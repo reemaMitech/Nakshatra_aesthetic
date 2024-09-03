@@ -179,7 +179,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="../dashboard/index-dual-compact.html">
+                                <a class="nav-link " href="<?=base_url(); ?>add_employee">
                                     <i class="icon svg-icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -193,7 +193,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link " href="../dashboard/index-boxed.html">
+                                <a class="nav-link " href="<?=base_url(); ?>create_access_level">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -437,14 +437,14 @@
                                     </div> -->
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="../dashboard/app/user-profile.html">Profile</a>
+                                    <!-- <li><a class="dropdown-item" href="../dashboard/app/user-profile.html">Profile</a>
                                     </li>
                                     <li><a class="dropdown-item"
                                             href="../dashboard/app/user-privacy-setting.html">Privacy Setting</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
-                                    </li>
-                                    <li><a class="dropdown-item" href="../dashboard/auth/sign-in.html">Logout</a></li>
+                                    </li> -->
+                                    <li><a class="dropdown-item" href="<?=base_url(); ?>logout">Logout</a></li>
                                 </ul>
                             </li>
                         </ul>
