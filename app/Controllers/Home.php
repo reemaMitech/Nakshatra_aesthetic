@@ -315,18 +315,82 @@ public function delete_employee($id)
 public function Add_stock()
 {
     $session = \Config\Services::session();
-        if (!$session->has('id')) {
-            return redirect()->to('/');
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    } 
+
+    $model = new AdminModel();
+
+    // Fetch all active products
+    $productCondition = array('Is_active' => 'Y');
+    $data['product'] = $model->getalldata('tbl_product', $productCondition); 
+
+    // Create an associative array of product IDs and names for easy lookup
+    $productNames = array();
+    foreach ($data['product'] as $product) {
+        $productNames[$product->id] = $product->product_name;
+    }
+
+    // Fetch all active branches
+    $branchCondition = array('is_active' => 'Y');
+    $data['branch'] = $model->getalldata('tbl_branch', $branchCondition);
+
+    foreach ($data['branch'] as $branch) {
+        $stockCondition = array('branch_name' => $branch->id);
+        $branch->stock_quantity = $model->getalldata('tbl_stock', $stockCondition);
+
+        // Replace product IDs with product names
+        foreach ($branch->stock_quantity as $stock) {
+            if (isset($productNames[$stock->product_name])) {
+                $stock->product_name = $productNames[$stock->product_name];
+            }
         }
-        $model = new AdminModel();
-        $wherecond = array('Is_active' => 'Y');
-        $data['product'] = $model->getalldata('tbl_product', $wherecond);
-        // print_r($data['product']);die;
-       return view('Admin/Add_stock',$data);
+    }
+
+    // Debug: Print the data structure to verify it works as expected
+    // echo '<pre>'; print_r($data['branch']);die;
+
+    return view('Admin/Add_stock', $data);
 }
+
 public function add_stocksin()
 {
-    print_r($_POST);die;
+    // print_r($_POST);die;
+    $db = \Config\Database::connect();
+    $data = [
+        'product_name' => $this->request->getPost('product_name'),
+        'quantity' => $this->request->getPost('quantity'),
+        'branch_name' => $this->request->getPost('branch_name'),
+        'size' => $this->request->getPost('size'),
+        'unit' => $this->request->getPost('unit'),
+        'use_by_date' => $this->request->getPost('use_by_date'),
+        'Expiry_date' => $this->request->getPost('Expiry_date'),
+
+       
+    ];
+    $db->table('tbl_stock')->insert($data);
+    return redirect()->to('Add_stock');
+}
+public function add_branch()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+  
+   return view('Admin/add_branch');
+}
+public function add_branches()
+{
+    // print_r($_POST);die;
+    $db = \Config\Database::connect();
+    $data = [
+        'branch_name' => $this->request->getPost('branch_name'),
+        'branch_location' => $this->request->getPost('branch_location'),
+    ];
+    $db->table('tbl_branch')->insert($data);
+    return redirect()->to('add_branch');
 }
 
 public function add_invoice()
