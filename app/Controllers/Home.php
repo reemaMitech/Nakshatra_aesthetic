@@ -395,8 +395,7 @@ public function add_branches()
 
 public function add_invoice()
 {
-    $session = session();
-    $id = $this->request->uri->getSegments(1);
+   
     $session = \Config\Services::session();
     if (!$session->has('id')) {
         return redirect()->to('/');
@@ -411,13 +410,12 @@ public function add_invoice()
     $wherecond = array('is_deleted' => 'N');
     $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
 
-    if(isset($id[1])) {
-    $wherecond1 = array('is_deleted' => 'N', 'id' => $id[1]);
+    // $wherecond1 = array('is_deleted' => 'N', 'id' => $id[1]);
 
-    $data['single_data'] = $model->get_single_data('tbl_invoice', $wherecond1);
+    // $data['single_data'] = $model->get_single_data('tbl_invoice', $wherecond1);
+
 
     
-    }
 
   
    return view('Admin/add_invoice',$data);
