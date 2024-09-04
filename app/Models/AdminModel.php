@@ -16,6 +16,12 @@ class AdminModel extends Model
             return false;
         }
     }
+  
+    public function getsinglerow($table, $wherecond)
+    {
+
+        $result = $this->db->table($table)->where($wherecond)->get()->getRow();
+
 
     public function get_state_name_location($country_id){
 
@@ -67,5 +73,13 @@ class AdminModel extends Model
     
     }
     
+
+
+        if ($result) {
+            return $result;
+        } else {
+            return false;
+        }
+    }
 
 }

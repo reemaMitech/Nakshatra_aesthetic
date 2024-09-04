@@ -11,10 +11,18 @@ class Home extends BaseController
     }
     public function admindashboard()
     {
+        $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
         return view('Admin/dashboard');
     }
     public function add_order()
     {
+        $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
         $model = new AdminModel();
         $wherecond = array('Is_active' => 'Y');
         $data['product'] = $model->getalldata('tbl_product', $wherecond);
@@ -28,26 +36,26 @@ class Home extends BaseController
     }
     public function add_product()
     {
-    
-    
+
+           $session = \Config\Services::session();
+            if (!$session->has('id')) {
+                return redirect()->to('/');
+            }
+
         return view('Admin/add_product');
     }
   public function save_product()
   {
-    // print_r($_POST);die;
-    // $session = \Config\Services::session();
-    // if (!$session->has('id')) {
-    //     return redirect()->to('/');
-    // }
+   
    $db = \Config\Database::connect();
    $data = [
        'product_name' => $this->request->getPost('product_name'),
+       'unit_type' => $this->request->getPost('unit_type'),
+       'unit' => $this->request->getPost('unit'),
        'container_type' => $this->request->getPost('container_type'),
        'ingredients' => $this->request->getPost('ingredients'),
        'mrp_with_tax' => $this->request->getPost('mrp_with_tax'),
    ];
-
-   // Insert data into the database table
    $db->table('tbl_product')->insert($data);
    return redirect()->to('add_product');
   }
@@ -71,6 +79,8 @@ class Home extends BaseController
         'product_name' => $this->request->getPost('product_name'),
         'quantity' => $this->request->getPost('quantity'),
         'mrp' => $this->request->getPost('mrp'),
+        'unit' => $this->request->getPost('unit'),
+        'unit_type' => $this->request->getPost('unit_type'),
         'total_amount' => $this->request->getPost('total_amount'),
         'transaction_id' => $this->request->getPost('transaction_id'),
         'transaction_screenshot' => $newName, 
@@ -83,6 +93,74 @@ class Home extends BaseController
     $db->table('tbl_order')->insert($data);
     return redirect()->to('add_order');
 }
+public function login()
+{
+    $model = new AdminModel();
+    $session = \CodeIgniter\Config\Services::session();
+    $username = $this->request->getPost('username');
+    $password = $this->request->getPost('password');  
+
+    $wherecond = array('username' => $username ,'password'=>$password);
+    $user = $model->getsinglerow('tbl_register', $wherecond);
+    if ($user) {
+        if ($password === $user->password) {  
+            $userData = [
+                'id' => $user->id,
+                'username' => $user->username,
+                'role' => $user->role,
+                 'menu_names'=>$user->menu_names,
+            
+            ];
+            $session->set($userData);
+            // echo "<pre>";print_r($_SESSION);die;
+            if ($user->role === 'customer') {
+                return redirect()->to(base_url('product'));
+            } 
+                elseif ($user->role === 'Admin') {
+                    return redirect()->to(base_url('admindashboard'));
+            } 
+          
+            else {
+                session()->setFlashdata('error', 'Invalid credentials');
+                return redirect()->to('/'); 
+            }
+        } else {
+            session()->setFlashdata('error', 'Invalid password');
+            return redirect()->to('/');
+        }
+
+    } else {
+        session()->setFlashdata('error', 'User not found');
+        return redirect()->to('/');
+    }
+}
+public function logout()
+{
+    $session = session();
+    $session->destroy();
+    return redirect()->to('/');
+    }
+public function add_employee()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+    $wherecond = array('is_active' => 'Y');
+    $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+    $wherecond = array('role' => 'Admin','active' => 'Y');
+    $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+    //  print_r($data['menu']);die;
+   return view('Admin/add_employee',$data);
+}
+public function create_access_level()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    return view('Admin/access_level');
 
 
 public function product_enquiry()
@@ -187,5 +265,61 @@ public function product_enquiry_details(){
 
 
 }
+public function access_level()
+{
+    // print_r($_POST);die;
+    $db = \Config\Database::connect();
+   $data = [
+       'menu_name' => $this->request->getPost('menu_name'),
+       'url_location' => $this->request->getPost('url_location'),
+      
+   ];
+   $db->table('tbl_menu')->insert($data);
+   return redirect()->to('add_employee');
+}
+public function create_user()
+{
+    // print_r($_POST);die;
+    $menuNames = implode(', ', $this->request->getPost('menu_names'));
+    $id = $this->request->getPost('id');
+    $db = \Config\Database::connect();
+    $data = [
+        'username' => $this->request->getPost('username'),
+        'password' => $this->request->getPost('password'),
+        'role' =>'Admin',
+        'menu_names' => $menuNames, 
+    ];
+    if ($id) {
+        $db->table('tbl_register')->where('id', $id)->update($data);
+        session()->setFlashdata('success', 'Employee updated successfully.');
+    } else {
+       
+        $db->table('tbl_register')->insert($data);
+        session()->setFlashdata('success', 'Employee created successfully.');
+    }
+    return redirect()->to('add_employee');
 
+}
+public function delete_employee($id)
+{
+    $db = \Config\Database::connect();
+    $data = ['active' => 'N'];
+    $db->table('tbl_register')->where('id', $id)->update($data);
+    
+    session()->setFlashdata('success', 'Employee deleted successfully.');
+    return redirect()->to(base_url('add_employee'));
+}
+public function Add_stock()
+{
+    $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
+        $model = new AdminModel();
+        $wherecond = array('Is_active' => 'Y');
+        $data['product'] = $model->getalldata('tbl_product', $wherecond);
+        // print_r($data['product']);die;
+       return view('Admin/Add_stock',$data);
+}
+}
 

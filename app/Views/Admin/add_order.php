@@ -10,9 +10,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                <form class="row g-3 needs-validation" action="<?= base_url('take_order'); ?>" method="post" enctype="multipart/form-data" novalidate>
-
-
+                    <form class="row g-3 needs-validation" action="<?= base_url('take_order'); ?>" method="post" enctype="multipart/form-data" novalidate>
+                        
                         <!-- New Fields for Username and Mobile Number -->
                         <div class="col-md-6">
                             <label for="username" class="form-label">Username</label>
@@ -36,13 +35,29 @@
                             <select class="form-select" id="productName" name="product_name" required>
                                 <option selected disabled value="">Choose...</option>
                                 <?php foreach ($product as $item): ?>
-                                <option value="<?= $item->id; ?>" data-mrp="<?= $item->mrp_with_tax; ?>">
+                                <option value="<?= $item->id; ?>" data-mrp="<?= $item->mrp_with_tax; ?>" data-unit="<?= $item->unit; ?>" data-unit_type="<?= $item->unit_type; ?>">
                                     <?= $item->product_name; ?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>
                             <div class="invalid-feedback">
                                 Please select a valid product name.
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="unit" class="form-label">Unit</label>
+                            <input type="text" class="form-control" id="unit" name="unit" readonly required>
+                            <div class="invalid-feedback">
+                                Please provide the unit.
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="unitType" class="form-label">Unit Type</label>
+                            <input type="text" class="form-control" id="unitType" name="unit_type" readonly required>
+                            <div class="invalid-feedback">
+                                Please provide the unit type.
                             </div>
                         </div>
 
@@ -189,9 +204,13 @@ $(document).ready(function() {
     $('#productName').change(function() {
         var selectedOption = $(this).find('option:selected');
         var mrp = selectedOption.data('mrp');
+        var unit = selectedOption.data('unit');
+        var unitType = selectedOption.data('unit_type');
 
-        // Set the MRP value
+        // Set the MRP, Unit, and Unit Type values
         $('#mrp').val(mrp);
+        $('#unit').val(unit);
+        $('#unitType').val(unitType);
 
         // Calculate the total amount if quantity is already entered
         var quantity = $('#quantity').val();
