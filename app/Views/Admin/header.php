@@ -34,17 +34,21 @@
 </head>
 
 <body class="  ">
+<?php //echo "<pre>";print_r($_SESSION);die;?>
+<?php
+$menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_names']) : [];
+// print_r($menu_names);die;
+?>
     <!-- loader Start -->
     <div id="loading">
         <div class="loader simple-loader">
             <div class="loader-body"></div>
         </div>
     </div>
-    <!-- loader END -->
-
+    
     <aside class="sidebar sidebar-default sidebar-white sidebar-base navs-rounded-all ">
         <div class="sidebar-header d-flex align-items-center justify-content-start">
-            <a href="../dashboard/index.html" class="navbar-brand">
+            <a href="<?php echo base_url() ?>admindashboard" class="navbar-brand">
                 <!--Logo start-->
                 <!--logo End-->
 
@@ -104,7 +108,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="../dashboard/index.html">
+                        <a class="nav-link active" aria-current="page" href="<?php echo base_url() ?>admindashboard">
                             <i class="icon">
                                 <svg width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                     class="icon-20">
@@ -150,6 +154,7 @@
                             </i>
                         </a>
                         <ul class="sub-nav collapse" id="horizontal-menu" data-bs-parent="#sidebar-menu">
+                        <?php if (in_array('add_order', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link " href="<?=base_url(); ?>add_order">
                                     <i class="icon">
@@ -164,8 +169,10 @@
                                     <span class="item-name">Add Order</span>
                                 </a>
                             </li>
+                          <?php endif; ?>
+                          <?php if (in_array('Coupon_Code', $menu_names)) : ?>
                             <li class="nav-item">
-                                <a class="nav-link " href="../dashboard/index-dual-horizontal.html">
+                                <a class="nav-link " href="<?=base_url(); ?>Coupon_Code">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -178,6 +185,8 @@
                                     <span class="item-name">Coupon Code</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php  if (in_array('add_employee', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link " href="<?=base_url(); ?>add_employee">
                                     <i class="icon svg-icon">
@@ -192,6 +201,8 @@
                                     <span class="item-name">Add Employee</span>
                                 </a>
                             </li>
+                            <?php  endif; ?>
+                            <?php  if (in_array('create_access_level', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link " href="<?=base_url(); ?>create_access_level">
                                     <i class="icon">
@@ -206,8 +217,10 @@
                                     <span class="item-name">Access Level</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (in_array('add_cash', $menu_names)) : ?>
                             <li class="nav-item">
-                                <a class="nav-link " href="../dashboard/index-boxed-fancy.html">
+                                <a class="nav-link " href="<?=base_url(); ?>add_cash">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -220,6 +233,7 @@
                                     <span class="item-name">Add Cash</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -242,6 +256,8 @@
                             </i>
                         </a>
                         <ul class="sub-nav collapse" id="Inventory" data-bs-parent="#sidebar-menu">
+                       
+                        <?php if (in_array('add_product', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link " href="<?=base_url(); ?>add_product">
                                     <i class="icon">
@@ -256,8 +272,10 @@
                                     <span class="item-name">Add Product</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (in_array('add_po', $menu_names)) : ?>
                             <li class="nav-item">
-                                <a class="nav-link " href="">
+                                <a class="nav-link " href="<?=base_url(); ?>add_po">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -270,8 +288,10 @@
                                     <span class="item-name">Add PO</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (in_array('add_Invoice', $menu_names)) : ?>
                             <li class="nav-item">
-                                <a class="nav-link " href="../dashboard/index-dual-compact.html">
+                                <a class="nav-link " href="<?=base_url(); ?>add_Invoice">
                                     <i class="icon svg-icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -284,8 +304,10 @@
                                     <span class="item-name">Add Invoice</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (in_array('Transfer_Inventory', $menu_names)) : ?>
                             <li class="nav-item">
-                                <a class="nav-link " href="../dashboard/index-boxed.html">
+                                <a class="nav-link " href="<?=base_url(); ?>Transfer_Inventory">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -298,7 +320,23 @@
                                     <span class="item-name">Transfer Inventory</span>
                                 </a>
                             </li>
-                            
+                            <?php endif; ?>
+                            <?php if (in_array('Add_stock', $menu_names)) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link " href="<?=base_url(); ?>Add_stock">
+                                    <i class="icon">
+                                        <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                            viewBox="0 0 24 24" fill="currentColor">
+                                            <g>
+                                                <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                    <i class="sidenav-mini-icon"> B </i>
+                                    <span class="item-name">Add Stocks</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
                         </ul>
                     </li>
 
