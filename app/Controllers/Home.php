@@ -161,7 +161,7 @@ public function create_access_level()
         return redirect()->to('/');
     }
     return view('Admin/access_level');
-
+}
 
 public function product_enquiry()
 {
@@ -258,13 +258,11 @@ public function product_enquiry_details(){
             session()->setFlashdata('success', 'Enquiry updated successfully.');
         }
     
-
+    
     return redirect()->to('product_enquiry');
 }
 
 
-
-}
 public function access_level()
 {
     // print_r($_POST);die;
