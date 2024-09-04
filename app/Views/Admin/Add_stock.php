@@ -13,7 +13,7 @@
                     <form class="row g-3 needs-validation" action="<?= base_url('add_stocksin'); ?>" method="post" novalidate>
 
                         <!-- Product Name Field -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="productName" class="form-label">Product Name</label>
                             <select class="form-select" id="productName" name="product_name" required>
                                 <option selected disabled value="">Choose...</option>
@@ -29,7 +29,7 @@
                         </div>
 
                         <!-- Quantity Field -->
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="quantity" class="form-label">Quantity</label>
                             <input type="number" class="form-control" id="quantity" name="quantity" required>
                             <div class="invalid-feedback">
@@ -38,7 +38,7 @@
                         </div>
 
                         <!-- Size of Product Field -->
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="size" class="form-label">Size of Product</label>
                             <input type="text" class="form-control" id="size" name="size" required>
                             <div class="invalid-feedback">
