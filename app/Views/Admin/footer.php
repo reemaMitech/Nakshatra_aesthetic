@@ -215,6 +215,10 @@
     
     <!-- App Script -->
     <script src="public/assets/js/hope-ui.js" defer></script>
+
+    <script src="<?=base_url(); ?>public/assets/js/jquery/jquery.validate.min.js"></script>
+   
+  
     
   </body>
 </html>
