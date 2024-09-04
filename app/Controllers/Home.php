@@ -319,5 +319,9 @@ public function Add_stock()
         // print_r($data['product']);die;
        return view('Admin/Add_stock',$data);
 }
+public function add_stocksin()
+{
+    print_r($_POST);die;
+}
 }
 
