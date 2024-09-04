@@ -30,4 +30,6 @@ $routes->post('delete_employee/(:num)', 'Home::delete_employee/$1');
 $routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
 $routes->get('Add_stock', 'Home::Add_stock');
 $routes->post('add_stocksin', 'Home::add_stocksin');
+$routes->get('add_branch', 'Home::add_branch');
+$routes->post('add_branches', 'Home::add_branches');
 
