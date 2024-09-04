@@ -328,5 +328,22 @@ public function add_stocksin()
 {
     print_r($_POST);die;
 }
+
+public function add_invoice()
+{
+   
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+    $wherecond = array('is_active' => 'Y');
+    $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+    $wherecond = array('role' => 'Admin','active' => 'Y');
+    $data['invoices_list'] = $model->getalldata('tbl_register', $wherecond);
+    //  print_r($data['menu']);die;
+   return view('Admin/add_invoice',$data);
+
+}
 }
 
