@@ -101,7 +101,7 @@ public function login()
     $password = $this->request->getPost('password');  
 
     $wherecond = array('username' => $username ,'password'=>$password);
-    $user = $model->getsinglerow('tbl_register', $wherecond);
+    $user= $model->getsingleuser('tbl_register', $wherecond);
     if ($user) {
         if ($password === $user->password) {  
             $userData = [

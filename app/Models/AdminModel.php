@@ -16,10 +16,12 @@ class AdminModel extends Model
             return false;
         }
     }
-  
+    public function getsingleuser($table, $wherecond)
+    {
+        return $this->db->table($table)->where($wherecond)->get()->getRow();
+    }
     public function getsinglerow($table, $wherecond)
     {
-
         $result = $this->db->table($table)->where($wherecond)->get()->getRow();
 
     }
