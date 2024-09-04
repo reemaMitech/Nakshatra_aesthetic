@@ -37,5 +37,6 @@ $routes->get('add_invoice', 'Home::add_invoice');
 
 $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
+$routes->post('set_invoice', 'Home::set_invoice');
 
 
