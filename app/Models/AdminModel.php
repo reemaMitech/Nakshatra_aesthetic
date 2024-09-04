@@ -22,7 +22,7 @@ class AdminModel extends Model
 
         $result = $this->db->table($table)->where($wherecond)->get()->getRow();
 
-
+    }
     public function get_state_name_location($country_id){
 
         $result = $this->db->table('states')->where('country_id', $country_id)->get()->getResult();
@@ -71,10 +71,6 @@ class AdminModel extends Model
     
         ->getResult();
     
-    }
-    
-
-
         if ($result) {
             return $result;
         } else {
