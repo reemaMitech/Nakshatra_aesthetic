@@ -216,7 +216,105 @@
     <!-- App Script -->
     <script src="public/assets/js/hope-ui.js" defer></script>
 
-   
+    <script>
+
+$("#country_id").change(function() {
+
+
+
+    $.ajax({
+
+        type: "post",
+
+        url: "<?=base_url();?>get_state_name_location",
+
+        data: {
+
+            'country_id': $("#country_id").val()
+
+        },
+
+        success: function(data) {
+
+            console.log(data);
+
+            $('#state_id').empty();
+
+            $('#state_id').append('<option value="">Choose ...</option>');
+
+            var opts = $.parseJSON(data);
+
+            $.each(opts, function(i, d) {
+
+                $('#state_id').append('<option value="' + d.id + '">' + d.name +
+
+                    '</option>');
+
+            });
+
+            $('#state_id').trigger("chosen:updated");
+
+        },
+
+        error: function(jqXHR, textStatus, errorThrown) {
+
+            console.log(textStatus, errorThrown);
+
+        }
+
+    });
+
+});
+
+$("#state_id").change(function() {
+
+
+
+    $.ajax({
+
+        type: "post",
+
+        url: "<?=base_url();?>get_city_name_location",
+
+        data: {
+
+            'state_id': $("#state_id").val()
+
+        },
+
+        success: function(data) {
+
+            console.log(data);
+
+            $('#city_id').empty();
+
+            $('#city_id').append('<option value="">Choose ...</option>');
+
+            var opts = $.parseJSON(data);
+
+            $.each(opts, function(i, d) {
+
+                $('#city_id').append('<option value="' + d.id + '">' + d.name +
+
+                    '</option>');
+
+            });
+
+            $('#city_id').trigger("chosen:updated");
+
+        },
+
+        error: function(jqXHR, textStatus, errorThrown) {
+
+            console.log(textStatus, errorThrown);
+
+        }
+
+    });
+
+})
+
+</script>
   
     
   </body>

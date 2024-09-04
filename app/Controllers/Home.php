@@ -165,6 +165,11 @@ public function create_access_level()
 
 public function product_enquiry()
 {
+    $session = \Config\Services::session();
+
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     $model = new AdminModel();
     $wherecond = array('Is_active' => 'Y');
     $data['product'] = $model->getalldata('tbl_product', $wherecond);
