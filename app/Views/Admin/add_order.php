@@ -109,7 +109,53 @@
                                 Please provide a valid pincode.
                             </div>
                         </div>
+
                         <div class="col-md-6">
+                                    <label for="country" class="form-label">Country:</label>
+                                        <!-- <div class="col-sm-9"> -->
+                                            <select class="form-select choosen" id="country_id" name="Country">
+                                                <option value="">Please select country</option>
+                                                <?php if(!empty($country)){foreach($country as $country_result){?>
+                                                <option value="<?=$country_result->id?>"
+                                                    <?php if(!empty($single) && $single->country_id == $country_result->id){?>selected="selected"
+                                                    <?php }?>><?=$country_result->name?></option>
+                                                <?php } } ?>
+                                            </select>
+                               
+                            </div>
+                            <div class="col-md-6">
+                                <label for="state" class="form-label">State:</label>
+                                <!-- <div class="col-sm-9"> -->
+                                    <select class="form-select choosen" id="state_id" name="State">
+                                        <option value="">Please select state</option>
+                                        <?php if((!empty($single)) != "") {?>
+                                        <?php 
+                                            if(!empty($states)){
+                                            foreach($states as $state_result){                ?>
+                                        <option value="<?=$state_result->id?>"
+                                            <?php if(!empty($single) && $single->state_id == $state_result->id){?>selected="selected"
+                                            <?php }?>><?=$state_result->name?></option>
+                                        <?php } } ?>
+                                        <?php }?>
+                                    </select>
+                                <!-- </div> -->
+                            </div>
+                            <div class="col-md-6">
+                                <label for="City" class="form-label">City:</label>
+                                <!-- <div class="col-sm-9"> -->
+                                    <select class="form-select choosen" id="city_id" name="City">
+                                        <option value="">Please select city</option>
+                                        <?php if((!empty($single)) != "") {?>
+                                        <?php if(!empty($citys)){foreach($citys as $city_result){?>
+                                        <option value="<?=$city_result->id?>"
+                                            <?php if(!empty($single) && $single->city_id == $city_result->id){?>selected="selected"
+                                            <?php }?>><?=$city_result->name?></option>
+                                        <?php } } ?>
+                                        <?php }?>
+                                    </select>
+                                <!-- </div> -->
+                            </div>
+                        <!-- <div class="col-md-6">
                             <label for="tal" class="form-label">Tal</label>
                             <input type="text" class="form-control" id="tal" name="tal" required>
                             <div class="invalid-feedback">
@@ -129,7 +175,7 @@
                             <div class="invalid-feedback">
                                 Please provide a valid country.
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-12">
                             <label for="address" class="form-label">Address</label>
                             <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
@@ -186,4 +232,101 @@ $(document).ready(function() {
         }
     });
 });
+
+
+$("#country_id").change(function() {
+
+
+
+$.ajax({
+
+    type: "post",
+
+    url: "<?=base_url();?>get_state_name_location",
+
+    data: {
+
+        'country_id': $("#country_id").val()
+
+    },
+
+    success: function(data) {
+
+        console.log(data);
+
+        $('#state_id').empty();
+
+        $('#state_id').append('<option value="">Choose ...</option>');
+
+        var opts = $.parseJSON(data);
+
+        $.each(opts, function(i, d) {
+
+            $('#state_id').append('<option value="' + d.id + '">' + d.name +
+
+                '</option>');
+
+        });
+
+        $('#state_id').trigger("chosen:updated");
+
+    },
+
+    error: function(jqXHR, textStatus, errorThrown) {
+
+        console.log(textStatus, errorThrown);
+
+    }
+
+});
+
+});
+
+$("#state_id").change(function() {
+
+
+
+$.ajax({
+
+    type: "post",
+
+    url: "<?=base_url();?>get_city_name_location",
+
+    data: {
+
+        'state_id': $("#state_id").val()
+
+    },
+
+    success: function(data) {
+
+        console.log(data);
+
+        $('#city_id').empty();
+
+        $('#city_id').append('<option value="">Choose ...</option>');
+
+        var opts = $.parseJSON(data);
+
+        $.each(opts, function(i, d) {
+
+            $('#city_id').append('<option value="' + d.id + '">' + d.name +
+
+                '</option>');
+
+        });
+
+        $('#city_id').trigger("chosen:updated");
+
+    },
+
+    error: function(jqXHR, textStatus, errorThrown) {
+
+        console.log(textStatus, errorThrown);
+
+    }
+
+});
+
+})
 </script>
