@@ -20,3 +20,4 @@ $routes->get('create_access_level', 'Home::create_access_level');
 $routes->post('create_user', 'Home::create_user');
 $routes->post('delete_employee/(:num)', 'Home::delete_employee/$1');
 $routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
+$routes->get('Add_stock', 'Home::Add_stock');

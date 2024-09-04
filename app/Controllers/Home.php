@@ -101,20 +101,18 @@ public function login()
                 'id' => $user->id,
                 'username' => $user->username,
                 'role' => $user->role,
-                // 'accesslevel'=>$user['accesslevel'],
+                 'menu_names'=>$user->menu_names,
             
             ];
             $session->set($userData);
-            // print_r($userData);die;
+            // echo "<pre>";print_r($_SESSION);die;
             if ($user->role === 'customer') {
                 return redirect()->to(base_url('product'));
             } 
                 elseif ($user->role === 'Admin') {
                     return redirect()->to(base_url('admindashboard'));
             } 
-            // elseif ($user->role === 'Admin') {
-            //     return redirect()->to(('AdminDashboard'));
-            // } 
+          
             else {
                 session()->setFlashdata('error', 'Invalid credentials');
                 return redirect()->to('/'); 
@@ -146,7 +144,7 @@ public function add_employee()
     $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
     $wherecond = array('role' => 'Admin','active' => 'Y');
     $data['employees'] = $model->getalldata('tbl_register', $wherecond);
-    //  print_r($data['users']);die;
+    //  print_r($data['menu']);die;
    return view('Admin/add_employee',$data);
 }
 public function create_access_level()
@@ -202,5 +200,16 @@ public function delete_employee($id)
     session()->setFlashdata('success', 'Employee deleted successfully.');
     return redirect()->to(base_url('add_employee'));
 }
-
+public function Add_stock()
+{
+    $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
+        $model = new AdminModel();
+        $wherecond = array('Is_active' => 'Y');
+        $data['product'] = $model->getalldata('tbl_product', $wherecond);
+        // print_r($data['product']);die;
+       return view('Admin/Add_stock',$data);
+}
 }

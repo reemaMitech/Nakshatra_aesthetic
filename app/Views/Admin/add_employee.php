@@ -39,7 +39,7 @@
                             <?php foreach ($menu as $menu): ?>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="menu_names[]"
-                                    id="menu_<?= $menu->id; ?>" value="<?= $menu->menu_name; ?>">
+                                    id="menu_<?= $menu->id; ?>" value="<?= $menu->url_location; ?>">
                                 <label class="form-check-label" for="menu_<?= $menu->id; ?>">
                                     <?= $menu->menu_name; ?>
                                 </label>
@@ -56,17 +56,20 @@
                     <!-- Employee List -->
                     <div id="employee-list" style="display:none;">
                         <h5>Employee List</h5>
-                        <?php foreach ($employees as $employee): ?>
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $employee->username; ?></h5>
-                                <p class="card-text">Access Levels: <?= $employee->menu_names; ?></p>
-                                <a href="#" class="btn btn-warning edit-button" data-id="<?= $employee->id; ?>">Edit</a>
-                                <a href="<?= base_url('delete_employee/'.$employee->id); ?>"
-                                    class="btn btn-danger">Delete</a>
+                        <?php if (is_array($employees) || is_object($employees)): ?>
+                            <?php foreach ($employees as $employee): ?>
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= $employee->username; ?></h5>
+                                    <p class="card-text">Access Levels: <?= $employee->menu_names; ?></p>
+                                    <a href="#" class="btn btn-warning edit-button" data-id="<?= $employee->id; ?>">Edit</a>
+                                    <a href="<?= base_url('delete_employee/'.$employee->id); ?>" class="btn btn-danger">Delete</a>
+                                </div>
                             </div>
-                        </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>No employees found.</p>
+                        <?php endif; ?>
                     </div>
                     <!-- End of Employee List -->
 
@@ -103,15 +106,22 @@ document.getElementById('toggle-view').addEventListener('click', function() {
 document.querySelectorAll('.edit-button').forEach(function(button) {
     button.addEventListener('click', function() {
         var id = this.getAttribute('data-id');
-        // AJAX call to get employee data (or pre-fill the form using available data)
-        // Example:
+        // Assuming employee data is available in $employees array (JSON encoded)
         var employee = <?= json_encode($employees); ?>.find(e => e.id == id);
         document.getElementById('employee_id').value = employee.id;
         document.getElementById('username').value = employee.username;
         document.getElementById('password').value = employee.password;
+
+        // Uncheck all checkboxes
         document.querySelectorAll('input[name="menu_names[]"]').forEach(function(checkbox) {
-            checkbox.checked = employee.menu_names.split(', ').includes(checkbox.value);
+            checkbox.checked = false;
         });
+
+        // Check the ones that the employee has access to
+        employee.menu_names.split(', ').forEach(function(menu) {
+            document.querySelector('input[value="' + menu + '"]').checked = true;
+        });
+
         document.getElementById('submit-button').textContent = 'Update';
         document.getElementById('form-title').textContent = 'Edit Access Level Employee';
         document.getElementById('access-form').style.display = 'block';
