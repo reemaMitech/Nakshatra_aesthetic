@@ -216,6 +216,12 @@
     <!-- App Script -->
     <script src="public/assets/js/hope-ui.js" defer></script>
 
+    <script src="public/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="public/assets/js/plugins/flatpickr.js" defer></script>
+
+    <script src="public/assets/js/plugins/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/number-to-words@1.2.4/numberToWords.min.js"></script>
+
     <script>
 
 $("#country_id").change(function() {

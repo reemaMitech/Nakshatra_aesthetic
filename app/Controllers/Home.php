@@ -401,13 +401,165 @@ public function add_invoice()
         return redirect()->to('/');
     }
     $model = new AdminModel();
-    $wherecond = array('is_active' => 'Y');
-    $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
-    $wherecond = array('role' => 'Admin','active' => 'Y');
-    $data['invoices_list'] = $model->getalldata('tbl_register', $wherecond);
-    //  print_r($data['menu']);die;
+    $wherecond = array('is_deleted' => 'N');
+    $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N');
+    $data['product_data'] = $model->getalldata('tbl_product', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N');
+    $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
+
+    // $wherecond1 = array('is_deleted' => 'N', 'id' => $id[1]);
+
+    // $data['single_data'] = $model->get_single_data('tbl_invoice', $wherecond1);
+
+
+    
+
+  
    return view('Admin/add_invoice',$data);
 
+}
+public function set_invoice()
+{
+    // Get the current month and year
+    $currentMonth = date('m');
+    $currentYear = date('Y');
+
+    // Determine the financial year based on the current month
+    if ($currentMonth > 3) {
+        $financialYear = substr($currentYear, 2) . substr($currentYear + 1, 2);
+    } else {
+        $financialYear = substr($currentYear - 1, 2) . substr($currentYear, 2);
+    }
+
+    // Determine the tax type
+    $taxType = $this->request->getVar('tax_id');
+    $taxCondition = '';
+    if ($taxType == 1 || $taxType == 2) {
+        $taxCondition = "WHERE tax_id IN (1, 2) AND is_deleted = 'N'";
+        $financialYear = 'G' . $financialYear;
+    } elseif ($taxType == 3) {
+        $taxCondition = "WHERE tax_id = 3 AND is_deleted = 'N'";
+    }
+
+    // Initialize database connection
+    $db = \Config\Database::connect();
+
+    // Count invoices based on the tax type
+    $query = $db->query("SELECT COUNT(*) as count FROM tbl_invoice $taxCondition");
+    $result = $query->getRow();
+    $invoiceCount = $result->count + 1; // Add 1 to the count
+    $invoiceNumber = str_pad($invoiceCount, 4, '0', STR_PAD_LEFT); // Pad the number with zeros to ensure it's 4 digits
+
+    // Generate the invoice number
+    $invoiceNo = "NABP-" . $financialYear . "-" . $invoiceNumber;
+
+    $data = [       
+        'branch_id' => $this->request->getVar('branch_id'),
+        'invoice_date' => $this->request->getVar('invoice_date'),
+        'customer_name' => $this->request->getVar('customer_name'),
+        'contact_no' => $this->request->getVar('contact_no'),
+        'delivery_address' => $this->request->getVar('delivery_address'),
+
+        'tax_id' => $this->request->getVar('tax_id'),
+        'invoiceNo' => $invoiceNo,
+      
+        'totalamounttotal' => $this->request->getVar('totalamounttotal'),
+        'cgst' => $this->request->getVar('cgst'),
+        'sgst' => $this->request->getVar('sgst'),
+        'igst' => $this->request->getVar('igst'),
+        'final_total' => $this->request->getVar('final_total'),
+        'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
+        
+    ];
+    $db = \Config\Database::connect();
+
+    if ($this->request->getVar('id') == "") {
+        $add_data = $db->table('tbl_invoice');
+        $add_data->insert($data);
+
+        $last_id =  $db->insertID();
+
+        $iteam = $this->request->getVar('iteam');
+        $description = $this->request->getVar('description');
+
+        $quantity = $this->request->getVar('quantity');
+        $price = $this->request->getVar('price');
+    
+        $total_amount = $this->request->getVar('total_amount');
+
+        for($k=0;$k<count($iteam);$k++){
+            $product_data = array(
+                'invoice_id' 	=> $last_id,
+                'iteam' 		=> $iteam[$k],
+                'description' 		=> $description[$k],
+                'quantity' 		=> $quantity[$k],
+                'price' 		=> $price[$k],
+                'total_amount'  => $total_amount[$k],
+                
+            ); 
+            // echo "<pre>";print_r($product_data);exit();
+            $add_data = $db->table('tbl_iteam');
+            $add_data->insert($product_data);
+    
+        }
+        session()->setFlashdata('success', 'Invoice added successfully.');
+    } else {
+
+
+        $data1 = [
+            'branch_id' => $this->request->getVar('branch_id'),
+            'invoice_date' => $this->request->getVar('invoice_date'),
+            'customer_name' => $this->request->getVar('customer_name'),
+            'contact_no' => $this->request->getVar('contact_no'),
+            'delivery_address' => $this->request->getVar('delivery_address'),
+            'tax_id' => $this->request->getVar('tax_id'),
+          
+            'totalamounttotal' => $this->request->getVar('totalamounttotal'),
+            'cgst' => $this->request->getVar('cgst'),
+            'sgst' => $this->request->getVar('sgst'),
+            'igst' => $this->request->getVar('igst'),
+            'final_total' => $this->request->getVar('final_total'),
+            'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
+            
+        ];
+
+        $update_data = $db->table('tbl_invoice')->where('id', $this->request->getVar('id'));
+        $update_data->update($data1);
+
+        $last_id =  $this->request->getVar('id');
+
+        $delete = $db->table('tbl_iteam')->where('invoice_id', $this->request->getVar('id'))->delete();
+
+        $iteam = $this->request->getVar('iteam');
+        $description = $this->request->getVar('description');
+
+
+        $quantity = $this->request->getVar('quantity');
+        $price = $this->request->getVar('price');
+    
+        $total_amount = $this->request->getVar('total_amount');
+
+        for($k=0;$k<count($iteam);$k++){
+            $product_data = array(
+                'invoice_id' 	=> $last_id,
+                'iteam' 		=> $iteam[$k],
+                'description' 		=> $description[$k],
+                'quantity' 		=> $quantity[$k],
+                'price' 		=> $price[$k],
+                'total_amount'  => $total_amount[$k],
+            ); 
+            $add_data = $db->table('tbl_iteam');
+            $add_data->insert($product_data);
+    
+        }
+        session()->setFlashdata('success', 'Invoice updated successfully.');
+            
+    }
+
+    return redirect()->to('add_invoice');
 }
 }
 

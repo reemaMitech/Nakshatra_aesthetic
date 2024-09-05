@@ -29,6 +29,11 @@
 
     <!-- RTL Css -->
     <link rel="stylesheet" href="public/assets/css/rtl.min.css" />
+    <link rel="stylesheet" href="public/assets/vendor/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="public/assets/css/commanstylefile.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+
 
 
 </head>
