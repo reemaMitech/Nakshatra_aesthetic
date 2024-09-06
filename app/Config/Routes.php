@@ -39,4 +39,5 @@ $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
 $routes->post('set_invoice', 'Home::set_invoice');
 
+$routes->post('transfer_branch_quantity', 'Home::transfer_branch_quantity');
 

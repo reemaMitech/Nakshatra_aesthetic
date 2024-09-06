@@ -235,7 +235,8 @@ document.getElementById('selectBranch').addEventListener('change', function () {
         // Populate product dropdown
         stockData.forEach(function (stock) {
             var option = document.createElement('option');
-            option.value = stock.id;
+            console.log(stock)
+            option.value = stock.product_id;
             option.text = stock.product_name + ' (' + stock.size + stock.unit + ')';
             option.setAttribute('data-quantity', stock.quantity);
             productDropdown.appendChild(option);
