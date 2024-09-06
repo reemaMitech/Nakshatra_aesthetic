@@ -45,4 +45,5 @@ $routes->get('delete_compan/(:any)/(:any)', 'Home::delete_compan/$1/$2');
 
 
 
+$routes->post('transfer_branch_quantity', 'Home::transfer_branch_quantity');
 

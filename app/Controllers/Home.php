@@ -312,18 +312,59 @@ public function delete_employee($id)
     session()->setFlashdata('success', 'Employee deleted successfully.');
     return redirect()->to(base_url('add_employee'));
 }
+// public function Add_stock()
+// {
+//     $session = \Config\Services::session();
+//     if (!$session->has('id')) {
+//         return redirect()->to('/');
+//     } 
+
+//     $model = new AdminModel();
+
+//     // Fetch all active products
+//     $productCondition = array('Is_active' => 'Y');
+//     $data['product'] = $model->getalldata('tbl_product', $productCondition); 
+
+//     // Create an associative array of product IDs and names for easy lookup
+//     $productNames = array();
+//     foreach ($data['product'] as $product) {
+//         $productNames[$product->id] = $product->product_name;
+//     }
+
+//     // Fetch all active branches
+//     $branchCondition = array('is_active' => 'Y');
+//     $data['branch'] = $model->getalldata('tbl_branch', $branchCondition);
+
+//     foreach ($data['branch'] as $branch) {
+//         $stockCondition = array('branch_name' => $branch->id);
+//         $stockData = $model->getalldata('tbl_stock', $stockCondition);
+
+//         // Ensure stock data is an array, even if no results are found
+//         $branch->stock_quantity = is_array($stockData) ? $stockData : [];
+
+//         // Replace product IDs with product names
+//         foreach ($branch->stock_quantity as $stock) {
+//             if (isset($productNames[$stock->product_name])) {
+//                 $stock->product_name = $productNames[$stock->product_name];
+//             }
+//         }
+//     }
+
+//     return view('Admin/Add_stock', $data);
+// }
+
 public function Add_stock()
 {
     $session = \Config\Services::session();
     if (!$session->has('id')) {
         return redirect()->to('/');
-    } 
+    }
 
     $model = new AdminModel();
 
     // Fetch all active products
     $productCondition = array('Is_active' => 'Y');
-    $data['product'] = $model->getalldata('tbl_product', $productCondition); 
+    $data['product'] = $model->getalldata('tbl_product', $productCondition);
 
     // Create an associative array of product IDs and names for easy lookup
     $productNames = array();
@@ -337,18 +378,19 @@ public function Add_stock()
 
     foreach ($data['branch'] as $branch) {
         $stockCondition = array('branch_name' => $branch->id);
-        $branch->stock_quantity = $model->getalldata('tbl_stock', $stockCondition);
+        $stockData = $model->getalldata('tbl_stock', $stockCondition);
 
-        // Replace product IDs with product names
+        // Ensure stock data is an array, even if no results are found
+        $branch->stock_quantity = is_array($stockData) ? $stockData : [];
+
+        // Pass both product ID and product name
         foreach ($branch->stock_quantity as $stock) {
             if (isset($productNames[$stock->product_name])) {
-                $stock->product_name = $productNames[$stock->product_name];
+                $stock->product_id = $stock->product_name; // Store the product ID
+                $stock->product_name = $productNames[$stock->product_name]; // Store the product name
             }
         }
     }
-
-    // Debug: Print the data structure to verify it works as expected
-    // echo '<pre>'; print_r($data['branch']);die;
 
     return view('Admin/Add_stock', $data);
 }
@@ -568,6 +610,65 @@ public function set_invoice()
     return redirect()->to('add_invoice');
 }
 
+
+
+public function transfer_branch_quantity()
+{
+    // print_r($_POST);die;
+    $model = new AdminModel();
+
+    $selectBranch = $this->request->getPost('select_branch');    
+    $selectProduct = $this->request->getPost('select_product');  
+    $transferQuantity = $this->request->getPost('transfer_quantity'); 
+    $transferBranch = $this->request->getPost('Transfer_branch'); 
+
+
+    $transferQuantity = intval(preg_replace('/[^0-9]/', '', $transferQuantity)); 
+
+    $sourceCondition = [
+        'branch_name' => $selectBranch,
+        'product_name' => $selectProduct
+    ];
+    $sourceStock = $model->getSingleDatass('tbl_stock', $sourceCondition);
+    if (!$sourceStock) {
+        return redirect()->back()->with('error', 'Source branch stock not found.');
+    }
+
+    if ($sourceStock->quantity >= $transferQuantity) {
+        $newSourceQuantity = $sourceStock->quantity - $transferQuantity;
+        if ($newSourceQuantity < 0) {
+            return redirect()->back()->with('error', 'Quantity cannot be negative.');
+        }
+        $model->updatequantity($sourceStock->id, $newSourceQuantity);
+    } else {
+        return redirect()->back()->with('error', 'Not enough stock to transfer.');
+    }
+
+    $wherecond = [
+        'branch_name' => $transferBranch,
+        'product_name' => $selectProduct
+    ];
+    $targetStock = $model->getSingleDatasss('tbl_stock',  $wherecond);
+    if ($targetStock) {
+        $newTargetQuantity = $targetStock->quantity + $transferQuantity;
+        $model->updatequantity($targetStock->id, $newTargetQuantity);
+    } else {
+        $newStockData = [
+            'product_name' => $selectProduct,
+            'branch_name' => $transferBranch,
+            'quantity' => $transferQuantity,
+            'size' => $sourceStock->size, 
+            'unit' => $sourceStock->unit, 
+            'use_by_date' => $sourceStock->use_by_date,
+            'Expiry_date' => $sourceStock->Expiry_date,
+            'active' => 'Y',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $model->insertData('tbl_stock', $newStockData);
+    }
+
+    return redirect()->back()->with('success', 'Stock transferred successfully.');
+}
 public function delete_compan()
 {
     $session = \Config\Services::session();
@@ -582,6 +683,7 @@ public function delete_compan()
     $update_data->update($data);
     session()->setFlashdata('success', 'Data deleted successfully.');
     return redirect()->back();
+
 
 }
 
