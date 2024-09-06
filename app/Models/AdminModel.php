@@ -6,6 +6,9 @@ use CodeIgniter\Model;
 
 class AdminModel extends Model
 {
+   protected $table ='tbl_stock';
+   protected $allowedFields = ['id', 'product_name', 'branch_name', 'quantity', 'size', 'unit','use_by_date','Expiry_date'];
+
     public function getalldata($table, $wherecond)
     {
         $result = $this->db->table($table)->where($wherecond)->get()->getResult();
@@ -16,6 +19,31 @@ class AdminModel extends Model
             return false;
         }
     }
+    public function getSingleData($table, $wherecond)
+    {
+        return $this->db->table($table)->where($wherecond)->get()->getRow();
+    }
+    public function getSingleDatas($table, $sourceCondition)
+    {
+        return $this->db->table($table)->where($sourceCondition)->get()->getRow();
+  
+    }
+    public function getSingleDatass($table, $condition)
+    {
+        return $this->db->table($table)
+                        ->where($condition)
+                        ->get()
+                        ->getRow();  
+    }
+
+    public function getSingleDatasss($table, $condition)
+    {
+        return $this->db->table($table)
+                        ->where($condition)
+                        ->get()
+                        ->getRow(); 
+    }
+
     public function getsingleuser($table, $wherecond)
     {
         return $this->db->table($table)->where($wherecond)->get()->getRow();
@@ -76,6 +104,7 @@ class AdminModel extends Model
         }
     }
 
+
     public function jointwotables($select, $table1, $table2,  $joinCond, $wherecond, $type)
 {
     $result = $this->db->table($table1)  // Use $table1 variable here
@@ -101,5 +130,30 @@ public function get_single_data($table, $wherecond)
         return false;
     }
 }
+
+
+    public function insertData($table, $data)
+    {
+        return $this->db->table($table)->insert($data);
+    }
+    public function updatequantity($id, $newQuantity)
+    {
+        return $this->db->table($this->table)
+                        ->set('quantity', $newQuantity)
+                        ->where('id', $id)
+                        ->update();
+    }
+    // public function updatequantity($Id, $quantity)
+    // {
+    //     return $this->db->table('tbl_stock')
+    //                     ->where('id', $Id)
+    //                     ->update(['quantity' => $quantity]);
+    // }
+    public function updatequantitys($Ids, $quantitys)
+    {
+        return $this->db->table('tbl_stock')
+                        ->where('id', $Ids)
+                        ->update(['quantity' => $quantitys]);
+    }
 
 }
