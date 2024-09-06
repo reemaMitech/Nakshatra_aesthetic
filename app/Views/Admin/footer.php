@@ -186,41 +186,39 @@
     </div>
 
     <!-- Library Bundle Script -->
-    <script src="public/assets/js/core/libs.min.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/core/libs.min.js"></script>
     
     <!-- External Library Bundle Script -->
-    <script src="public/assets/js/core/external.min.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/core/external.min.js"></script>
     
     <!-- Widgetchart Script -->
-    <script src="public/assets/js/charts/widgetcharts.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/charts/widgetcharts.js"></script>
     
     <!-- mapchart Script -->
-    <script src="public/assets/js/charts/vectore-chart.js"></script>
-    <script src="public/assets/js/charts/dashboard.js" ></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/charts/vectore-chart.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/charts/dashboard.js" ></script>
     
     <!-- fslightbox Script -->
-    <script src="public/assets/js/plugins/fslightbox.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/fslightbox.js"></script>
     
     <!-- Settings Script -->
-    <script src="public/assets/js/plugins/setting.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/setting.js"></script>
     
     <!-- Slider-tab Script -->
-    <script src="public/assets/js/plugins/slider-tabs.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/slider-tabs.js"></script>
     
     <!-- Form Wizard Script -->
-    <script src="public/assets/js/plugins/form-wizard.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/form-wizard.js"></script>
     
     <!-- AOS Animation Plugin-->
-    <script src="public/assets/vendor/aos/dist/aos.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/vendor/aos/dist/aos.js"></script>
     
     <!-- App Script -->
-    <script src="public/assets/js/hope-ui.js" defer></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/hope-ui.js" defer></script>
 
     <script>
 
 $("#country_id").change(function() {
-
-
 
     $.ajax({
 

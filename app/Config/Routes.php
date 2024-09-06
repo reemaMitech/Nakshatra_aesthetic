@@ -14,10 +14,14 @@ $routes->post('take_order', 'Home::take_order');
 
 
 $routes->get('product_enquiry', 'Home::product_enquiry');
+// $routes->post('product_enquiry', 'Home::product_enquiry');
 $routes->post('product_enquiry_details', 'Home::product_enquiry_details');
+$routes->get('edit_enquiry/(:any)', 'Home::product_enquiry/$1');
 $routes->post('get_state_name_location','Home::get_state_name_location');
-
 $routes->post('get_city_name_location','Home::get_city_name_location');
+$routes->post('increment_follow_up_count', 'Home::increment_follow_up_count');
+
+
 
 $routes->post('login', 'Home::login');
 $routes->get('logout', 'Home::logout');
@@ -37,5 +41,8 @@ $routes->get('add_invoice', 'Home::add_invoice');
 
 $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
+
+$routes->get('delete/(:any)/(:any)', 'Home::delete/$1/$1');
+
 
 
