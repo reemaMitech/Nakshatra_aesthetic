@@ -170,53 +170,67 @@ public function product_enquiry()
     if (!$session->has('id')) {
         return redirect()->to('/');
     }
-    $model = new AdminModel();
-    $wherecond = array('Is_active' => 'Y');
-    $data['product'] = $model->getalldata('tbl_product', $wherecond);
 
-    $data['country'] = $model->get_country_name();
+    $uri = service('uri');
+        $localbrand_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+        // echo'<pre>';print_r($localbrand_id);exit();
+        $model = new AdminModel();
+        $wherecond = array('Is_active' => 'Y');
+        $data['product'] = $model->getalldata('tbl_product', $wherecond);
 
-    $data['states'] = $model->get_states_name();
+        $data['country'] = $model->get_country_name();
 
-    $data['citys'] = $model->get_citys_name();
+        $data['states'] = $model->get_states_name();
 
-    // print_r($data['product']);die;
+        $data['citys'] = $model->get_citys_name();
+
+        // $session_id = $result->get('id');
+
+        // $id = $this->request->uri->getSegments(1);
+
+        
+        // echo'<pre>';print_r($data['enquiry_data']);die;
+
+        if(!empty($localbrand_id)){
+
+            $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+
+            $data['single_data'] = $model->get_single_data('tbl_product_enquiry', $wherecond1);
+            // print_r($data['single_data']);die;
+
+        }else{
+            $select = 'tbl_product_enquiry.*, tbl_product.product_name';
+            $joinCond = 'tbl_product_enquiry.prod_id  = tbl_product.id';
+            $wherecond = [
+                'tbl_product_enquiry.is_deleted' => 'N',
+                'tbl_product.is_deleted'=>'N'
+            ];
+            $data['enquiry_data'] = $model->jointwotables($select, 'tbl_product_enquiry', 'tbl_product',  $joinCond,  $wherecond, 'DESC');
+        }
+  
     return  view('Admin/product_enquiry',$data);
 }
-public function get_state_name_location(){
 
+public function get_state_name_location()
+{
     $model = new AdminModel();
-
     $country_id = $this->request->getVar('country_id');
-
-    // echo "hiii";
-
-    // echo $country_id; exit();
-
-
-
     $model->get_state_name_location($country_id);
-
 }
 
 
 
-public function get_city_name_location(){
-
+public function get_city_name_location()
+{
     $model = new AdminModel();
-
     $state_id = $this->request->getVar('state_id');
-
     $model->get_city_name_location($state_id);
-
 }
 
 public function product_enquiry_details(){
-    print_r($_POST);die;
+    // print_r($_POST);die;
     $db = \Config\Database::connect();
     $enquiry_date = $this->request->getPost('enquiry_date');
-    // $companyName = $this->request->getPost('companyName');
-    // $GSTIN = $this->request->getPost('GSTIN');
     $custname = $this->request->getPost('custname');
     $mobile_number = $this->request->getPost('mobile_number');
     $Country = $this->request->getPost('Country');
@@ -227,15 +241,10 @@ public function product_enquiry_details(){
     $prod_desc = $this->request->getPost('prod_desc');
     $pincode = $this->request->getPost('pincode');
     $detailAddress = $this->request->getPost('detailAddress');
-    // $POCmobileNo = $this->request->getPost('POCmobileNo');
-    // $attachmentFile = $this->request->getFile('attachment');
-
-       
+  
         $data = [
             'enquiry_date' => $enquiry_date,
             'cust_name' => $custname,
-            // 'CompanyName' => $companyName,
-            // 'GSTIN' => $GSTIN,
             'mob_no' => $mobile_number,
             'country' => $Country,
             'state' => $State,
@@ -245,8 +254,6 @@ public function product_enquiry_details(){
             'product_details' => $prod_desc,
             'pincode' => $pincode,
             'cust_addr' => $detailAddress,
-            // 'POC_email' => $POCemail,
-            // 'POC_mobile_no' => $POCmobileNo
         ];
 
         // Instantiate your model
@@ -262,7 +269,6 @@ public function product_enquiry_details(){
             $update_data->update($data);
             session()->setFlashdata('success', 'Enquiry updated successfully.');
         }
-    
     
     return redirect()->to('product_enquiry');
 }
@@ -467,8 +473,64 @@ public function add_invoice()
     // echo "hiii";
     // echo "<pre>";print_r($data['product_data']);exit();
    return view('Admin/add_invoice',$data);
-
 }
+
+public function delete()
+{
+    // Get URI segments
+    $uri_data = $this->request->getUri()->getSegments();
+
+    // Decode the ID and get the table name from the URI segments
+    $id = base64_decode($uri_data[1]);  // Assuming the ID is the second segment
+    $table = $uri_data[2];  // Assuming the table name is the third segment
+
+    // Update the database row with is_deleted = 'Y'
+    $data = ['is_deleted' => 'Y'];
+    $db = \Config\Database::connect();
+    $update_data = $db->table($table)->where('id', $id);
+    $update_data->update($data);
+
+    // Set a flash message and redirect back
+    session()->setFlashdata('success', 'Data deleted successfully.');
+    return redirect()->back();
+}
+
+public function increment_follow_up_count()
+{
+    $id = $this->request->getPost('id');  // Get enquiry ID from the POST request
+
+    if ($id) {
+        $db = \Config\Database::connect();
+        $builder = $db->table('tbl_product_enquiry');
+
+        // Use IFNULL to treat null values as 0 before incrementing
+        $builder->set('follow_up_count', 'IFNULL(follow_up_count, 0) + 1', FALSE);
+        $builder->where('id', $id);
+        $builder->update();
+
+        // Fetch the updated follow_up_count value
+        $query = $builder->select('follow_up_count')->where('id', $id)->get();
+        $result = $query->getRow();
+
+        if ($result) {
+            return $this->response->setJSON([
+                'success' => true,
+                'follow_up_count' => $result->follow_up_count
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Could not retrieve updated follow-up count.'
+            ]);
+        }
+    } else {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Invalid ID'
+        ]);
+    }
+}
+
 public function set_invoice()
 {
     // Get the current month and year
@@ -686,6 +748,7 @@ public function delete_compan()
 
 
 }
+
 
 
 

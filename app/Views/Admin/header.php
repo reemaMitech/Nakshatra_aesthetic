@@ -7,6 +7,67 @@
     <title>Nakshatra Aesthetic Beauty Product</title>
 
     <!-- Favicon -->
+
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>public/assets/images/favicon.ico" />
+
+    <!-- Library / Plugin Css Build -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/core/libs.min.css" />
+
+    <!-- Aos Animation Css -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/vendor/aos/dist/aos.css" />
+
+    <!-- Hope Ui Design System Css -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/hope-ui.min.css?v=2.0.0" />
+
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/custom.min.css?v=2.0.0" />
+
+    <!-- Dark Css -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/dark.min.css" />
+
+    <!-- Customizer Css -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/customizer.min.css" />
+
+    <!-- RTL Css -->
+    <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/rtl.min.css" />
+    <!-- Font awesome Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    /* Ensure the table and buttons are displayed consistently */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.table thead th {
+    font-weight: bold;
+}
+
+.follow-up-btn {
+    width: 100%;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.me-2 {
+    margin-right: 10px;
+}
+
+.table-responsive {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+</style>
+
     <link rel="shortcut icon" href="<?=base_url(); ?>public/assets/images/favicon.ico" />
 
     <!-- Library / Plugin Css Build -->
@@ -32,6 +93,7 @@
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/commanstylefile.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 
 
 
