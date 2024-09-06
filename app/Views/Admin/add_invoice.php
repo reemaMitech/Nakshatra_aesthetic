@@ -14,44 +14,46 @@
                         <form class="row g-3" id="invoice_form" action="<?= base_url('set_invoice'); ?>" method="post" enctype="multipart/form-data" novalidate>
 
 
-                            <input type="hidden" id="invoice_id " name="id" value="">
+                            <input type="hidden" id="invoice_id " name="id" value="<?php if(!empty($single_data)){ echo $single_data->id; } ?>">
 
 
 
                             <div class="col-md-3 position-relative">
                             <label for="branch_id" class="form-label">Branch</label>
+                            
+
                             <select class="form-select" id="branch_id" name="branch_id" required>
-                                <option selected disabled value="">Select Branch </option>
-                                <option value="Pune">Pune</option>
-                                <option value="Mumbai">Mumbai</option>
-                                <option value="Nashik">Nashik</option>
-                                <option value="Delhi">Delhi</option>
-                                <option value="Other">Other</option>
+                                <option disabled value="">Select Branch</option>
+                                <option value="Pune" <?php if((!empty($single_data)) && $single_data->branch_id == 'Pune'){ echo'selected';} ?>>Pune</option>
+                                <option value="Mumbai" <?php if((!empty($single_data)) && $single_data->branch_id == 'Mumbai'){ echo'selected';} ?>>Mumbai</option>
+                                <option value="Nashik" <?php if((!empty($single_data)) && $single_data->branch_id == 'Nashik'){ echo'selected';} ?>>Nashik</option>
+                                <option value="Delhi" <?php if((!empty($single_data)) && $single_data->branch_id == 'Delhi'){ echo'selected';} ?>>Delhi</option>
+                                <option value="Other" <?php if((!empty($single_data)) && $single_data->branch_id == 'Other'){ echo'selected';} ?>>Other</option>
                             </select>
                             
                             </div>
 
                             <div class="col-md-3 position-relative">
                                 <label for="invoice_date" class="form-label"> Date</label>
-                                <input type="text" name="invoice_date" id="invoice_date" value="" class="form-control date_flatpicker" >
+                                <input type="text" name="invoice_date" id="invoice_date" value="<?php if(!empty($single_data)){ echo $single_data->invoice_date; } ?>" class="form-control date_flatpicker" >
                                 
                             </div>
 
                             
                             <div class="col-md-3">
                                 <label for="customer_name" class="form-label"> Customer Name</label>
-                                <input type="text" class="form-control" id="customer_name" name="customer_name" required>
+                                <input type="text" class="form-control" id="customer_name" name="customer_name" value="<?php if(!empty($single_data)){ echo $single_data->customer_name; } ?>" required>
                             
                             </div>
 
                             <div class="col-md-3">
                                 <label for="contact_no" class="form-label"> Contact No.</label>
-                                <input type="text" class="form-control" id="contact_no" name="contact_no" required>
+                                <input type="text" class="form-control" id="contact_no" name="contact_no" value="<?php if(!empty($single_data)){ echo $single_data->contact_no; } ?>" required>
                             
                             </div>
                             <div class="col-md-6">
                                 <label for="delivery_address" class="form-label"> Delivery Address</label>
-                                <textarea class="form-control" id="delivery_address" name="delivery_address" rows="4" cols="30" required></textarea>
+                                <textarea class="form-control" id="delivery_address" name="delivery_address" rows="4" cols="30" required><?php if(!empty($single_data)){ echo $single_data->delivery_address; } ?></textarea>
                             
                             </div>
 
@@ -61,7 +63,7 @@
                                             <select name="tax_id" id="tax_id" class="form-control">
                                                 <option> Select Tax</option>
                                                 <?php foreach ($tax_data as $data): ?>
-                                                    <option value="<?= $data->id; ?>" <?php if (isset($single_data)) { echo ($single_data->tax_id == $data->id) ? 'selected="selected"' : ''; } ?>>
+                                                    <option value="<?= $data->id; ?>" <?php if (!empty($single_data)) { echo ($single_data->tax_id == $data->id) ? 'selected="selected"' : ''; } ?>>
                                                         <?= $data->tax; ?>
                                                     </option>
                                                 <?php endforeach; ?>
@@ -70,7 +72,7 @@
                                     </div>
 
                                     <div class="invoice-add-table col-lg-12 col-md-12 col-12">
-                                        <h4>Item Details   <a href="javascript:void(0);" class="add-btn me-2 add_more_iteam"><i class="fas fa-plus-circle"></i></a></h4>
+                                        <h4>Item Details   <a href="javascript:void(0);" class="add_more_iteam add-btn me-2 "><i class="fas fa-plus-circle"></i></a></h4>
                                                 <div>
                                                     <table class="table table-center add-table-items">
                                                         <thead>
@@ -136,7 +138,7 @@
                                                                         <?php foreach ($product_data as $sdata) { ?>
                                                                         <option value="<?= $sdata->id; ?>"
                                                                             <?= ($data->iteam === $sdata->id) ? "selected" : "" ?>>
-                                                                            <?= $sdata->product_data; ?>
+                                                                            <?= $sdata->product_name; ?>
                                                                         </option>
                                                                         <?php } ?>
                                                                         <?php } ?>
@@ -259,7 +261,7 @@
                                             <td><?php echo $i; ?></td>
                                             <td>
                                                 <a href="edit_invoice/<?=$data->id; ?>"><i class="far fa-edit me-2"></i></a>
-                                                <a href="<?=base_url(); ?>delete_compan/<?php echo base64_encode($data->id); ?>/tbl_invoice" onclick="return confirm('Are You Sure You Want To Delete This Record?')"><i class="far fa-trash-alt me-2"></i></a>
+                                                <a href="<?=base_url(); ?>delete_compan/<?php echo $data->id; ?>/tbl_invoice" onclick="return confirm('Are You Sure You Want To Delete This Record?')"><i class="far fa-trash-alt me-2"></i></a>
                                                 <a href="invoice/<?=$data->id; ?>" target="_blank"><i class="far fa-eye me-2"> </i></a>
                                             </td>
                                             <td>
@@ -359,6 +361,7 @@ $(document).on("change", ".add-row input[type='text'], #cgst, #sgst, #igst, #tax
 
     // Update fields
     $("#totalamounttotal").val(total_amount.toFixed(2));
+    // console.log(final_total);
     $("#final_total").val(final_total.toFixed(2));
 
     // Convert total amount to words (assuming numberToWords library is included)
@@ -372,8 +375,9 @@ $(document).on("change", ".add-row input[type='text'], #cgst, #sgst, #igst, #tax
     $(".preview_totalAmountWithtax").text(total_amount.toFixed(2));
 });
 
+
 $(document).ready(function() {
-    $('.add-row input[type="text"], #cgst, #sgst, #tax,').change();
+    $('.add-row input[type="text"], #cgst, #sgst, #tax').change();
 });
 
 
@@ -390,181 +394,158 @@ $(document).ready(function() {
         // handleTaxChange();
         
     });
-
     function calculateAndStoreTotals() {
-        var totalQuantity = 0;
-        var totalPrice = 0;
-        var totalAmount = 0;
+    var totalQuantity = 0;
+    var totalPrice = 0;
+    var totalAmount = 0;
+    var totalDiscount = 0;
+    var totalTaxValue = 0;
+    var totalCGSTValue = 0;
+    var totalSGSTValue = 0;
+    var totalIGST = 0;
+    var totalAmountTotal = 0;
+
+    var cgst_data = parseFloat($("input[name='cgst']").val()) || 0;
+    var sgst_data = parseFloat($("input[name='sgst']").val()) || 0;
+    var igst_data = parseFloat($("input[name='igst']").val()) || 0;
+
+    $(".add-row").each(function () {
+        var row = $(this);
+
+        // Parse all input values and default to 0 if NaN
+        var quantity = parseFloat(row.find("input[name='quantity[]']").val()) || 0;
+        var price = parseFloat(row.find("input[name='price[]']").val()) || 0;
+        var amount = parseFloat(row.find("input[name='amount_p[]']").val()) || 0;
+        var discount = parseFloat(row.find("input[name='discount[]']").val()) || 0;
+        var total_amount = parseFloat(row.find("input[name='total_amount[]']").val()) || 0;
+        var total_tax = parseFloat(row.find("input[name='tax[]']").val()) || 0;
+        var total_tax_value = parseFloat(row.find("input[name='tax_value[]']").val()) || 0;
+        var total_cgst_value = parseFloat(row.find("input[name='cgst_value[]']").val()) || 0;
+        var total_sgst_value = parseFloat(row.find("input[name='sgst_value[]']").val()) || 0;
+
+        // Accumulate totals
+        totalQuantity += quantity;
+        totalPrice += price;
+        totalAmount += amount;
+        totalDiscount += discount;
+        totalAmountTotal += total_amount;
+        totalTaxValue += total_tax_value;
+        totalCGSTValue += total_cgst_value;
+        totalSGSTValue += total_sgst_value;
+    });
+
+    // Calculate CGST, SGST, and IGST values based on the total amount
+    var cgst_value = totalAmountTotal * (cgst_data / 100);
+    var sgst_value = totalAmountTotal * (sgst_data / 100);
+    var igst_value = totalAmountTotal * (igst_data / 100);
+
+    // Calculate the final total
+    var finalTotal = totalAmountTotal + cgst_value + sgst_value + igst_value;
+
+    // Store calculated values in input fields
+    $("input[name='totalQuantity']").val(totalQuantity.toFixed(2));
+    $("input[name='total_price']").val(totalPrice.toFixed(2));
+    $("input[name='totalamount']").val(totalAmount.toFixed(2));
+    $("input[name='total_discount']").val(totalDiscount.toFixed(2));
+    $("input[name='totalamounttotal']").val(totalAmountTotal.toFixed(2));
+    $("input[name='final_total']").val(finalTotal.toFixed(2));
+    $("input[name='total_tax_value']").val(totalTaxValue.toFixed(2));
+
+    // Update text fields for displaying totals
+    $(".sub_total").text(totalAmount.toFixed(2));
+    $(".total_d").text(totalDiscount.toFixed(2));
+
+    if (totalCGSTValue !== 0 || totalSGSTValue !== 0) {
+        $(".cgst2").text(totalCGSTValue.toFixed(2));
+        $(".sgst2").text(totalSGSTValue.toFixed(2));
+        $("#cgst2").val(totalCGSTValue.toFixed(2));
+        $("#sgst2").val(totalSGSTValue.toFixed(2));
+        $('.tax2').hide();
+    } else {
+        $(".tax2").text(totalTaxValue.toFixed(2));
+        $("#tax2").val(totalTaxValue.toFixed(2));
+        $('.tax2').show();
+    }
+
+    $("#preview_total_discount").text(totalDiscount.toFixed(2));
+}
+
+
+
+$(document).ready(function () {
+    var max_fields = 5000; // Maximum number of fields allowed
+    var x = 1; // Initial count
+
+    // Hide tax columns initially
+    $('.add_more_iteam').click(function (e) {
+        e.preventDefault();
+        $('.tax_column, .tax_column1, .tax_column2').hide();
+
+        // Check if "Bill Without Tax" is checked
+        var isBillWithoutTaxChecked = $("input[name='bill'][value='Bill Without Tax']").is(":checked");
+
+        if (x < max_fields) {
+            x++;
+            // Append new row to the table
+            $('.dynamic_iteam').append('<tr class="now add-row"><td><select class="form-control" name="iteam[]" id="iteam_' + x + '" required><option value="">Select Product</option><?php if (!empty($product_data)) { ?><?php foreach ($product_data as $data) { ?><option value="<?= $data->id; ?>"><?= $data->product_name; ?></option><?php } ?><?php } ?></select></td><td><input type="text" name="description[]" id="description" class="dynamic-items form-control"></td><td><input type="text" name="quantity[]" class="dynamic-quantity form-control"></td><td><input type="text" name="price[]" class="dynamic-price form-control"></td><td><input type="text" name="total_amount[]" class="dynamic-total_amount form-control" readonly></td><td class="add-remove text-end"><a href="javascript:void(0);" class="remove-btn btn_remove"><i class="fas fa-trash"></i></a></td></tr>');
+
+            // Event handler for removing a row
+            $('.btn_remove').on('click', function () {
+                $(this).closest('.now').remove();
+                calculateAndStoreTotals();
+            });
+
+            calculateAndStoreTotals();
+        }
+    });
+
+    // Function to calculate and store totals
+    function calculateAndStoreTotals() {
+        var total_amount = 0;
         var totalDiscount = 0;
-        var totaltaxvalue = 0;
-        var totalcgstvalue = 0;
-        var totalsgstvalue = 0;
+        var totalTaxValue = 0;
+        var totalCGSTValue = 0;
+        var totalSGSTValue = 0;
 
-        var totalTax = 0;
-        var totalSGST = 0;
-        var totalCGST = 0;
-
-        var totalTax = 0;
-        var totalamounttotal = 0;
-
+        var cgst_data = parseFloat($("#cgst").val()) || 0;
+        var sgst_data = parseFloat($("#sgst").val()) || 0;
+        var tax_data = parseFloat($("input[name='tax[]']").val()) || 0;
 
         $(".add-row").each(function () {
             var row = $(this);
             var quantity = parseFloat(row.find("input[name='quantity[]']").val()) || 0;
             var price = parseFloat(row.find("input[name='price[]']").val()) || 0;
-            var amount = parseFloat(row.find("input[name='amount_p[]']").val()) || 0;
-            var discount = parseFloat(row.find("input[name='discount[]']").val()) || 0;
-            var total_amount = parseFloat(row.find("input[name='total_amount[]']").val()) || 0;
-            var total_tax = parseFloat(row.find("input[name='tax[]']").val()) || 0;
-            var total_tax_value = parseFloat(row.find("input[name='tax_value[]']").val()) || 0;
-            var total_cgst_value = parseFloat(row.find("input[name='cgst_value[]']").val()) || 0;
+            var amount = quantity * price;
 
-            var total_sgst_value = parseFloat(row.find("input[name='sgst_value[]']").val()) || 0;
+            row.find("input[name='total_amount[]']").val(amount.toFixed(2));
 
-
-            var total_sgst = parseFloat(row.find("input[name='sgst[]']").val()) || 0;
-            var total_cgst = parseFloat(row.find("input[name='cgst[]']").val()) || 0;
-          
-
-
-            totalQuantity += quantity;
-            totalPrice += price;
-            totalAmount += amount;
-            totalDiscount += discount;
-            totalamounttotal += total_amount;
-
-            totaltaxvalue += total_tax_value;
-            totalcgstvalue += total_cgst_value;
-            totalsgstvalue += total_sgst_value;
-
-
-            totalTax += total_tax;
-            totalSGST += total_sgst;
-            totalCGST += total_cgst;
+            total_amount += amount;
         });
 
-        $("input[name='totalQuantity']").val(totalQuantity.toFixed(2));
-        $("input[name='total_price']").val(totalPrice.toFixed(2));
-        $("input[name='totalamount']").val(totalAmount.toFixed(2));
-        $("input[name='total_discount']").val(totalDiscount.toFixed(2));
-        $("input[name='totalamounttotal']").val((totalamounttotal).toFixed(2));
-        $("input[name='final_total']").val((totalamounttotal).toFixed(2));
+        var tax_value = total_amount * (tax_data / 100);
+        var cgst_value = total_amount * (cgst_data / 100);
+        var sgst_value = total_amount * (sgst_data / 100);
 
-        $("input[name='total_tax_value']").val(totaltaxvalue.toFixed(2));
+        var final_total = total_amount + cgst_value + sgst_value;
 
-        $("input[name='total_tax']").val(totalTax.toFixed(2));
-        $("input[name='total_sgst']").val(totalSGST.toFixed(2));
-        $("input[name='total_cgst']").val((totalCGST).toFixed(2));
-        $(".sub_total").text((totalAmount).toFixed(2));
-        $(".total_d").text((totalDiscount).toFixed(2));
+        // Update the values in the UI
+        $("#final_total").val(final_total.toFixed(2));
+        $("#totalamounttotal").val(total_amount.toFixed(2));
+        $(".preview_sgst2").text(sgst_value.toFixed(2));
+        $(".preview_cgst2").text(cgst_value.toFixed(2));
+        $(".preview_igst2").text(0); // Assuming IGST is not part of this calculation
+        $(".preview_totalAmountWithtax").text(total_amount.toFixed(2));
 
-       
-      
+        var totalAmountTotalWords = numberToWords.toWords(final_total);
+        $("input[name='totalamount_in_words']").val(totalAmountTotalWords);
 
-        if (totalcgstvalue !== 0 || totalsgstvalue !== 0) {
-                $(".cgst2").text((totalcgstvalue).toFixed(2));
-                $(".sgst2").text((totalsgstvalue).toFixed(2));
-            
-                $("#cgst2").val((totalcgstvalue).toFixed(2));
-                $("#sgst2").val((totalsgstvalue).toFixed(2));
-                $('.tax2').hide();
-            }else {
-            
-
-                $(".tax2").text((totaltaxvalue).toFixed(2));
-                        $("#tax2").val((totaltaxvalue).toFixed(2));
-                        $('.tax2').show();
-            }
-
-
-
-   
-
-     
-
-
-        $("#preview_total_discount").text((totalDiscount).toFixed(2));
-
-
-        
-
-
-        // var totalAmountTotalWords = numberToWords.toWords(totalamounttotal);
-        // $("input[name='totalamount_in_words']").val(totalAmountTotalWords);
-
-  
+        $(".totalAmountWithtax").text(total_amount.toFixed(2));
     }
 
-
-
-    $('.add_more_iteam').click(function(e) {
-        $('.tax_column, .tax_column1, .tax_column2').hide();
-    e.preventDefault();
-    var max_fields = 5000;
-    var x = 1;
-
-    		var isBillWithoutTaxChecked = $("input[name='bill'][value='Bill Without Tax']").is(":checked");
-    if (x < max_fields) {
-        x++;
-        $('.dynamic_iteam').append('<tr class="now add-row "><td><select class="form-control" name="iteam[]" id="iteam_'+ x +'" required><option value="">Select Product</option><?php if (!empty($product_data)) { ?><?php foreach ($product_data as $data) { ?><option value="<?= $data->id; ?>"><?= $data->product_name; ?></option><?php } ?><?php } ?></select></td><td><input type="text" name="description[]" id="description" class="dynamic-items form-control"></td><td><input type="text" name="quantity[]" class="dynamic-quantity form-control"></td><td><input type="text" name="price[]" class="dynamic-price form-control"></td><td><input type="text" name="total_amount[]"  class="dynamic-total_amount form-control" readonly ></td><td class="add-remove text-end"> <a href="javascript:void(0);" class="remove-btn btn_remove"><i class="fas fa-trash"></i></a></td></tr>');
-        
-     
-
-
-        $('.btn_remove').on('click', function() {
-            $(this).closest('.now').remove();
-
-            var row = $(this).closest(".add-row");
-    var discount = 0;
-    var tax_data = 0;
-    var cgst_data = parseFloat($("#cgst").val()) || 0;
-    var sgst_data = parseFloat($("#sgst").val()) || 0;
-    var totalAmountWithtax = 0;
-    var quantity = parseFloat(row.find("input[name='quantity[]']").val()) || 0;
-    var price = parseFloat(row.find("input[name='price[]']").val()) || 0;
-    discount = parseFloat(row.find("input[name='discount[]']").val()) || 0;
-    tax_data = parseFloat(row.find("input[name='tax[]']").val()) || 0;
-
-    var amount = quantity * price;
-
-
-
-    row.find("input[name='total_amount[]']").val(amount.toFixed(2));
-
-    var total_amount = 0;
-    $(".add-row").each(function() {
-        var totalAmount = parseFloat($(this).find("input[name='total_amount[]']").val()) || 0;
-        total_amount += totalAmount;
-    });
-
-    $(".totalAmountWithtax").text(total_amount.toFixed(2));
-
-    var tax_value1 = total_amount * (tax_data / 100);
-    var cgst_value1 = total_amount * (cgst_data / 100);
-    var sgst_value1 = total_amount * (sgst_data / 100);
-
-    $("#final_total").val(total_amount.toFixed(2));
-
-    // Calculate final total by adding CGST, SGST, and total amount
-    var final_total = total_amount + cgst_value1 + sgst_value1;
-
-    $("#totalamounttotal").val(total_amount.toFixed(2));
-
-    $("#final_total").val(final_total.toFixed(2));
-
-
-    var totalAmountTotalWords = numberToWords.toWords(final_total);
-    $("input[name='totalamount_in_words']").val(totalAmountTotalWords);
-
-    $(".preview_sgst2").text(sgst_value.toFixed(2));
-    $(".preview_cgst2").text(cgst_value.toFixed(2));
-    $(".preview_igst2").text(0); // Assuming IGST is not part of this calculation
-    $(".preview_totalAmountWithtax").text(total_amount.toFixed(2));
-            calculateAndStoreTotals();
-        });
-    }
-
+    // Initial calculation to set default values
+    calculateAndStoreTotals();
 });
+
 $('.btn_remove').on('click', function() {
     $(this).closest('.now').remove();
 
@@ -620,80 +601,48 @@ $('.btn_remove').on('click', function() {
 });
 
 	});
-    $(document).ready(function() {
-    // Define the change event handler for #client_id
-    $("#client_id").change(function() {
-        $.ajax({
-            type: "post",
-            url: "<?=base_url();?>get_po_details",
-            data: {
-                'client_id': $("#client_id").val()
-            },
-            success: function(data) {
-                console.log(data);
-                $('#po_no').empty();
-                $('#po_no').append('<option value="">Choose ...</option>');
-                var opts = $.parseJSON(data);
-                $.each(opts, function(i, d) {
-                    $('#po_no').append('<option value="' + d.id + '">' + d.doc_no + '</option>');
-                });
-                $('#po_no').trigger("chosen:updated");
-
-                // If there is an existing selected PO number, set it
-                <?php if(!empty($single_data)) { ?>
-                    $('#po_no').val("<?= $single_data->po_no; ?>");
-                <?php } ?>
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-            }
-        });
-    });
-
-    // Check if #client_id has a value and trigger the change event if it does
-    if ($("#client_id").val()) {
-        $("#client_id").trigger('change');
-    } else {
-        // If client_id is not set, set the PO number directly from the server-rendered options
-        <?php if(!empty($single_data)) { ?>
-            $('#po_no').val("<?= $single_data->po_no; ?>");
-        <?php } ?>
-    }
-});
+ 
 
 
 </script>
 
 <script>
 $(document).ready(function(){
-    $('#tax_id').change(function(){
-        var selectedTaxId = $(this).val();
+    function updateTaxFields() {
+        var selectedTaxId = $('#tax_id').val();
         
+        // Hide all fields initially
+        $('.cgst').hide();
+        $('.sgst').hide();
+        $('.igst').hide();
+
+        // Get the current values of the fields
+        var cgstValue = $('#cgst').val();
+        var sgstValue = $('#sgst').val();
+        var igstValue = $('#igst').val();
+
+        // Show and set values based on the selected tax_id
         if (selectedTaxId == '1') {
             $('.cgst').show();
             $('.sgst').show();
-            $('.igst').hide();
-            $('#cgst').val('0');
-            $('#sgst').val('0');
+            // Only set to zero if no value is present
+            $('#cgst').val(cgstValue || '0');
+            $('#sgst').val(sgstValue || '0');
         } else if (selectedTaxId == '2') {
-            $('.cgst').hide();
-            $('.sgst').hide();
             $('.igst').show();
-            $('#igst').val('0');
-        } else {
-            $('.cgst').hide();
-            $('.sgst').hide();
-            $('.igst').hide();
-            $('#cgst').val('');
-            $('#sgst').val('');
-            $('#igst').val('');
+            // Only set to zero if no value is present
+            $('#igst').val(igstValue || '0');
         }
-    });
-    
-    // Trigger change event on page load to set the initial state
-    $('#tax_id').trigger('change');
+    }
+
+    // Call the function when the page loads and on change
+    updateTaxFields();
+    $('#tax_id').change(updateTaxFields);
 });
 </script>
+
+
+
 
 <script>
 // Function to format the date as yyyy-mm-dd
@@ -704,8 +653,13 @@ function formatDate(date) {
     return `${year}-${month}-${day}`;
 }
 
-// Set the current date as the value of the input field
-document.getElementById('invoice_date').value = formatDate(new Date());
+// Set the current date as the value of the input field only if it's not already set
+document.addEventListener('DOMContentLoaded', function () {
+    const invoiceDateInput = document.getElementById('invoice_date');
+    if (!invoiceDateInput.value) { // Check if the input is empty
+        invoiceDateInput.value = formatDate(new Date());
+    }
+});
 </script>
 
 <script>

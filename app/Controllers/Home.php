@@ -395,7 +395,6 @@ public function add_branches()
 
 public function add_invoice()
 {
-   
     $session = \Config\Services::session();
     if (!$session->has('id')) {
         return redirect()->to('/');
@@ -410,14 +409,21 @@ public function add_invoice()
     $wherecond = array('is_deleted' => 'N');
     $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
 
-    // $wherecond1 = array('is_deleted' => 'N', 'id' => $id[1]);
+    $id = request()->getUri()->getSegment(2); // Adjust the segment number based on your route
+    $data['single_data'] = [];
 
-    // $data['single_data'] = $model->get_single_data('tbl_invoice', $wherecond1);
+    if (!empty($id)) {
+        // Fetching single data using the ID
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
+        $data['single_data'] = $model->getsingleuser('tbl_invoice', $wherecond1);
 
 
-    
+        $wherecond1 = array('is_deleted' => 'N', 'invoice_id' => $id);
 
-  
+        $data['iteam'] = $model->getalldata('tbl_iteam', $wherecond1);
+    }
+    // echo "hiii";
+    // echo "<pre>";print_r($data['product_data']);exit();
    return view('Admin/add_invoice',$data);
 
 }
@@ -561,5 +567,25 @@ public function set_invoice()
 
     return redirect()->to('add_invoice');
 }
+
+public function delete_compan()
+{
+    $session = \Config\Services::session();
+
+    $id = request()->getUri()->getSegment(2);
+    $table = request()->getUri()->getSegment(3);
+
+    $data = ['is_deleted' => 'Y'];
+    $db = \Config\Database::connect();
+
+    $update_data = $db->table($table)->where('id', $id);
+    $update_data->update($data);
+    session()->setFlashdata('success', 'Data deleted successfully.');
+    return redirect()->back();
+
+}
+
+
+
 }
 
