@@ -83,13 +83,13 @@
             <h5 class="mb-3 mt-4">Scheme Direction</h5>
             <div class="d-grid gap-3 grid-cols-2 mb-4">
               <div class="text-center">
-                <img src="public/assets/images/settings/dark/01.png" alt="ltr" class="mode dark-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="dir-mode" data-name="dir" data-value="ltr">
-                <img src="public/assets/images/settings/light/01.png" alt="ltr" class="mode light-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="dir-mode" data-name="dir" data-value="ltr">
+                <img src="<?=base_url(); ?>public/assets/images/settings/dark/01.png" alt="ltr" class="mode dark-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="dir-mode" data-name="dir" data-value="ltr">
+                <img src="<?=base_url(); ?>public/assets/images/settings/light/01.png" alt="ltr" class="mode light-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="dir-mode" data-name="dir" data-value="ltr">
                 <span class=" mt-2"> LTR </span>
               </div>
                <div class="text-center">
-                 <img src="public/assets/images/settings/dark/02.png" alt="" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="dir-mode" data-name="dir" data-value="rtl">
-                  <img src="public/assets/images/settings/light/02.png" alt="" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="dir-mode" data-name="dir" data-value="rtl">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/dark/02.png" alt="" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="dir-mode" data-name="dir" data-value="rtl">
+                  <img src="<?=base_url(); ?>public/assets/images/settings/light/02.png" alt="" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="dir-mode" data-name="dir" data-value="rtl">
                   <span class="mt-2 "> RTL  </span>
               </div>
             </div>
@@ -114,18 +114,18 @@
             <h5 class="mt-4 mb-3">Sidebar Types</h5>
             <div class="d-grid gap-3 grid-cols-3 mb-4">
               <div class="text-center">
-                <img src="public/assets/images/settings/dark/03.png" alt="mini" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-mini">
-                <img src="public/assets/images/settings/light/03.png" alt="mini" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-mini">
+                <img src="<?=base_url(); ?>public/assets/images/settings/dark/03.png" alt="mini" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-mini">
+                <img src="<?=base_url(); ?>public/assets/images/settings/light/03.png" alt="mini" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-mini">
                 <span class="mt-2">Mini</span>
               </div>
               <div class="text-center">
-               <img src="public/assets/images/settings/dark/04.png" alt="hover" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-hover" data-extra-value="sidebar-mini">
-               <img src="public/assets/images/settings/light/04.png" alt="hover" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-hover" data-extra-value="sidebar-mini">
+               <img src="<?=base_url(); ?>public/assets/images/settings/dark/04.png" alt="hover" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-hover" data-extra-value="sidebar-mini">
+               <img src="<?=base_url(); ?>public/assets/images/settings/light/04.png" alt="hover" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-hover" data-extra-value="sidebar-mini">
                 <span class="mt-2">Hover</span>
               </div>
               <div class="text-center">
-                 <img src="public/assets/images/settings/dark/05.png" alt="boxed" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-boxed">
-                 <img src="public/assets/images/settings/light/05.png" alt="boxed" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-boxed">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/dark/05.png" alt="boxed" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-boxed">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/light/05.png" alt="boxed" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-type" data-value="sidebar-boxed">
                 <span class="mt-2">Boxed</span>
               </div>
             </div>
@@ -133,23 +133,23 @@
             <h5 class="mt-4 mb-3">Sidebar Active Style</h5>
             <div class="d-grid gap-3 grid-cols-2 mb-4">
               <div class="text-center">
-                <img src="public/assets/images/settings/dark/06.png" alt="rounded-one-side" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded">
-                <img src="public/assets/images/settings/light/06.png" alt="rounded-one-side" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded">
+                <img src="<?=base_url(); ?>public/assets/images/settings/dark/06.png" alt="rounded-one-side" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded">
+                <img src="<?=base_url(); ?>public/assets/images/settings/light/06.png" alt="rounded-one-side" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded">
                 <span class="mt-2">Rounded One Side</span>
               </div>
               <div class="text-center">
-                <img src="public/assets/images/settings/dark/07.png" alt="rounded-all" class="mode dark-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded-all">
-                <img src="public/assets/images/settings/light/07.png" alt="rounded-all" class="mode light-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded-all">
+                <img src="<?=base_url(); ?>public/assets/images/settings/dark/07.png" alt="rounded-all" class="mode dark-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded-all">
+                <img src="<?=base_url(); ?>public/assets/images/settings/light/07.png" alt="rounded-all" class="mode light-img img-fluid btn-border p-0 flex-column active mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-rounded-all">
                 <span class="mt-2">Rounded All</span>
               </div>
               <div class="text-center">
-                 <img src="public/assets/images/settings/dark/08.png" alt="pill-one-side" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill">
-                 <img src="public/assets/images/settings/light/09.png" alt="pill-one-side" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/dark/08.png" alt="pill-one-side" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/light/09.png" alt="pill-one-side" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill">
                 <span class="mt-2">Pill One Side</span>
               </div>
               <div class="text-center">
-                 <img src="public/assets/images/settings/dark/09.png" alt="pill-all" class="mode dark-img img-fluid btn-border p-0 flex-column" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill-all">
-                 <img src="public/assets/images/settings/light/08.png" alt="pill-all" class="mode light-img img-fluid btn-border p-0 flex-column" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill-all">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/dark/09.png" alt="pill-all" class="mode dark-img img-fluid btn-border p-0 flex-column" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill-all">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/light/08.png" alt="pill-all" class="mode light-img img-fluid btn-border p-0 flex-column" data-setting="sidebar" data-name="sidebar-item" data-value="navs-pill-all">
                 <span class="mt-2">Pill All</span>
               </div>
             </div>
@@ -157,23 +157,23 @@
              <h5 class="mt-4 mb-3">Navbar Style</h5>
             <div class="d-grid gap-3 grid-cols-2 ">
               <div class=" text-center">
-                <img src="public/assets/images/settings/dark/11.png" alt="image" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="nav-glass">
-                <img src="public/assets/images/settings/light/10.png" alt="image" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="nav-glass">
+                <img src="<?=base_url(); ?>public/assets/images/settings/dark/11.png" alt="image" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="nav-glass">
+                <img src="<?=base_url(); ?>public/assets/images/settings/light/10.png" alt="image" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="nav-glass">
                 <span class="mt-2">Glass</span>
               </div>
               <div class="text-center">
-                 <img src="public/assets/images/settings/dark/10.png" alt="color" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar-header" data-name="navbar-type" data-value="navs-bg-color">
-                 <img src="public/assets/images/settings/light/11.png" alt="color" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar-header" data-name="navbar-type" data-value="navs-bg-color">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/dark/10.png" alt="color" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar-header" data-name="navbar-type" data-value="navs-bg-color">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/light/11.png" alt="color" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar-header" data-name="navbar-type" data-value="navs-bg-color">
                 <span class="mt-2">Color</span>
               </div>
               <div class=" text-center">
-                 <img src="public/assets/images/settings/dark/12.png" alt="sticky" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-sticky">
-                 <img src="public/assets/images/settings/light/12.png" alt="sticky" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-sticky">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/dark/12.png" alt="sticky" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-sticky">
+                 <img src="<?=base_url(); ?>public/assets/images/settings/light/12.png" alt="sticky" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-sticky">
                 <span class="mt-2">Sticky</span>
               </div>
               <div class="text-center">
-                  <img src="public/assets/images/settings/dark/13.png" alt="transparent" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-transparent">
-                  <img src="public/assets/images/settings/light/13.png" alt="transparent" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-transparent">
+                  <img src="<?=base_url(); ?>public/assets/images/settings/dark/13.png" alt="transparent" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-transparent">
+                  <img src="<?=base_url(); ?>public/assets/images/settings/light/13.png" alt="transparent" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="navbar" data-target=".iq-navbar" data-name="navbar-type" data-value="navs-transparent">
                 <span class="mt-2">Transparent</span>
               </div>
               <div class="btn btn-border active col-span-full mt-4 d-block" data-setting="navbar" data-name="navbar-default" data-value="default">
@@ -186,40 +186,40 @@
     </div>
 
     <!-- Library Bundle Script -->
-    <script src="public/assets/js/core/libs.min.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/core/libs.min.js"></script>
     
     <!-- External Library Bundle Script -->
-    <script src="public/assets/js/core/external.min.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/core/external.min.js"></script>
     
     <!-- Widgetchart Script -->
-    <script src="public/assets/js/charts/widgetcharts.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/charts/widgetcharts.js"></script>
     
     <!-- mapchart Script -->
-    <script src="public/assets/js/charts/vectore-chart.js"></script>
-    <script src="public/assets/js/charts/dashboard.js" ></script>
+    <script src="<?=base_url(); ?>public/assets/js/charts/vectore-chart.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/charts/dashboard.js" ></script>
     
     <!-- fslightbox Script -->
-    <script src="public/assets/js/plugins/fslightbox.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/plugins/fslightbox.js"></script>
     
     <!-- Settings Script -->
-    <script src="public/assets/js/plugins/setting.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/plugins/setting.js"></script>
     
     <!-- Slider-tab Script -->
-    <script src="public/assets/js/plugins/slider-tabs.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/plugins/slider-tabs.js"></script>
     
     <!-- Form Wizard Script -->
-    <script src="public/assets/js/plugins/form-wizard.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/plugins/form-wizard.js"></script>
     
     <!-- AOS Animation Plugin-->
-    <script src="public/assets/vendor/aos/dist/aos.js"></script>
+    <script src="<?=base_url(); ?>public/assets/vendor/aos/dist/aos.js"></script>
     
     <!-- App Script -->
-    <script src="public/assets/js/hope-ui.js" defer></script>
+    <script src="<?=base_url(); ?>public/assets/js/hope-ui.js" defer></script>
 
-    <script src="public/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="public/assets/js/plugins/flatpickr.js" defer></script>
+    <script src="<?=base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/plugins/flatpickr.js" defer></script>
 
-    <script src="public/assets/js/plugins/jquery.validate.min.js"></script>
+    <script src="<?=base_url(); ?>public/assets/js/plugins/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/number-to-words@1.2.4/numberToWords.min.js"></script>
 
     <script>
