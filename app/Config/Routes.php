@@ -43,6 +43,8 @@ $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
 $routes->post('set_invoice', 'Home::set_invoice');
 $routes->get('edit_invoice/(:any)', 'Home::add_invoice/$1');
+$routes->get('invoice/(:any)', 'Home::invoice/$1');
+
 
 $routes->get('delete_compan/(:any)/(:any)', 'Home::delete_compan/$1/$2');
 
