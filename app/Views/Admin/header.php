@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     /* Ensure the table and buttons are displayed consistently */
-.table {
+/* .table {
     width: 100%;
     margin-bottom: 1rem;
     color: #212529;
@@ -65,7 +65,7 @@
     display: block;
     overflow-x: auto;
     white-space: nowrap;
-}
+} */
 </style>
 
     <link rel="shortcut icon" href="<?=base_url(); ?>public/assets/images/favicon.ico" />
@@ -350,6 +350,23 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                                 </a>
                             </li>
                           <?php endif; ?>
+
+                          <?php  if (in_array('add_courierService', $menu_names)) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link " href="<?=base_url(); ?>add_courierService">
+                                    <i class="icon svg-icon">
+                                        <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                            viewBox="0 0 24 24" fill="currentColor">
+                                            <g>
+                                                <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                    <i class="sidenav-mini-icon"> D </i>
+                                    <span class="item-name">Add Courier Service</span>
+                                </a>
+                            </li>
+                            <?php  endif; ?>
                         </ul>
                     </li>
                     <li class="nav-item">

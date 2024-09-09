@@ -479,10 +479,12 @@ public function delete()
 {
     // Get URI segments
     $uri_data = $this->request->getUri()->getSegments();
+    // print_r($uri_data);die;
 
     // Decode the ID and get the table name from the URI segments
     $id = base64_decode($uri_data[1]);  // Assuming the ID is the second segment
     $table = $uri_data[2];  // Assuming the table name is the third segment
+    // print_r($id);die;
 
     // Update the database row with is_deleted = 'Y'
     $data = ['is_deleted' => 'Y'];
@@ -781,12 +783,77 @@ public function invoice()
         echo view('Admin/invoice');
 
 
-    } 
+    }
+}
+    
+    public function add_courierService()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+   
+
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+  
+    $model = new AdminModel();
+    if(!empty($localbrand_id)){
+        // echo'<pre>';print_r($localbrand_id);exit();
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+
+        $data['single_data'] = $model->get_single_data('tbl_courierservice', $wherecond1);
+        // print_r($data['single_data']);die;
+
+    }else{
+        $wherecond = array('is_deleted' => 'N');
+        $data['courier_data'] = $model->getalldata('tbl_courierservice', $wherecond);
+    }
+
+    // print_r($data);die;
+    return  view('Admin/add_courierService',$data);
+}
+
+public function set_courierService(){
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+
+    // print_r($_POST);die;
+    $db = \Config\Database::connect();
+  
+    $provider_name = $this->request->getPost('courier_service_provider');
+    $mobile_number = $this->request->getPost('mobile_number');
+    
+    $data = [
+        'provider_name' => $provider_name,
+        'mobile_number' => $mobile_number,
+    ];
+
+    // Instantiate your model
+    $model = new Adminmodel();
+
+    $db = \Config\Database::Connect();
+    if ($this->request->getVar('id') == "") {
+        $add_data = $db->table('tbl_courierservice');
+        $add_data->insert($data);
+        session()->setFlashdata('success', 'Provider added successfully.');
+    } else {
+        $update_data = $db->table('tbl_courierservice')->where('id', $this->request->getVar('id'));
+        $update_data->update($data);
+        session()->setFlashdata('success', 'Provider updated successfully.');
+    }
+
+return redirect()->to('add_courierService');
+}
 
 }
 
 
 
 
-}
+
 
