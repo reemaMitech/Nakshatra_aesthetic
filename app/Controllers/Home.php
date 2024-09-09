@@ -295,6 +295,13 @@ public function create_user()
     $data = [
         'username' => $this->request->getPost('username'),
         'password' => $this->request->getPost('password'),
+        'first_name' => $this->request->getPost('first_name'),
+        'middle_name' => $this->request->getPost('middle_name'),
+        'last_name' => $this->request->getPost('last_name'),
+        'mobile' => $this->request->getPost('mobile'),
+        'email' => $this->request->getPost('email'),
+        'designation' => $this->request->getPost('designation'),
+        'department' => $this->request->getPost('department'),
         'role' =>'Admin',
         'menu_names' => $menuNames, 
     ];

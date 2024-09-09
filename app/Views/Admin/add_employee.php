@@ -15,21 +15,93 @@
                         method="post" enctype="multipart/form-data" novalidate>
                         <input type="hidden" id="employee_id" name="id">
 
-                        <!-- New Field for Username -->
+                        <!-- Field for User ID -->
                         <div class="col-md-6">
-                            <label for="username" class="form-label">Employee Username</label>
+                            <label for="username" class="form-label">User ID</label>
                             <input type="text" class="form-control" id="username" name="username" required>
                             <div class="invalid-feedback">
-                                Please provide a valid username.
+                                Please provide a valid user ID.
                             </div>
                         </div>
 
-                        <!-- New Field for Password -->
+                        <!-- Field for First Name -->
+                        <div class="col-md-6">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid first name.
+                            </div>
+                        </div>
+
+                        <!-- Field for Middle Name -->
+                        <div class="col-md-6">
+                            <label for="middle_name" class="form-label">Middle Name</label>
+                            <input type="text" class="form-control" id="middle_name" name="middle_name" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid middle name.
+                            </div>
+                        </div>
+
+                        <!-- Field for Last Name -->
+                        <div class="col-md-6">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid last name.
+                            </div>
+                        </div>
+
+                        <!-- Field for Mobile Number -->
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label">Mobile Number</label>
+                            <input type="text" class="form-control" id="mobile" name="mobile" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid mobile number.
+                            </div>
+                        </div>
+
+                        <!-- Field for Email -->
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email address.
+                            </div>
+                        </div>
+
+                        <!-- Field for Password -->
                         <div class="col-md-6">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" required>
                             <div class="invalid-feedback">
                                 Please provide a valid password.
+                            </div>
+                        </div>
+
+                        <!-- Field for Confirm Password -->
+                        <div class="col-md-6">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                            <div class="invalid-feedback">
+                                Please confirm your password.
+                            </div>
+                        </div>
+
+                        <!-- Field for Designation -->
+                        <div class="col-md-6">
+                            <label for="designation" class="form-label">Designation</label>
+                            <input type="text" class="form-control" id="designation" name="designation" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid designation.
+                            </div>
+                        </div>
+
+                        <!-- Field for Department -->
+                        <div class="col-md-6">
+                            <label for="department" class="form-label">Department</label>
+                            <input type="text" class="form-control" id="department" name="department" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid department.
                             </div>
                         </div>
 
@@ -87,6 +159,7 @@ document.getElementById('toggle-view').addEventListener('click', function() {
     var list = document.getElementById('employee-list');
     var title = document.getElementById('form-title');
     var button = document.getElementById('toggle-view');
+
     if (form.style.display === 'none') {
         form.style.display = 'block';
         list.style.display = 'none';
@@ -94,6 +167,17 @@ document.getElementById('toggle-view').addEventListener('click', function() {
         button.textContent = 'View Employee List';
         document.getElementById('submit-button').textContent = 'Submit';
         form.reset();
+
+        // Show all fields
+        document.getElementById('first_name').parentElement.style.display = 'block';
+        document.getElementById('middle_name').parentElement.style.display = 'block';
+        document.getElementById('last_name').parentElement.style.display = 'block';
+        document.getElementById('mobile').parentElement.style.display = 'block';
+        document.getElementById('email').parentElement.style.display = 'block';
+        document.getElementById('designation').parentElement.style.display = 'block';
+        document.getElementById('department').parentElement.style.display = 'block';
+        document.getElementById('password').parentElement.style.display = 'block';
+        document.getElementById('confirm_password').parentElement.style.display = 'block';
     } else {
         form.style.display = 'none';
         list.style.display = 'block';
@@ -106,11 +190,24 @@ document.getElementById('toggle-view').addEventListener('click', function() {
 document.querySelectorAll('.edit-button').forEach(function(button) {
     button.addEventListener('click', function() {
         var id = this.getAttribute('data-id');
-        // Assuming employee data is available in $employees array (JSON encoded)
         var employee = <?= json_encode($employees); ?>.find(e => e.id == id);
         document.getElementById('employee_id').value = employee.id;
         document.getElementById('username').value = employee.username;
-        document.getElementById('password').value = employee.password;
+
+        // Hide fields not needed for editing
+        document.getElementById('first_name').parentElement.style.display = 'none';
+        document.getElementById('middle_name').parentElement.style.display = 'none';
+        document.getElementById('last_name').parentElement.style.display = 'none';
+        document.getElementById('mobile').parentElement.style.display = 'none';
+        document.getElementById('email').parentElement.style.display = 'none';
+        document.getElementById('designation').parentElement.style.display = 'none';
+        document.getElementById('department').parentElement.style.display = 'none';
+        document.getElementById('password').parentElement.style.display = 'none';
+        document.getElementById('confirm_password').parentElement.style.display = 'none';
+
+        // Clear the fields
+        document.getElementById('password').value = '';
+        document.getElementById('confirm_password').value = '';
 
         // Uncheck all checkboxes
         document.querySelectorAll('input[name="menu_names[]"]').forEach(function(checkbox) {
@@ -124,8 +221,24 @@ document.querySelectorAll('.edit-button').forEach(function(button) {
 
         document.getElementById('submit-button').textContent = 'Update';
         document.getElementById('form-title').textContent = 'Edit Access Level Employee';
+        document.getElementById('access-form').scrollIntoView();
         document.getElementById('access-form').style.display = 'block';
         document.getElementById('employee-list').style.display = 'none';
+        document.getElementById('toggle-view').textContent = 'View Employee List';
     });
 });
+
+// Check if passwords match before submitting form
+document.getElementById('access-form').addEventListener('submit', function(event) {
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirm_password').value;
+
+    if (password !== confirmPassword) {
+        event.preventDefault();
+        alert('Password and Confirm Password do not match.');
+        return false;
+    }
+    return true;
+});
 </script>
+
