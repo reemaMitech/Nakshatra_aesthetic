@@ -20,6 +20,10 @@ $routes->get('edit_enquiry/(:any)', 'Home::product_enquiry/$1');
 $routes->post('get_state_name_location','Home::get_state_name_location');
 $routes->post('get_city_name_location','Home::get_city_name_location');
 $routes->post('increment_follow_up_count', 'Home::increment_follow_up_count');
+$routes->get('add_courierService', 'Home::add_courierService');
+$routes->post('add_courierService', 'Home::add_courierService');
+$routes->post('set_courierService', 'Home::set_courierService');
+$routes->get('edit_courier/(:any)', 'Home::add_courierService/$1');
 
 
 
