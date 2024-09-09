@@ -5,8 +5,14 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title mb-0" id="form-title">Add Invoice</h4>
-                    <button id="toggle-view" class="btn btn-warning">Invoice List</button>
+                    <div>
+                        <!-- Button to toggle between form and invoice list -->
+                        <button id="toggle-view" class="btn btn-warning">Invoice List</button>
+                        <!-- Button styled as a link with direct link in href -->
+                        <a id="back-button" href="<?=base_url(); ?>add_invoice" class="btn btn-secondary" style="display: none;">Back</a>
+                    </div>
                 </div>
+
 
                 <div class="card-body">
                     <div id="access-form">
@@ -298,30 +304,44 @@
     </div>
 </div>
 <?php include __DIR__.'/../Admin/footer.php'; ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var url = window.location.href;
+        var toggleButton = document.getElementById('toggle-view');
+        var backButton = document.getElementById('back-button');
+        var form = document.getElementById('access-form');
+        var list = document.getElementById('Invoice-list');
+        var title = document.getElementById('form-title');
 
- <script>
-        // Toggle between form and Invoice List
-        document.getElementById('toggle-view').addEventListener('click', function() {
-            var form = document.getElementById('access-form');
-            var list = document.getElementById('Invoice-list');
-            var title = document.getElementById('form-title');
-            var button = document.getElementById('toggle-view');
+        // Check if the URL contains "edit_invoice"
+        if (url.includes('edit_invoice')) {
+            backButton.style.display = 'inline-block'; // Show the "Back" button
+            toggleButton.style.display = 'none'; // Hide the "Invoice List" button
 
-            if (form.style.display === 'none') {
-                form.style.display = 'block';
-                list.style.display = 'none';
-                title.textContent = 'Add Invoice';
-                button.textContent = 'View Invoice List';
-                document.getElementById('submit-button').textContent = 'Submit';
-                form.reset();
-            } else {
-                form.style.display = 'none';
-                list.style.display = 'block';
-                title.textContent = 'Invoice List';
-                button.textContent = 'Add New Invoice';
-            }
-        });
-    </script>
+            form.style.display = 'block'; // Show the form when editing
+            list.style.display = 'none'; // Hide the invoice list
+            title.textContent = 'Edit Invoice';
+        } else {
+            // Toggle between form and Invoice List
+            toggleButton.addEventListener('click', function() {
+                if (form.style.display === 'none') {
+                    form.style.display = 'block';
+                    list.style.display = 'none';
+                    title.textContent = 'Add Invoice';
+                    toggleButton.textContent = 'View Invoice List';
+                    document.getElementById('submit-button').textContent = 'Submit';
+                    form.reset();
+                } else {
+                    form.style.display = 'none';
+                    list.style.display = 'block';
+                    title.textContent = 'Invoice List';
+                    toggleButton.textContent = 'Add New Invoice';
+                }
+            });
+        }
+    });
+</script>
+
 
 <script>
 $(document).on("change", ".add-row input[type='text'], #cgst, #sgst, #igst, #tax_id", function () {

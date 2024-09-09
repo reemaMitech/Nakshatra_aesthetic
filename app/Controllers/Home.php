@@ -585,6 +585,42 @@ public function delete_compan()
 
 }
 
+public function invoice()
+{
+    $session = \Config\Services::session();
+
+    $model = new AdminModel();
+
+    $id = request()->getUri()->getSegment(2);
+    if (!empty($id)) {
+        // Fetching single data using the ID
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
+        $data['invoice_data'] = $model->getsingleuser('tbl_invoice', $wherecond1);
+        
+        // $select = 'tbl_invoice.*, tbl_invoice.id as invoiceid, tbl_client.*, tbl_client.id as clientid, tbl_client.vendor_code, tbl_currencies.symbol as currency_symbol';
+        // $table1 = 'tbl_invoice';
+        // $table2 = 'tbl_client';
+        // $table3 = 'tbl_currencies';
+        // $joinCond1 = 'tbl_invoice.client_id = tbl_client.id';
+        // $joinCond2 = 'tbl_invoice.currancy_id = tbl_currencies.id';  // Assuming this is the correct join condition
+        // $wherecond = [
+        //     'tbl_invoice.is_deleted' => 'N',
+        //     'tbl_invoice.id' => $id[1]
+        // ];
+
+        // $data['invoice_data'] = $model->joinThreeTablessingal($select, $table1, $table2, $table3, $joinCond1, $joinCond2, $wherecond);
+
+
+        // echo "<pre>";print_r($data['invoice_data']);exit();
+        echo view('Admin/invoice',$data);
+    } else {
+        echo view('Admin/invoice');
+
+
+    } 
+
+}
+
 
 
 }
