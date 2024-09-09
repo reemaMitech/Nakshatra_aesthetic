@@ -16,30 +16,21 @@
                     <div class="bd-example">
                         <ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
-                                    data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home"
-                                    aria-selected="true"> Product Enquiry Form </button>
+                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="true">Product Enquiry Form</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
-                                    data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile"
-                                    aria-selected="false">Enquiry List</button>
+                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false">Enquiry List</button>
                             </li>
                             <!-- <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
-                                    data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact"
-                                    aria-selected="false">Contact</button>
+                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
                             </li> -->
                         </ul>
-
                         <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="pills-home1" role="tabpanel" aria-labelledby="pills-home-tab1">
+                            <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
+                                aria-labelledby="pills-home-tab1">
                                 <form class="row g-3 needs-validation" action="<?= base_url('product_enquiry_details'); ?>" method="post" id="product_enquiry_form" novalidate>
-                                    <!-- <div class="row"> -->
                                     <input type="hidden" name="id" class="form-control" id="id" value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>">
-
                                         <div class="col-md-4">
-                                            <!-- <div class="form-group"> -->
                                             <label class="form-label" for="enquiry_date"> Enquiry Date </label>
                                             <input type="date" class="form-control" id="enquiry_date"  name="enquiry_date" value="<?php if(!empty($single_data)){ echo $single_data->enquiry_date; }?>"  >
                                             <div class="invalid-feedback">
@@ -56,18 +47,14 @@
 
                                         <div class="col-md-4">
                                             <label for="mobileNumber" class="form-label">Mobile Number</label>
-                                            <input type="text" class="form-control" id="mobileNumber" name="mobile_number" value="<?php if(!empty($single_data)){ echo $single_data->mob_no; }?>" required >
+                                            <input type="text" class="form-control" id="mobileNumber" name="mobile_number" maxlength="10" value="<?php if(!empty($single_data)){ echo $single_data->mob_no; }?>" required >
                                             <div class="invalid-feedback">
                                                 Please provide a valid mobile number.
                                             </div>
                                         </div>
-                                    <!-- </div> -->
-
-                                    <!-- <div class="row"> -->
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="country" class="form-label">Country:</label>
-                                                    <!-- <div class="col-sm-9"> -->
                                                         <select class="form-select choosen" id="country_id" name="Country">
                                                             <option value="">Please select country</option>
                                                             <?php if(!empty($country)){foreach($country as $country_result){?>
@@ -80,7 +67,6 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="state" class="form-label">State:</label>
-                                            <!-- <div class="col-sm-9"> -->
                                                 <select class="form-select choosen" id="state_id" name="State">
                                                     <option value="">Please select state</option>
                                                    
@@ -93,11 +79,9 @@
                                                     <?php } } ?>
                                                  
                                                 </select>
-                                            <!-- </div> -->
                                         </div>
                                         <div class="col-md-4">
                                             <label for="City" class="form-label">City:</label>
-                                            <!-- <div class="col-sm-9"> -->
                                                 <select class="form-select choosen" id="city_id" name="City">
                                                     <option value="">Please select city</option>
                                                     
@@ -108,11 +92,7 @@
                                                     <?php } } ?>
                                                   
                                                 </select>
-                                            <!-- </div> -->
                                         </div>
-                                    <!-- </div> -->
-
-                                    <!-- <div class="row"> -->
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="productName" class="form-label">Product Name</label>
@@ -146,13 +126,11 @@
                                                 Please provide a valid product Desription.
                                             </div>
                                         </div>
-                                    <!-- </div> -->
-                                
-                                    <!-- <div class="row"> -->
+                                 
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="form-label" for="pincode"> Pincode</label>
-                                                <input type="number" class="form-control" id="pincode" name="pincode" value="<?php if(!empty($single_data)){ echo $single_data->pincode; }?>" required>
+                                                <input type="number" class="form-control" id="pincode" name="pincode" maxlength="6"  value="<?php if(!empty($single_data)){ echo $single_data->pincode; }?>" required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid pincode.
                                                 </div>
@@ -161,76 +139,96 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="form-label" for="detailAddress"> Detail Address</label>
-                                                <textarea class="form-control" id="detailAddress" name="detailAddress" rows="3"><?php if(!empty($single_data)){ echo $single_data->cust_addr; } ?></textarea>
-                                            </div>
+                                                <textarea class="form-control" id="detailAddress" name="detailAddress" rows="3" required><?php if(!empty($single_data)){ echo $single_data->cust_addr; } ?></textarea>
                                             <div class="invalid-feedback">
                                                 Please provide a valid Detail address.
                                             </div>
+                                            </div>
                                         </div>
-                                
-                                    <!-- </div> -->
-                                    
                                     <div class="col-12">
-                                    <button type="submit" value="" name="Save" id="submit" class="btn btn-lg btn-success">
-                                    <?php if(!empty($single_data)){ echo 'Update'; }else{ echo 'Save';} ?>
+                                        <button type="submit" value="" name="Save" id="submit" class="btn btn-lg btn-success">
+                                        <?php if(!empty($single_data)){ echo 'Update'; }else{ echo 'Save';} ?>
                                     </div>
-                                
                                 </form>
                             </div>
-
-                            <!-- Profile Tab Content -->
-                            <div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
+                            <div class="tab-pane fade" id="pills-profile1" role="tabpanel"
+                                aria-labelledby="pills-profile-tab1">
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">Enquiry List</h4>
                                     </div>
                                     <div class="card-body">
-                                        <table id="datatable" class="table table-striped table-responsive" data-toggle="data-table">
-                                            <thead>
-                                                <tr>
+                                        <div class="table-responsive">
+                                            <table id="datatable" class="table table-striped" data-toggle="data-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sr. No.</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Mobile Number</th>
+                                                        <th>Product Name</th>
+                                                        <th>Product Quantity</th>
+                                                        <th>Follow-Up Action</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody> 
+                                                    <?php if (!empty($enquiry_data)) { 
+                                                        $i = 1;
+                                                        foreach ($enquiry_data as $enquiry): ?>
+                                                            <tr>
+                                                                <td><?php echo $i; ?></td>
+                                                                <td><?php echo $enquiry->cust_name; ?></td>
+                                                                <td><?php echo $enquiry->mob_no; ?></td>
+                                                                <td><?php echo $enquiry->product_name; ?></td>
+                                                                <td><?php echo $enquiry->prod_qty; ?></td>
+                                                                <td>
+                                                                    <button class="btn btn-primary follow-up-btn" data-id="<?php echo $enquiry->id; ?>">
+                                                                        Add Follow-Up
+                                                                    </button>
+                                                                    <span class="follow-up-count" id="follow-up-count-<?php echo $enquiry->id; ?>">
+                                                                        (<?php echo $enquiry->follow_up_count ?? 0; ?>)
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="<?= base_url(); ?>edit_enquiry/<?= $enquiry->id; ?>"><i class="far fa-edit me-2"></i></a>
+                                                                    <a href="<?= base_url(); ?>delete/<?= base64_encode($enquiry->id); ?>/tbl_product_enquiry" onclick="return confirm('Are You Sure You Want To Delete This Record?')"><i class="far fa-trash-alt me-2"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        <?php 
+                                                        $i++; 
+                                                        endforeach; 
+                                                    } ?>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
                                                     <th>Sr. No.</th>
-                                                    <th>Customer Name</th>
-                                                    <th>Mobile Number</th>
-                                                    <th>Product Name</th>
-                                                    <th>Product Quantity</th>
-                                                    <th>Follow-Up Action</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody> 
-                                                <?php if (!empty($enquiry_data)) { 
-                                                    $i = 1;
-                                                    foreach ($enquiry_data as $enquiry): ?>
-                                                        <tr>
-                                                            <td><?php echo $i; ?></td>
-                                                            <td><?php echo $enquiry->cust_name; ?></td>
-                                                            <td><?php echo $enquiry->mob_no; ?></td>
-                                                            <td><?php echo $enquiry->product_name; ?></td>
-                                                            <td><?php echo $enquiry->prod_qty; ?></td>
-                                                            <td>
-                                                                <button class="btn btn-primary follow-up-btn" data-id="<?php echo $enquiry->id; ?>">
-                                                                    Add Follow-Up
-                                                                </button>
-                                                                <span class="follow-up-count" id="follow-up-count-<?php echo $enquiry->id; ?>">
-                                                                    (<?php echo $enquiry->follow_up_count ?? 0; ?>)
-                                                                </span>
-                                                            </td>
-                                                            <td>
-                                                                <a href="<?= base_url(); ?>edit_enquiry/<?= $enquiry->id; ?>"><i class="far fa-edit me-2"></i></a>
-                                                                <a href="<?= base_url(); ?>delete/<?= base64_encode($enquiry->id); ?>/tbl_product_enquiry" onclick="return confirm('Are You Sure You Want To Delete This Record?')"><i class="far fa-trash-alt me-2"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                    <?php 
-                                                    $i++; 
-                                                    endforeach; 
-                                                } ?>
-                                            </tbody>
-                                        </table>
-
-                                      
+                                                        <th>Customer Name</th>
+                                                        <th>Mobile Number</th>
+                                                        <th>Product Name</th>
+                                                        <th>Product Quantity</th>
+                                                        <th>Follow-Up Action</th>
+                                                        <th>Action</th>
+                                            
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <!-- <div class="tab-pane fade" id="pills-contact1" role="tabpanel"
+                                aria-labelledby="pills-contact-tab1">
+                                <p>
+                                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu
+                                    stumptown aliqua, retro synth master cleanse. Mustache cliche tempor,
+                                    williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh
+                                    dreamcatcher synth.
+                                </p>
+                                <p>
+                                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu
+                                    stumptown aliqua, retro synth master cleanse.
+                                </p>
+                            </div> -->
                         </div>
                     </div>
                 </div>
