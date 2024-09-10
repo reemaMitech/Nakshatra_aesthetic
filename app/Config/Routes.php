@@ -30,12 +30,14 @@ $routes->get('edit_courier/(:any)', 'Home::add_courierService/$1');
 $routes->post('login', 'Home::login');
 $routes->get('logout', 'Home::logout');
 $routes->get('add_employee', 'Home::add_employee');
+$routes->get('edit_employee/(:any)', 'Home::add_employee/$1');
+
 $routes->post('login', 'Home::login');
 $routes->post('access_level', 'Home::access_level');
 $routes->get('create_access_level', 'Home::create_access_level');
 $routes->post('create_user', 'Home::create_user');
-$routes->post('delete_employee/(:num)', 'Home::delete_employee/$1');
-$routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
+// $routes->post('delete_employee/(:num)', 'Home::delete_employee/$1');
+// $routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
 $routes->get('Add_stock', 'Home::Add_stock');
 $routes->post('add_stocksin', 'Home::add_stocksin');
 

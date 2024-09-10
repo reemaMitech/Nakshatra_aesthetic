@@ -140,20 +140,30 @@ public function logout()
     $session->destroy();
     return redirect()->to('/');
     }
-public function add_employee()
-{
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
+    public function add_employee()
+    {
+        $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
+        $model = new AdminModel();
+        $wherecond = array('is_active' => 'Y');
+        $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+         //  print_r($data['menu']);die;
+        $wherecond = array('role' => 'Admin','active' => 'Y','is_deleted'=>'N');
+        $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+    
+        $uri = service('uri');
+        $localbrand_id = $uri->getSegment(2); 
+        if(!empty($localbrand_id)){
+            $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+            $data['single_data'] = $model->get_single_data('tbl_register', $wherecond1);
+            // print_r($data['single_data']);die;
+        }
+       
+       return view('Admin/add_employee',$data);
     }
-    $model = new AdminModel();
-    $wherecond = array('is_active' => 'Y');
-    $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
-    $wherecond = array('role' => 'Admin','active' => 'Y');
-    $data['employees'] = $model->getalldata('tbl_register', $wherecond);
-    //  print_r($data['menu']);die;
-   return view('Admin/add_employee',$data);
-}
+    
 public function create_access_level()
 {
     $session = \Config\Services::session();
