@@ -71,6 +71,7 @@
                         </div>
 
                         <!-- Field for Password -->
+                        <!-- Field for Password -->
                         <div class="col-md-6">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" value="<?php if(!empty($single_data)){ echo $single_data->password; }?>" required>
@@ -219,6 +220,7 @@ document.getElementById('toggle-view').addEventListener('click', function() {
     var title = document.getElementById('form-title');
     var button = document.getElementById('toggle-view');
 
+
     if (form.style.display === 'none') {
         form.style.display = 'block';
         list.style.display = 'none';
@@ -226,6 +228,17 @@ document.getElementById('toggle-view').addEventListener('click', function() {
         button.textContent = 'View Employee List';
         document.getElementById('submit-button').textContent = 'Submit';
         form.reset();
+
+        // Show all fields
+        document.getElementById('first_name').parentElement.style.display = 'block';
+        document.getElementById('middle_name').parentElement.style.display = 'block';
+        document.getElementById('last_name').parentElement.style.display = 'block';
+        document.getElementById('mobile').parentElement.style.display = 'block';
+        document.getElementById('email').parentElement.style.display = 'block';
+        document.getElementById('designation').parentElement.style.display = 'block';
+        document.getElementById('department').parentElement.style.display = 'block';
+        document.getElementById('password').parentElement.style.display = 'block';
+        document.getElementById('confirm_password').parentElement.style.display = 'block';
 
         // Show all fields
         document.getElementById('first_name').parentElement.style.display = 'block';
@@ -268,6 +281,21 @@ document.querySelectorAll('.edit-button').forEach(function(button) {
         document.getElementById('password').value = '';
         document.getElementById('confirm_password').value = '';
 
+        // Hide fields not needed for editing
+        document.getElementById('first_name').parentElement.style.display = 'none';
+        document.getElementById('middle_name').parentElement.style.display = 'none';
+        document.getElementById('last_name').parentElement.style.display = 'none';
+        document.getElementById('mobile').parentElement.style.display = 'none';
+        document.getElementById('email').parentElement.style.display = 'none';
+        document.getElementById('designation').parentElement.style.display = 'none';
+        document.getElementById('department').parentElement.style.display = 'none';
+        document.getElementById('password').parentElement.style.display = 'none';
+        document.getElementById('confirm_password').parentElement.style.display = 'none';
+
+        // Clear the fields
+        document.getElementById('password').value = '';
+        document.getElementById('confirm_password').value = '';
+
         // Uncheck all checkboxes
         document.querySelectorAll('input[name="menu_names[]"]').forEach(function(checkbox) {
             checkbox.checked = false;
@@ -281,8 +309,10 @@ document.querySelectorAll('.edit-button').forEach(function(button) {
         document.getElementById('submit-button').textContent = 'Update';
         document.getElementById('form-title').textContent = 'Edit Access Level Employee';
         document.getElementById('access-form').scrollIntoView();
+        document.getElementById('access-form').scrollIntoView();
         document.getElementById('access-form').style.display = 'block';
         document.getElementById('employee-list').style.display = 'none';
+        document.getElementById('toggle-view').textContent = 'View Employee List';
         document.getElementById('toggle-view').textContent = 'View Employee List';
     });
 });
@@ -303,4 +333,5 @@ document.getElementById('access-form').addEventListener('submit', function(event
 });
 
 </script>
+
 
