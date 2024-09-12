@@ -205,7 +205,6 @@
                     </div>
                     <!-- End of Employee List -->
 
-                </div>
             </div>
         </div>
     </div>

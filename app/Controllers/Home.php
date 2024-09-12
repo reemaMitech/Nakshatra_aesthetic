@@ -228,8 +228,6 @@ public function get_state_name_location()
     $model->get_state_name_location($country_id);
 }
 
-
-
 public function get_city_name_location()
 {
     $model = new AdminModel();
@@ -237,7 +235,8 @@ public function get_city_name_location()
     $model->get_city_name_location($state_id);
 }
 
-public function product_enquiry_details(){
+public function product_enquiry_details()
+{
     // print_r($_POST);die;
     $db = \Config\Database::connect();
     $enquiry_date = $this->request->getPost('enquiry_date');
@@ -591,10 +590,8 @@ public function set_invoice()
         'customer_name' => $this->request->getVar('customer_name'),
         'contact_no' => $this->request->getVar('contact_no'),
         'delivery_address' => $this->request->getVar('delivery_address'),
-
         'tax_id' => $this->request->getVar('tax_id'),
         'invoiceNo' => $invoiceNo,
-      
         'totalamounttotal' => $this->request->getVar('totalamounttotal'),
         'cgst' => $this->request->getVar('cgst'),
         'sgst' => $this->request->getVar('sgst'),
@@ -645,7 +642,6 @@ public function set_invoice()
             'contact_no' => $this->request->getVar('contact_no'),
             'delivery_address' => $this->request->getVar('delivery_address'),
             'tax_id' => $this->request->getVar('tax_id'),
-          
             'totalamounttotal' => $this->request->getVar('totalamounttotal'),
             'cgst' => $this->request->getVar('cgst'),
             'sgst' => $this->request->getVar('sgst'),
@@ -798,8 +794,6 @@ public function invoice()
         echo view('Admin/invoice',$data);
     } else {
         echo view('Admin/invoice');
-
-
     }
 }
     
@@ -833,7 +827,8 @@ public function invoice()
     return  view('Admin/add_courierService',$data);
 }
 
-public function set_courierService(){
+public function set_courierService()
+{
     $session = \Config\Services::session();
     if (!$session->has('id')) {
         return redirect()->to('/');
@@ -865,6 +860,89 @@ public function set_courierService(){
     }
 
 return redirect()->to('add_courierService');
+}
+
+public function add_vendor()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+   
+
+    $uri = service('uri');
+    $vendor_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+  
+    $model = new AdminModel();
+    if(!empty($vendor_id)){
+        // print_r($vendor_id);exit();
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $vendor_id);
+
+        $data['single_data'] = $model->get_single_data('tbl_vendor', $wherecond1);
+        // echo'<pre>';print_r($data['single_data']);die;
+
+    }else{
+        $wherecond = array('is_deleted' => 'N');
+        $data['vendor_data'] = $model->getalldata('tbl_vendor', $wherecond);
+    }
+
+    // print_r($data);die;
+    return  view('Admin/add_vendor',$data);
+}
+
+public function set_vendor_data()
+{
+    // print_r($_POST);die;
+    $data = [
+                'vendor_name' => $this->request->getVar('name'),
+                'contact_person' => $this->request->getVar('contact_person_name'),
+                'vendor_mobile_no' => $this->request->getVar('vendor_mobile_no'),
+                'contperson_mobile_no' => $this->request->getVar('cp_mobile_no'),
+                'email' => $this->request->getVar('email'),
+                'address' => $this->request->getVar('address'),
+                'country' => $this->request->getVar('country'),
+                'state' => $this->request->getVar('state'),
+                'district' => $this->request->getVar('district'),
+                'vendor_type_id' => $this->request->getVar('vendor_type_id'),
+                'vendor_type' => $this->request->getVar('vendor_type'),
+                'GST_no' => $this->request->getVar('gst_no'),
+                'PAN_no' => $this->request->getVar('pan_no'),
+                'bank_name' => $this->request->getVar('bank_name'),
+                'acc_no' => $this->request->getVar('acc_no'),
+                'bank_holder_name' => $this->request->getVar('bank_holder_name'),
+                'ifsc_code' => $this->request->getVar('ifsc_code'),
+                'branch_name' => $this->request->getVar('branch_name'),
+                'upi_id' => $this->request->getVar('upi_id'),
+                'mobile_no' => $this->request->getVar('bank_linked_mobile_no'),
+                'days' => $this->request->getVar('days'),
+                'months' => $this->request->getVar('months'),
+                'dates' => $this->request->getVar('dates'),
+                'recurring' => $this->request->getVar('recurring'),
+                // 'created_on' => date('Y:m:d H:i:s'),
+];
+// echo "<pre>";
+// print_r($data);exit();
+ $db = \Config\Database::Connect();
+ if($this->request->getVar('id') == ""){
+    // echo "<pre>";
+    // print_r($data);exit();
+    $add_data = $db->table('tbl_vendor');
+    $add_data->insert($data);
+    session()->setFlashdata('success', 'Data added successfully.');
+}else{
+    $update_data = $db->table('tbl_vendor')->where('id',$this->request->getVar('id'));
+    $update_data->update($data);
+
+
+
+    session()->setFlashdata('success', 'Data updated successfully.');
+}
+
+
+    return redirect()->to('add_vendor'); 
+
 }
 
 }
