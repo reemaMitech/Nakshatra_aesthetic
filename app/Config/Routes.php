@@ -45,8 +45,10 @@ $routes->post('set_invoice', 'Home::set_invoice');
 $routes->get('edit_invoice/(:any)', 'Home::add_invoice/$1');
 $routes->get('invoice/(:any)', 'Home::invoice/$1');
 
+$routes->get('add_row_Materials', 'Home::add_row_Materials');
 
 $routes->get('delete_compan/(:any)/(:any)', 'Home::delete_compan/$1/$2');
+$routes->post('save_row_Materials', 'Home::save_row_Materials');
 
 $routes->get('delete/(:any)/(:any)', 'Home::delete/$1/$1');
 
