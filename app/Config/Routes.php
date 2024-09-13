@@ -11,6 +11,15 @@ $routes->get('add_order', 'Home::add_order');
 $routes->get('add_product', 'Home::add_product');
 $routes->post('save_product', 'Home::save_product');
 $routes->post('take_order', 'Home::take_order');
+$routes->get('dispatch', 'Home::dispatch');
+$routes->get('getCourierMobile', 'Home::getCourierMobile');
+$routes->get('getCustomerData', 'Home::getCustomerData');
+$routes->post('dispatch_details', 'Home::dispatch_details');
+
+
+$routes->get('salary_slip', 'Home::salary_slip');
+$routes->get('leave_application', 'Home::leave_application');
+$routes->get('punch_in_out', 'Home::punch_in_out');
 
 
 $routes->get('product_enquiry', 'Home::product_enquiry');
@@ -21,17 +30,27 @@ $routes->post('get_state_name_location','Home::get_state_name_location');
 $routes->post('get_city_name_location','Home::get_city_name_location');
 $routes->post('increment_follow_up_count', 'Home::increment_follow_up_count');
 
+$routes->get('add_courierService', 'Home::add_courierService');
+$routes->post('add_courierService', 'Home::add_courierService');
+$routes->post('set_courierService', 'Home::set_courierService');
+$routes->get('edit_courier/(:any)', 'Home::add_courierService/$1');
+
+$routes->get('add_vendor', 'Home::add_vendor');
+$routes->post('set_vendor_data', 'Home::set_vendor_data');
+$routes->get('edit_vendor/(:any)', 'Home::add_vendor/$1');
 
 
 $routes->post('login', 'Home::login');
 $routes->get('logout', 'Home::logout');
 $routes->get('add_employee', 'Home::add_employee');
+$routes->get('edit_employee/(:any)', 'Home::add_employee/$1');
+
 $routes->post('login', 'Home::login');
 $routes->post('access_level', 'Home::access_level');
 $routes->get('create_access_level', 'Home::create_access_level');
 $routes->post('create_user', 'Home::create_user');
-$routes->post('delete_employee/(:num)', 'Home::delete_employee/$1');
-$routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
+// $routes->post('delete_employee/(:num)', 'Home::delete_employee/$1');
+// $routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
 $routes->get('Add_stock', 'Home::Add_stock');
 $routes->post('add_stocksin', 'Home::add_stocksin');
 
@@ -44,6 +63,7 @@ $routes->post('add_branches', 'Home::add_branches');
 $routes->post('set_invoice', 'Home::set_invoice');
 $routes->get('edit_invoice/(:any)', 'Home::add_invoice/$1');
 $routes->get('invoice/(:any)', 'Home::invoice/$1');
+$routes->get('bill_label/(:any)', 'Home::bill_label/$1');
 
 $routes->get('add_row_Materials', 'Home::add_row_Materials');
 

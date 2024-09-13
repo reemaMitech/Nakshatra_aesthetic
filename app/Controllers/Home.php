@@ -24,14 +24,30 @@ class Home extends BaseController
             return redirect()->to('/');
         }
         $model = new AdminModel();
-        $wherecond = array('Is_active' => 'Y');
-        $data['product'] = $model->getalldata('tbl_product', $wherecond);
-        // print_r($data['product']);die;
-        $model = new AdminModel();
-        $data['country'] = $model->get_country_name();
-        $data['states'] = $model->get_states_name();
-        $data['citys'] = $model->get_citys_name();
-        
+
+    $uri = service('uri');
+    $order_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+  
+    $model = new AdminModel();
+    $data['country'] = $model->get_country_name();
+    $data['states'] = $model->get_states_name();
+    $data['citys'] = $model->get_citys_name();
+    $wherecond = array( 'Is_active' => 'Y');
+    $data['product'] = $model->getalldata('tbl_product', $wherecond);
+    if(!empty($order_id)){
+        // echo'<pre>';print_r($localbrand_id);exit();
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $order_id);
+
+        $data['single_data'] = $model->get_single_data('tbl_order', $wherecond1);
+        // print_r($data['single_data']);die;
+
+    }else{
+        $wherecond = array( 'is_active' => 'Y','is_deleted' => 'N');
+        $data['order_data'] = $model->getalldata('tbl_order', $wherecond);
+    }
+        // print_r($data['order_data']);die;
+      
         return  view('Admin/add_order',$data);
     }
     public function add_product()
@@ -119,7 +135,10 @@ public function login()
             } 
                 elseif ($user->role === 'Admin') {
                     return redirect()->to(base_url('admindashboard'));
-            } 
+            }   
+            elseif ($user->role === 'Employee') {  // Add Employee role redirection
+                return redirect()->to(base_url('employeedashboard'));  // Change to Employee dashboard URL
+            }
           
             else {
                 session()->setFlashdata('error', 'Invalid credentials');
@@ -141,20 +160,30 @@ public function logout()
     $session->destroy();
     return redirect()->to('/');
     }
-public function add_employee()
-{
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
+    public function add_employee()
+    {
+        $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
+        $model = new AdminModel();
+        $wherecond = array('is_active' => 'Y');
+        $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+         //  print_r($data['menu']);die;
+        $wherecond = array('role' => 'Admin','active' => 'Y','is_deleted'=>'N');
+        $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+    
+        $uri = service('uri');
+        $localbrand_id = $uri->getSegment(2); 
+        if(!empty($localbrand_id)){
+            $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+            $data['single_data'] = $model->get_single_data('tbl_register', $wherecond1);
+            // print_r($data['single_data']);die;
+        }
+       
+       return view('Admin/add_employee',$data);
     }
-    $model = new AdminModel();
-    $wherecond = array('is_active' => 'Y');
-    $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
-    $wherecond = array('role' => 'Admin','active' => 'Y');
-    $data['employees'] = $model->getalldata('tbl_register', $wherecond);
-    //  print_r($data['menu']);die;
-   return view('Admin/add_employee',$data);
-}
+    
 public function create_access_level()
 {
     $session = \Config\Services::session();
@@ -219,8 +248,6 @@ public function get_state_name_location()
     $model->get_state_name_location($country_id);
 }
 
-
-
 public function get_city_name_location()
 {
     $model = new AdminModel();
@@ -228,7 +255,8 @@ public function get_city_name_location()
     $model->get_city_name_location($state_id);
 }
 
-public function product_enquiry_details(){
+public function product_enquiry_details()
+{
     // print_r($_POST);die;
     $db = \Config\Database::connect();
     $enquiry_date = $this->request->getPost('enquiry_date');
@@ -303,14 +331,14 @@ public function create_user()
         'email' => $this->request->getPost('email'),
         'designation' => $this->request->getPost('designation'),
         'department' => $this->request->getPost('department'),
-        'role' =>'Admin',
+        'role' => $this->request->getPost('user_role'),
+        // 'role' =>'Admin',
         'menu_names' => $menuNames, 
     ];
     if ($id) {
         $db->table('tbl_register')->where('id', $id)->update($data);
         session()->setFlashdata('success', 'Employee updated successfully.');
     } else {
-       
         $db->table('tbl_register')->insert($data);
         session()->setFlashdata('success', 'Employee created successfully.');
     }
@@ -425,6 +453,7 @@ public function add_invoice()
 
     $wherecond = array('is_deleted' => 'N');
     $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
+    // echo'<pre>';print_r($data);die;
 
     $id = request()->getUri()->getSegment(2); // Adjust the segment number based on your route
     $data['single_data'] = [];
@@ -448,10 +477,12 @@ public function delete()
 {
     // Get URI segments
     $uri_data = $this->request->getUri()->getSegments();
+    // print_r($uri_data);die;
 
     // Decode the ID and get the table name from the URI segments
     $id = base64_decode($uri_data[1]);  // Assuming the ID is the second segment
     $table = $uri_data[2];  // Assuming the table name is the third segment
+    // print_r($id);die;
 
     // Update the database row with is_deleted = 'Y'
     $data = ['is_deleted' => 'Y'];
@@ -541,10 +572,8 @@ public function set_invoice()
         'customer_name' => $this->request->getVar('customer_name'),
         'contact_no' => $this->request->getVar('contact_no'),
         'delivery_address' => $this->request->getVar('delivery_address'),
-
         'tax_id' => $this->request->getVar('tax_id'),
         'invoiceNo' => $invoiceNo,
-      
         'totalamounttotal' => $this->request->getVar('totalamounttotal'),
         'cgst' => $this->request->getVar('cgst'),
         'sgst' => $this->request->getVar('sgst'),
@@ -595,7 +624,6 @@ public function set_invoice()
             'contact_no' => $this->request->getVar('contact_no'),
             'delivery_address' => $this->request->getVar('delivery_address'),
             'tax_id' => $this->request->getVar('tax_id'),
-          
             'totalamounttotal' => $this->request->getVar('totalamounttotal'),
             'cgst' => $this->request->getVar('cgst'),
             'sgst' => $this->request->getVar('sgst'),
@@ -748,12 +776,27 @@ public function invoice()
         echo view('Admin/invoice',$data);
     } else {
         echo view('Admin/invoice');
-
-
-    } 
-
+    }
 }
 
+public function bill_label()
+{
+    $session = \Config\Services::session();
+
+    $model = new AdminModel();
+
+    $id = request()->getUri()->getSegment(2);
+    if (!empty($id)) {
+        // Fetching single data using the ID
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
+        $data['invoice_data'] = $model->getsingleuser('tbl_invoice', $wherecond1);
+        // echo "<pre>";print_r($data['invoice_data']);exit();
+        echo view('Admin/bill_label',$data);
+    } else {
+        echo view('Admin/bill_label');
+    }
+}
+ 
 public function add_row_Materials()
 {
     $session = \Config\Services::session();
@@ -779,6 +822,328 @@ public function save_row_Materials()
     ];
     $db->table('tbl_row_materials')->insert($data);
     return redirect()->to('add_row_Materials');
-}
+}   
+    public function add_courierService()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+  
+    $model = new AdminModel();
+    if(!empty($localbrand_id)){
+        // echo'<pre>';print_r($localbrand_id);exit();
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+
+        $data['single_data'] = $model->get_single_data('tbl_courierservice', $wherecond1);
+        // print_r($data['single_data']);die;
+
+    }else{
+        $wherecond = array('is_deleted' => 'N');
+        $data['courier_data'] = $model->getalldata('tbl_courierservice', $wherecond);
+    }
+
+    // print_r($data);die;
+    return  view('Admin/add_courierService',$data);
+
 }
 
+public function set_courierService()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+
+    // print_r($_POST);die;
+    $db = \Config\Database::connect();
+  
+    $provider_name = $this->request->getPost('courier_service_provider');
+    $mobile_number = $this->request->getPost('mobile_number');
+    $address = $this->request->getPost('address');
+    
+    $data = [
+        'provider_name' => $provider_name,
+        'mobile_number' => $mobile_number,
+        'address' => $address
+    ];
+
+    // Instantiate your model
+    $model = new Adminmodel();
+
+    $db = \Config\Database::Connect();
+    if ($this->request->getVar('id') == "") {
+        $add_data = $db->table('tbl_courierservice');
+        $add_data->insert($data);
+        session()->setFlashdata('success', 'Provider added successfully.');
+    } else {
+        $update_data = $db->table('tbl_courierservice')->where('id', $this->request->getVar('id'));
+        $update_data->update($data);
+        session()->setFlashdata('success', 'Provider updated successfully.');
+    }
+
+return redirect()->to('add_courierService');
+}
+
+
+public function add_vendor()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+   
+
+    $uri = service('uri');
+    $vendor_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+  
+    $model = new AdminModel();
+    if(!empty($vendor_id)){
+        // print_r($vendor_id);exit();
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $vendor_id);
+
+        $data['single_data'] = $model->get_single_data('tbl_vendor', $wherecond1);
+        // echo'<pre>';print_r($data['single_data']);die;
+
+    }else{
+        $wherecond = array('is_deleted' => 'N');
+        $data['vendor_data'] = $model->getalldata('tbl_vendor', $wherecond);
+    }
+
+    // print_r($data);die;
+    return  view('Admin/add_vendor',$data);
+}
+
+public function set_vendor_data()
+{
+    // print_r($_POST);die;
+    $data = [
+                'vendor_name' => $this->request->getVar('name'),
+                'contact_person' => $this->request->getVar('contact_person_name'),
+                'vendor_mobile_no' => $this->request->getVar('vendor_mobile_no'),
+                'contperson_mobile_no' => $this->request->getVar('cp_mobile_no'),
+                'email' => $this->request->getVar('email'),
+                'address' => $this->request->getVar('address'),
+                'country' => $this->request->getVar('country'),
+                'state' => $this->request->getVar('state'),
+                'district' => $this->request->getVar('district'),
+                'vendor_type_id' => $this->request->getVar('vendor_type_id'),
+                'vendor_type' => $this->request->getVar('vendor_type'),
+                'GST_no' => $this->request->getVar('gst_no'),
+                'PAN_no' => $this->request->getVar('pan_no'),
+                'bank_name' => $this->request->getVar('bank_name'),
+                'acc_no' => $this->request->getVar('acc_no'),
+                'bank_holder_name' => $this->request->getVar('bank_holder_name'),
+                'ifsc_code' => $this->request->getVar('ifsc_code'),
+                'branch_name' => $this->request->getVar('branch_name'),
+                'upi_id' => $this->request->getVar('upi_id'),
+                'mobile_no' => $this->request->getVar('bank_linked_mobile_no'),
+                'days' => $this->request->getVar('days'),
+                'months' => $this->request->getVar('months'),
+                'dates' => $this->request->getVar('dates'),
+                'recurring' => $this->request->getVar('recurring'),
+                // 'created_on' => date('Y:m:d H:i:s'),
+];
+// echo "<pre>";
+// print_r($data);exit();
+ $db = \Config\Database::Connect();
+ if($this->request->getVar('id') == ""){
+    // echo "<pre>";
+    // print_r($data);exit();
+    $add_data = $db->table('tbl_vendor');
+    $add_data->insert($data);
+    session()->setFlashdata('success', 'Data added successfully.');
+}else{
+    $update_data = $db->table('tbl_vendor')->where('id',$this->request->getVar('id'));
+    $update_data->update($data);
+
+
+
+    session()->setFlashdata('success', 'Data updated successfully.');
+}
+
+
+    return redirect()->to('add_vendor'); 
+
+}
+
+
+public function dispatch() {
+    $db = \Config\Database::connect();
+    
+
+    $courierBuilder = $db->table('tbl_courierservice');
+    $data['courier_services'] = $courierBuilder->get()->getResultArray();
+
+    $invoiceBuilder = $db->table('tbl_invoice');
+    $data['invoice_data'] = $invoiceBuilder->get()->getResultArray();
+    
+    return view('Admin/dispatch', $data);
+}
+
+public function getCustomerData()
+{
+    $invoiceNo = $this->request->getGet('invoice_no'); // Make sure the query parameter matches
+
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_invoice');
+    
+    // Use the correct column name
+    $builder->where('invoiceNo', $invoiceNo);
+    $query = $builder->get();
+    
+    if ($query->getNumRows() > 0) {
+        $data = $query->getRowArray();
+        // Return the data or format it as needed
+        return $this->response->setJSON($data);
+    } else {
+        return $this->response->setJSON(['error' => 'No data found']);
+    }
+}
+
+public function getCourierMobile() {
+    $providerName = $this->request->getGet('provider_name');
+    
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_courierservice');
+    $builder->where('provider_name', $providerName);
+    $result = $builder->get()->getRowArray();
+
+    if ($result) {
+        return $this->response->setJSON(['mobile_number' => $result['mobile_number'] ?? '']);
+    } else {
+        return $this->response->setJSON(['mobile_number' => '']);
+    }
+} 
+public function dispatch_details()
+{
+    // Get the database connection
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_dispatch'); // Ensure this is your table name
+
+    // Load validation service
+    $validation = \Config\Services::validation();
+    $validation->setRules([
+        'courier_provider' => 'required',
+        'courier_mobile' => 'required',
+        'courier_date' => 'required|valid_date',
+        'bill_number' => 'required',
+        'tracking_id' => 'required',
+        'customer_name' => 'required',
+        'customer_mobile' => 'required',
+        'delivery_address' => 'required',
+        'courier_price' => 'required|numeric'
+    ]);
+
+    if (!$validation->withRequest($this->request)->run()) {
+        // Redirect back with validation errors
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+    }
+
+    // Get form data
+    $data = [
+        'courier_provider' => $this->request->getPost('courier_provider'),
+        'courier_mobile' => $this->request->getPost('courier_mobile'),
+        'courier_date' => $this->request->getPost('courier_date'),
+        'bill_number' => $this->request->getPost('bill_number'),
+        'tracking_id' => $this->request->getPost('tracking_id'),
+        'customer_name' => $this->request->getPost('customer_name'),
+        'customer_mobile' => $this->request->getPost('customer_mobile'),
+        'delivery_address' => $this->request->getPost('delivery_address'),
+        'courier_price' => $this->request->getPost('courier_price'),
+    ];
+
+    // Insert data into the database
+    if ($builder->insert($data)) {
+        // Redirect back with a success message
+        return redirect()->back()->with('message', 'Dispatch details saved successfully!');
+    } else {
+        // Redirect back with an error message
+        return redirect()->back()->with('error', 'Failed to save dispatch details.');
+    }
+}
+
+public function salary_slip(){
+    return view('Admin/salary_slip');
+} 
+
+public function punch_in_out(){
+    return view('Admin/punch_in_out');
+} 
+
+
+public function leave_application(){
+    return view('Admin/leave_application');
+}
+
+
+public function punch()
+{
+    $session = \CodeIgniter\Config\Services::session();
+    $userId = $session->get('id'); // Get user ID from session
+    $punchType = $this->request->getPost('punch_type');
+    $db = \Config\Database::connect(); // Connect to the database
+
+    if ($punchType === 'in') {
+        // Handle Punch In logic
+        $data = [
+            'user_id' => $userId,
+            'punch_in' => date('Y-m-d H:i:s'),
+            'action' => 'punch in',
+        ];
+
+        $db->table('tbl_punch_log')->insert($data); // Insert punch in data
+
+        session()->setFlashdata('success', 'Punched In successfully!');
+    } elseif ($punchType === 'out') {
+        // Handle Punch Out logic
+        // Find the last punch in entry with no punch out
+        $query = $db->table('tbl_punch_log')
+                    ->where('user_id', $userId)
+                    ->where('punch_out IS NULL', null, false)
+                    ->orderBy('punch_in', 'DESC')
+                    ->limit(1)
+                    ->get();
+        $lastPunch = $query->getRow();
+
+        if ($lastPunch) {
+            // Update the punch out time for the last punch in entry
+            $db->table('tbl_punch_log')
+               ->where('id', $lastPunch->id)
+               ->update([
+                   'punch_out' => date('Y-m-d H:i:s'),
+                   'action' => 'punch out',
+               ]);
+
+            session()->setFlashdata('success', 'Punched Out successfully!');
+        } else {
+            session()->setFlashdata('error', 'You need to punch in first!');
+        }
+    }
+
+    return redirect()->to('/punchpage'); // Redirect back to the punch page
+
+}
+
+public function punchPage()
+{
+    $session = \CodeIgniter\Config\Services::session();
+
+    if (!$session->has('id')) {
+        return redirect()->to('/login'); // Redirect to login if not logged in
+    }
+
+
+    return view('punch_in_out');
+}
+
+
+
+}

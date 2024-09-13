@@ -12,7 +12,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
 @page {
-    size: A4;
+    size: A5;
     margin: 20mm;
 }
 
