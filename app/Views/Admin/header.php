@@ -259,7 +259,7 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                                 </a>
                             </li>
                           <?php endif; ?>
-
+                          <?php if (in_array('add_branch', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link " href="<?=base_url(); ?>add_branch">
                                     <i class="icon">
