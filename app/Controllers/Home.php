@@ -77,6 +77,7 @@ class Home extends BaseController
   }
   public function take_order()
 {
+    // print_r($_POST);die;
     $db = \Config\Database::connect();
     $file = $this->request->getFile('transaction_screenshot');
     if (!$file) {
@@ -353,46 +354,6 @@ public function delete_employee($id)
     session()->setFlashdata('success', 'Employee deleted successfully.');
     return redirect()->to(base_url('add_employee'));
 }
-// public function Add_stock()
-// {
-//     $session = \Config\Services::session();
-//     if (!$session->has('id')) {
-//         return redirect()->to('/');
-//     } 
-
-//     $model = new AdminModel();
-
-//     // Fetch all active products
-//     $productCondition = array('Is_active' => 'Y');
-//     $data['product'] = $model->getalldata('tbl_product', $productCondition); 
-
-//     // Create an associative array of product IDs and names for easy lookup
-//     $productNames = array();
-//     foreach ($data['product'] as $product) {
-//         $productNames[$product->id] = $product->product_name;
-//     }
-
-//     // Fetch all active branches
-//     $branchCondition = array('is_active' => 'Y');
-//     $data['branch'] = $model->getalldata('tbl_branch', $branchCondition);
-
-//     foreach ($data['branch'] as $branch) {
-//         $stockCondition = array('branch_name' => $branch->id);
-//         $stockData = $model->getalldata('tbl_stock', $stockCondition);
-
-//         // Ensure stock data is an array, even if no results are found
-//         $branch->stock_quantity = is_array($stockData) ? $stockData : [];
-
-//         // Replace product IDs with product names
-//         foreach ($branch->stock_quantity as $stock) {
-//             if (isset($productNames[$stock->product_name])) {
-//                 $stock->product_name = $productNames[$stock->product_name];
-//             }
-//         }
-//     }
-
-//     return view('Admin/Add_stock', $data);
-// }
 
 public function Add_stock()
 {
@@ -406,7 +367,8 @@ public function Add_stock()
     // Fetch all active products
     $productCondition = array('Is_active' => 'Y');
     $data['product'] = $model->getalldata('tbl_product', $productCondition);
-
+    $wherecond = array('active' => 'Y');
+    $data['stck'] = $model->getalldata('tbl_stock', $wherecond);
     // Create an associative array of product IDs and names for easy lookup
     $productNames = array();
     foreach ($data['product'] as $product) {
@@ -834,7 +796,33 @@ public function bill_label()
         echo view('Admin/bill_label');
     }
 }
-    
+ 
+public function add_row_Materials()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+    $wherecond = array('active' => 'Y');
+    $data['row_materials'] = $model->getalldata('tbl_row_materials', $wherecond);
+    // print_r($data['row_materials']);die;
+    echo view('Admin/add_row_materiyals',$data);
+}
+public function save_row_Materials()
+{
+    // print_r($_POST);die;
+    $db = \Config\Database::connect();
+    $data = [
+        'product_name' => $this->request->getPost('product_name'),
+        'unit' => $this->request->getPost('unit'),
+        'unit_type' => $this->request->getPost('unit_type'),
+        'container_type' => $this->request->getPost('container_type'),
+
+    ];
+    $db->table('tbl_row_materials')->insert($data);
+    return redirect()->to('add_row_Materials');
+}   
     public function add_courierService()
 {
     $session = \Config\Services::session();
@@ -842,7 +830,6 @@ public function bill_label()
         return redirect()->to('/');
     }
     $model = new AdminModel();
-   
 
     $uri = service('uri');
     $localbrand_id = $uri->getSegment(2);   // Assuming the ID is the second segment
@@ -863,6 +850,7 @@ public function bill_label()
 
     // print_r($data);die;
     return  view('Admin/add_courierService',$data);
+
 }
 
 public function set_courierService()

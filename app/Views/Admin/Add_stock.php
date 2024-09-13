@@ -130,79 +130,92 @@
                             </div>
 
                             <!-- Profile Tab Content -->
-                            <div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Transfer Branch Quantity</h4>
-        </div>
-        <div class="card-body">
-            <form class="row g-3 needs-validation" action="<?= base_url('transfer_branch_quantity'); ?>" method="post" novalidate>
-                
-                <!-- Select Branch Field -->
-                <div class="col-md-6">
-                    <label for="selectBranch" class="form-label">Select Branch</label>
-                    <select class="form-select" id="selectBranch" name="select_branch" required>
-                        <option selected disabled value="">Choose...</option>
-                        <?php foreach ($branch as $item): ?>
-                            <option value="<?= $item->id; ?>" data-stock='<?= json_encode($item->stock_quantity); ?>'>
-                                <?= $item->branch_name; ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please select a branch.
-                    </div>
-                </div>
+                            <div class="tab-pane fade" id="pills-profile1" role="tabpanel"
+                                aria-labelledby="pills-profile-tab1">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Transfer Branch Quantity</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <form class="row g-3 needs-validation"
+                                            action="<?= base_url('transfer_branch_quantity'); ?>" method="post"
+                                            novalidate>
 
-                <!-- Select Product Field -->
-                <div class="col-md-6">
-                    <label for="selectProduct" class="form-label">Select Product</label>
-                    <select class="form-select" id="selectProduct" name="select_product" required disabled>
-                        <option selected disabled value="">Choose a branch first...</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please select a product.
-                    </div>
-                </div>
+                                            <!-- Select Branch Field -->
+                                            <div class="col-md-6">
+                                                <label for="selectBranch" class="form-label">Select Branch</label>
+                                                <select class="form-select" id="selectBranch" name="select_branch"
+                                                    required>
+                                                    <option selected disabled value="">Choose...</option>
+                                                    <?php foreach ($branch as $item): ?>
+                                                    <option value="<?= $item->id; ?>"
+                                                        data-stock='<?= json_encode($item->stock_quantity); ?>'>
+                                                        <?= $item->branch_name; ?>
+                                                    </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Please select a branch.
+                                                </div>
+                                            </div>
 
-                <!-- Quantity Available Field -->
-                <div class="col-md-6">
-                    <label for="branchQuantity" class="form-label">Quantity Available</label>
-                    <input type="text" class="form-control" id="branchQuantity" name="branch_quantity" readonly>
-                </div>
+                                            <!-- Select Product Field -->
+                                            <div class="col-md-6">
+                                                <label for="selectProduct" class="form-label">Select Product</label>
+                                                <select class="form-select" id="selectProduct" name="select_product"
+                                                    required disabled>
+                                                    <option selected disabled value="">Choose a branch first...</option>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Please select a product.
+                                                </div>
+                                            </div>
 
-                <!-- Transfer Branch Quantity Field -->
-                <div class="col-md-6">
-                    <label for="transferQuantity" class="form-label">Transfer Branch Quantity</label>
-                    <input type="number" class="form-control" id="transferQuantity" name="transfer_quantity" required>
-                    <div class="invalid-feedback">
-                        Please provide a valid transfer quantity.
-                    </div>
-                </div>
+                                            <!-- Quantity Available Field -->
+                                            <div class="col-md-6">
+                                                <label for="branchQuantity" class="form-label">Quantity
+                                                    Available</label>
+                                                <input type="text" class="form-control" id="branchQuantity"
+                                                    name="branch_quantity" readonly>
+                                            </div>
 
-                <!-- Transfer To Branch Field -->
-                <div class="col-md-6">
-                    <label for="Transfer_branch" class="form-label">Transfer To Branch</label>
-                    <select class="form-select" id="Transfer_branch" name="Transfer_branch" required>
-                        <option selected disabled value="">Choose...</option>
-                        <?php foreach ($branch as $item): ?>
-                            <option value="<?= $item->id; ?>"><?= $item->branch_name; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please select a branch.
-                    </div>
-                </div>
+                                            <!-- Transfer Branch Quantity Field -->
+                                            <div class="col-md-6">
+                                                <label for="transferQuantity" class="form-label">Transfer Branch
+                                                    Quantity</label>
+                                                <input type="number" class="form-control" id="transferQuantity"
+                                                    name="transfer_quantity" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a valid transfer quantity.
+                                                </div>
+                                            </div>
 
-                <!-- Submit Button -->
-                <div class="col-12">
-                    <button class="btn btn-primary" type="submit">Transfer</button>
-                </div>
+                                            <!-- Transfer To Branch Field -->
+                                            <div class="col-md-6">
+                                                <label for="Transfer_branch" class="form-label">Transfer To
+                                                    Branch</label>
+                                                <select class="form-select" id="Transfer_branch" name="Transfer_branch"
+                                                    required>
+                                                    <option selected disabled value="">Choose...</option>
+                                                    <?php foreach ($branch as $item): ?>
+                                                    <option value="<?= $item->id; ?>"><?= $item->branch_name; ?>
+                                                    </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="invalid-feedback">
+                                                    Please select a branch.
+                                                </div>
+                                            </div>
 
-            </form>
-        </div>
-    </div>
-</div>
+                                            <!-- Submit Button -->
+                                            <div class="col-12">
+                                                <button class="btn btn-primary" type="submit">Transfer</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
 
 
 
@@ -221,19 +234,19 @@
 
 <?php include __DIR__.'/../Admin/footer.php'; ?>
 <script>
-document.getElementById('selectBranch').addEventListener('change', function () {
+document.getElementById('selectBranch').addEventListener('change', function() {
     var selectedOption = this.options[this.selectedIndex];
     var stockData = JSON.parse(selectedOption.getAttribute('data-stock'));
     var productDropdown = document.getElementById('selectProduct');
-    
+
     // Clear previous options
     productDropdown.innerHTML = '<option selected disabled value="">Choose a product...</option>';
 
     if (stockData && stockData.length > 0) {
         productDropdown.disabled = false;
-        
+
         // Populate product dropdown
-        stockData.forEach(function (stock) {
+        stockData.forEach(function(stock) {
             var option = document.createElement('option');
             console.log(stock)
             option.value = stock.product_id;
@@ -251,12 +264,11 @@ document.getElementById('selectBranch').addEventListener('change', function () {
 });
 
 // Update quantity when a product is selected
-document.getElementById('selectProduct').addEventListener('change', function () {
+document.getElementById('selectProduct').addEventListener('change', function() {
     var selectedOption = this.options[this.selectedIndex];
     var quantity = selectedOption.getAttribute('data-quantity');
-    
+
     // Display the quantity in the read-only input field
     document.getElementById('branchQuantity').value = quantity + ' units';
 });
-
 </script>
