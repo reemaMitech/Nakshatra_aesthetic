@@ -47,13 +47,14 @@
                                             Please provide a valid mobile number.
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-6">
+                                    <div class="col-md-6">
                                         <label for="address" class="form-label">Address</label>
-                                        <input type="text" class="form-control" id="address" name="address" required>
+                                        <!-- <input type="text" class="form-control" id="address" name="address" required> -->
+                                        <textarea class="form-control" id="address" name="address" rows="4" cols="30" required><?php if(!empty($single_data)){ echo $single_data->address; }?></textarea>
                                         <div class="invalid-feedback">
                                             Please provide a valid Address.
                                         </div>
-                                    </div> -->
+                                    </div>
 
                                     <!-- Submit Button -->
                                     <div class="col-12">
