@@ -134,7 +134,10 @@ public function login()
             } 
                 elseif ($user->role === 'Admin') {
                     return redirect()->to(base_url('admindashboard'));
-            } 
+            }   
+            elseif ($user->role === 'Employee') {  // Add Employee role redirection
+                return redirect()->to(base_url('employeedashboard'));  // Change to Employee dashboard URL
+            }
           
             else {
                 session()->setFlashdata('error', 'Invalid credentials');
@@ -899,6 +902,7 @@ public function set_courierService()
 return redirect()->to('add_courierService');
 }
 
+
 public function add_vendor()
 {
     $session = \Config\Services::session();
@@ -982,10 +986,176 @@ public function set_vendor_data()
 
 }
 
+
+public function dispatch() {
+    $db = \Config\Database::connect();
+    
+
+    $courierBuilder = $db->table('tbl_courierservice');
+    $data['courier_services'] = $courierBuilder->get()->getResultArray();
+
+    $invoiceBuilder = $db->table('tbl_invoice');
+    $data['invoice_data'] = $invoiceBuilder->get()->getResultArray();
+    
+    return view('Admin/dispatch', $data);
+}
+
+public function getCustomerData()
+{
+    $invoiceNo = $this->request->getGet('invoice_no'); // Make sure the query parameter matches
+
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_invoice');
+    
+    // Use the correct column name
+    $builder->where('invoiceNo', $invoiceNo);
+    $query = $builder->get();
+    
+    if ($query->getNumRows() > 0) {
+        $data = $query->getRowArray();
+        // Return the data or format it as needed
+        return $this->response->setJSON($data);
+    } else {
+        return $this->response->setJSON(['error' => 'No data found']);
+    }
+}
+
+public function getCourierMobile() {
+    $providerName = $this->request->getGet('provider_name');
+    
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_courierservice');
+    $builder->where('provider_name', $providerName);
+    $result = $builder->get()->getRowArray();
+
+    if ($result) {
+        return $this->response->setJSON(['mobile_number' => $result['mobile_number'] ?? '']);
+    } else {
+        return $this->response->setJSON(['mobile_number' => '']);
+    }
+} 
+public function dispatch_details()
+{
+    // Get the database connection
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_dispatch'); // Ensure this is your table name
+
+    // Load validation service
+    $validation = \Config\Services::validation();
+    $validation->setRules([
+        'courier_provider' => 'required',
+        'courier_mobile' => 'required',
+        'courier_date' => 'required|valid_date',
+        'bill_number' => 'required',
+        'tracking_id' => 'required',
+        'customer_name' => 'required',
+        'customer_mobile' => 'required',
+        'delivery_address' => 'required',
+        'courier_price' => 'required|numeric'
+    ]);
+
+    if (!$validation->withRequest($this->request)->run()) {
+        // Redirect back with validation errors
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+    }
+
+    // Get form data
+    $data = [
+        'courier_provider' => $this->request->getPost('courier_provider'),
+        'courier_mobile' => $this->request->getPost('courier_mobile'),
+        'courier_date' => $this->request->getPost('courier_date'),
+        'bill_number' => $this->request->getPost('bill_number'),
+        'tracking_id' => $this->request->getPost('tracking_id'),
+        'customer_name' => $this->request->getPost('customer_name'),
+        'customer_mobile' => $this->request->getPost('customer_mobile'),
+        'delivery_address' => $this->request->getPost('delivery_address'),
+        'courier_price' => $this->request->getPost('courier_price'),
+    ];
+
+    // Insert data into the database
+    if ($builder->insert($data)) {
+        // Redirect back with a success message
+        return redirect()->back()->with('message', 'Dispatch details saved successfully!');
+    } else {
+        // Redirect back with an error message
+        return redirect()->back()->with('error', 'Failed to save dispatch details.');
+    }
+}
+
+public function salary_slip(){
+    return view('Admin/salary_slip');
+} 
+
+public function punch_in_out(){
+    return view('Admin/punch_in_out');
+} 
+
+
+public function leave_application(){
+    return view('Admin/leave_application');
+}
+
+
+public function punch()
+{
+    $session = \CodeIgniter\Config\Services::session();
+    $userId = $session->get('id'); // Get user ID from session
+    $punchType = $this->request->getPost('punch_type');
+    $db = \Config\Database::connect(); // Connect to the database
+
+    if ($punchType === 'in') {
+        // Handle Punch In logic
+        $data = [
+            'user_id' => $userId,
+            'punch_in' => date('Y-m-d H:i:s'),
+            'action' => 'punch in',
+        ];
+
+        $db->table('tbl_punch_log')->insert($data); // Insert punch in data
+
+        session()->setFlashdata('success', 'Punched In successfully!');
+    } elseif ($punchType === 'out') {
+        // Handle Punch Out logic
+        // Find the last punch in entry with no punch out
+        $query = $db->table('tbl_punch_log')
+                    ->where('user_id', $userId)
+                    ->where('punch_out IS NULL', null, false)
+                    ->orderBy('punch_in', 'DESC')
+                    ->limit(1)
+                    ->get();
+        $lastPunch = $query->getRow();
+
+        if ($lastPunch) {
+            // Update the punch out time for the last punch in entry
+            $db->table('tbl_punch_log')
+               ->where('id', $lastPunch->id)
+               ->update([
+                   'punch_out' => date('Y-m-d H:i:s'),
+                   'action' => 'punch out',
+               ]);
+
+            session()->setFlashdata('success', 'Punched Out successfully!');
+        } else {
+            session()->setFlashdata('error', 'You need to punch in first!');
+        }
+    }
+
+    return redirect()->to('/punchpage'); // Redirect back to the punch page
+
+}
+
+public function punchPage()
+{
+    $session = \CodeIgniter\Config\Services::session();
+
+    if (!$session->has('id')) {
+        return redirect()->to('/login'); // Redirect to login if not logged in
+    }
+
+
+    return view('punch_in_out');
 }
 
 
 
-
-
-
+}

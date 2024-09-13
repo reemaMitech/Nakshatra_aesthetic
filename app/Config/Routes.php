@@ -11,6 +11,15 @@ $routes->get('add_order', 'Home::add_order');
 $routes->get('add_product', 'Home::add_product');
 $routes->post('save_product', 'Home::save_product');
 $routes->post('take_order', 'Home::take_order');
+$routes->get('dispatch', 'Home::dispatch');
+$routes->get('getCourierMobile', 'Home::getCourierMobile');
+$routes->get('getCustomerData', 'Home::getCustomerData');
+$routes->post('dispatch_details', 'Home::dispatch_details');
+
+
+$routes->get('salary_slip', 'Home::salary_slip');
+$routes->get('leave_application', 'Home::leave_application');
+$routes->get('punch_in_out', 'Home::punch_in_out');
 
 
 $routes->get('product_enquiry', 'Home::product_enquiry');
