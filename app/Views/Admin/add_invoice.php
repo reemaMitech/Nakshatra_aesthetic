@@ -1,4 +1,12 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
+<?php
+// Detect if URL contains 'edit_invoice'
+$showForm = false;
+$current_url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+if (strpos($current_url, 'edit_invoice') !== false) {
+    $showForm = true;
+}
+?>
 <div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
         <div class="col-sm-12 col-lg-12">
@@ -10,300 +18,354 @@
                         <button id="toggle-view" class="btn btn-warning">Invoice List</button>
                         <!-- Button styled as a link with direct link in href -->
                         <a id="back-button" href="<?=base_url(); ?>add_invoice" class="btn btn-secondary" style="display: none;">Back</a>
+                    
+                    
+                    
+                    
                     </div>
                 </div>
 
 
                 <div class="card-body">
-                    <div id="access-form">
-                        <!-- Form for Adding/Editing Invoice Access Level -->
-                        <form class="row g-3" id="invoice_form" action="<?= base_url('set_invoice'); ?>" method="post" enctype="multipart/form-data" novalidate>
+                    <div class="bd-example">
+                    <ul class="nav nav-pills" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Invoice List</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Add Invoice</button>
+                            </li>
+                        </ul>
 
 
-                            <input type="hidden" id="invoice_id " name="id" value="<?php if(!empty($single_data)){ echo $single_data->id; } ?>">
 
-
-
-                            <div class="col-md-3 position-relative">
-                            <label for="branch_id" class="form-label">Branch</label>
-                            
-
-                            <select class="form-select" id="branch_id" name="branch_id" required>
-                                <option disabled value="">Select Branch</option>
-                                <option value="Pune" <?php if((!empty($single_data)) && $single_data->branch_id == 'Pune'){ echo'selected';} ?>>Pune</option>
-                                <option value="Mumbai" <?php if((!empty($single_data)) && $single_data->branch_id == 'Mumbai'){ echo'selected';} ?>>Mumbai</option>
-                                <option value="Nashik" <?php if((!empty($single_data)) && $single_data->branch_id == 'Nashik'){ echo'selected';} ?>>Nashik</option>
-                                <option value="Delhi" <?php if((!empty($single_data)) && $single_data->branch_id == 'Delhi'){ echo'selected';} ?>>Delhi</option>
-                                <option value="Other" <?php if((!empty($single_data)) && $single_data->branch_id == 'Other'){ echo'selected';} ?>>Other</option>
-                            </select>
-                            
-                            </div>
-
-                            <div class="col-md-3 position-relative">
-                                <label for="invoice_date" class="form-label"> Date</label>
-                                <input type="text" name="invoice_date" id="invoice_date" value="<?php if(!empty($single_data)){ echo $single_data->invoice_date; } ?>" class="form-control date_flatpicker" >
-                                
-                            </div>
-
-                            
-                            <div class="col-md-3">
-                                <label for="customer_name" class="form-label"> Customer Name</label>
-                                <input type="text" class="form-control" id="customer_name" name="customer_name" value="<?php if(!empty($single_data)){ echo $single_data->customer_name; } ?>" required>
-                            
-                            </div>
-
-                            <div class="col-md-3">
-                                <label for="contact_no" class="form-label"> Contact No.</label>
-                                <input type="text" class="form-control" id="contact_no" name="contact_no" value="<?php if(!empty($single_data)){ echo $single_data->contact_no; } ?>" required>
-                            
-                            </div>
-                            <div class="col-md-6">
-                                <label for="delivery_address" class="form-label"> Delivery Address</label>
-                                <textarea class="form-control" id="delivery_address" name="delivery_address" rows="4" cols="30" required><?php if(!empty($single_data)){ echo $single_data->delivery_address; } ?></textarea>
-                            
-                            </div>
-
-                            <div class="col-xl-6 col-md-6 col-sm-12 col-12 tax_id">
-                                        <div class="form-group">
-                                            <label>Tax</label>
-                                            <select name="tax_id" id="tax_id" class="form-control">
-                                                <option> Select Tax</option>
-                                                <?php foreach ($tax_data as $data): ?>
-                                                    <option value="<?= $data->id; ?>" <?php if (!empty($single_data)) { echo ($single_data->tax_id == $data->id) ? 'selected="selected"' : ''; } ?>>
-                                                        <?= $data->tax; ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="invoice-add-table col-lg-12 col-md-12 col-12">
-                                        <h4>Item Details   <a href="javascript:void(0);" class="add_more_iteam add-btn me-2 "><i class="fas fa-plus-circle"></i></a></h4>
-                                                <div>
-                                                    <table class="table table-center add-table-items">
+                        <div class="tab-content" id="pills-tabContent">
+                            <div id="viewAppointmentLetterListCard" class="card mt-2" <?php if ($showForm) echo 'style="display: none;"'; ?>>
+                                <div class="tab-pane fade show <?php echo !$showForm ? 'show active' : ''; ?>" id="pills-home1" role="tabpanel"
+                                        aria-labelledby="pills-home-tab1">
+                                        <div id="Invoice-list" >
+                                            <div class="table-responsive">
+                                                <table id="datatable" class="table table-striped" data-toggle="data-table">
                                                         <thead>
                                                             <tr>
-                                                                <th>Product</th>
-                                                                <th>Description</th>
-                                                                <th>Quantity</th>
-                                                                <th>Unit Price</th>
-                                                                <th>Amount</th>
-                                                                <th>Actions</th>
+                                                                <th>Sr.No</th>
+                                                                <th>Action</th>
+                                                                <th>Bill Number</th>
+                                                                <th>Payment Status</th>
+                                                                <th>Bill Date</th>
+                                                                <th>Customer Name</th>
+                                                                <th>Total Amount</th>
+                                                                <th>CGST</th>
+                                                                <th>SGST</th>
+                                                                <th>IGST</th>
+                                                                <th>Final Total</th>
                                                             </tr>
                                                         </thead>
-                                                        <?php if(empty($iteam)){
-                                                        // echo "<pre>";print_r($iteam);exit();    
-                                                    
-                                                        ?>    
-                                                        <tbody >
-                                                            <tr class="add-row">
-                                                                <td>
-                                                                    <select class="form-control" name="iteam[]" id="iteam_0" required>
-                                                                        <option value="">Select Product</option>
-                                                                        <?php if (!empty($product_data)) { ?>
-                                                                        <?php foreach ($product_data as $data) { ?>
-                                                                        <option value="<?= $data->id; ?>">
-                                                                            <?= $data->product_name; ?>
-                                                                        </option>
-                                                                        <?php } ?>
-                                                                        <?php } ?>
-                                                                    </select>
-
-                                                                </td>
-
-                                                                <td>
-                                                                    <input type="text" name="description[]" id="description_0" class="dynamic-items form-control">
-                                                                </td>
-                                                            
-                                                                <td>
-                                                                    <input type="text" name="quantity[]" class="dynamic-quantity form-control">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="price[]" class="dynamic-price form-control">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="total_amount[]"  class="dynamic-total_amount form-control" readonly >
-                                                                </td>
-                                                                <td class="add-remove text-end">
-                                                                    <!-- <a href="javascript:void(0);" class="add-btn me-2 add_more_iteam "><i class="fas fa-plus-circle"></i></a>  -->
-                                                                <a href="javascript:void(0);" class="remove-btn"><i class="fas fa-trash"></i></a>
-                                                                </td>
-                                                            </tr>  
-                                                        
-                                                        </tbody>
-                                                        <?php }else{
-                                                            foreach($iteam as $data){
-                                                            ?>
-
-                                                            <tr class="now add-row">
-
-                                                            <td>
-                                                                    <select class="form-control" name="iteam[]" id="iteam_0" required>
-                                                                        <option value="">Select Product</option>
-                                                                        <?php if (!empty($product_data)) { ?>
-                                                                        <?php foreach ($product_data as $sdata) { ?>
-                                                                        <option value="<?= $sdata->id; ?>"
-                                                                            <?= ($data->iteam === $sdata->id) ? "selected" : "" ?>>
-                                                                            <?= $sdata->product_name; ?>
-                                                                        </option>
-                                                                        <?php } ?>
-                                                                        <?php } ?>
-                                                                    </select>
-
-                                                                </td>
-
-                                                                <td>
-                                                                    <input type="text" name="description[]" id="description_0" value="<?=$data->description;?>" class="dynamic-items form-control">
-                                                                </td>
-                                                            
-                                                                <td>
-                                                                    <input type="text" name="quantity[]" value="<?=$data->quantity;?>" class="dynamic-quantity form-control">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="price[]" value="<?=$data->price;?>" class="dynamic-price form-control">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" name="total_amount[]"  value="<?=$data->total_amount;?>"  class="dynamic-total_amount form-control" readonly >
-                                                                </td>
-                                                                <td class="add-remove text-end">
-                                                                    <!-- <a href="javascript:void(0);" class="add-btn me-2 add_more_iteam"><i class="fas fa-plus-circle"></i></a>  -->
-                                                                <a href="javascript:void(0);" class="remove-btn btn_remove"><i class="fas fa-trash"></i></a>
-                                                                </td>
-                                                            </tr>
-                                                        <?php }} ?>
-                                                        <tbody class="dynamic_iteam"></tbody>
                                                         <tbody>
-                                                        </tbody>
-                                                    </table>   
-                                                    <hr>
-                                                    <div class="row">
-                                                        <div class="col-lg-7 plopd">
-                                                            <div class="row">
-                                                                <div class="col-lg-4">
-                                                                <p><b>Total Amount In Words : </b><p>    
-                                                                </div>
-                                                                <div class="col-lg-8">
-                                                                    <input class="form-control" type="text" name="totalamount_in_words" id="totalamount_in_words" readonly value="<?php if(!empty($single_data)){ echo $single_data->totalamount_in_words;} ?>">  
-                                                                </div>
+                                                            <?php if (!empty($invoice_data)) {
+                                                                // echo '<pre>';print_r($invoice_data);die;
+                                                                $i = 1;
+                                                                foreach ($invoice_data as $data) {
+                                                                    if ($data->tax_id == 1 || $data->tax_id == 2) { // Assuming there's a flag for GST applicability
+                                                                        $adminModel = new \App\Models\AdminModel();
+                                                            ?>
+                                                                            <tr>
+                                                                                <td><?php echo $i; ?></td>
+                                                                                <td>
+                                                                                    <!-- Bill Label with Tooltip -->
+                                                                                    <a href="bill_label/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill Label">
+                                                                                        <i class="far fa-file-alt me-2"></i>
+                                                                                    </a>
+                                                                                    
+                                                                                    <!-- Invoice with Tooltip -->
+                                                                                    <a href="invoice/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill">
+                                                                                        <i class='far fa-money-bill-alt me-2'></i>
+                                                                                    </a><br>
+                                                                                    
+                                                                                    <!-- Edit with Tooltip -->
+                                                                                    <a href="edit_invoice/<?=$data->id; ?>" data-toggle="tooltip" title="Edit Invoice">
+                                                                                        <i class="far fa-edit me-2"></i>
+                                                                                    </a>
+                                                                                    
+                                                                                    <!-- Delete with Tooltip and Confirmation -->
+                                                                                    <a href="<?=base_url(); ?>delete_compan/<?php echo $data->id; ?>/tbl_invoice" 
+                                                                                    data-toggle="tooltip" title="Delete Invoice"
+                                                                                    onclick="return confirm('Are You Sure You Want To Delete This Record?')">
+                                                                                        <i class="far fa-trash-alt me-2"></i>
+                                                                                    </a>
+                                                                                </td>
+                                                                                <td><?php echo $data->invoiceNo; ?></td>
+                                                                                <td>
+                                                                                    <select class="form-select" name="payment_status" onchange="updatestatus(this, <?= $data->id; ?>)">
+                                                                                        <option value="" selected>Select status</option>
+                                                                                        <option value="Received" <?php if ($data->payment_status == 'Received') { echo "selected"; } ?>>Received</option>
+                                                                                        <option value="Pending" <?php if ($data->payment_status == 'Pending') { echo "selected"; } ?>>Pending</option>
+                                                                                        <option value="Cancelled" <?php if ($data->payment_status == 'Cancelled') { echo "selected"; } ?>>Cancelled</option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td><?php echo $data->invoice_date; ?></td>
+                                                                                <td><?php echo $data->customer_name; ?></td>
+                                                                            
+                                                                                <td><?php echo $data->totalamounttotal; ?></td>
+                                                                                <td><?php if($data->tax_id == 1 ){ echo $data->cgst; }else{ echo("0");}?></td>
+                                                                                <td><?php if($data->tax_id == 1 ){ echo $data->sgst; }else{ echo("0");}?></td>
+                                                                                <td><?php if($data->tax_id == 2 ){ echo $data->igst; }else{ echo("0");}?></td>
+                                                                                <td><?php echo $data->final_total; ?></td>
+                                                                            </tr>
+                                                            <?php $i++;
+                                                                            }
+                                                                        }
+                                                                    } ?>
+                                                            </tbody>
+                                        
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    
+                                </div> 
+                            </div> 
+                            <!-- End of Form -->
+
+                            <!-- Invoice List -->
+                            <div class="tab-pane fade <?php echo $showForm ? 'show active' : ''; ?>" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
+                                
+                                <div id="addAppointmentLetterFormCard" class="card card-primary mt-2" <?php if (!$showForm) echo 'style="display: none;"'; ?>>
+                                    <div id="access-form">
+                                            <!-- Form for Adding/Editing Invoice Access Level -->
+                                            <form class="row g-3" id="invoice_form" action="<?= base_url('set_invoice'); ?>" method="post" enctype="multipart/form-data" novalidate>
+
+
+                                                <input type="hidden" id="invoice_id " name="id" value="<?php if(!empty($single_data)){ echo $single_data->id; } ?>">
+
+
+
+                                                <div class="col-md-3 position-relative">
+                                                <label for="branch_id" class="form-label">Branch</label>
+                                                
+
+                                                <select class="form-select" id="branch_id" name="branch_id" required>
+                                                    <option disabled value="">Select Branch</option>
+                                                    <option value="Pune" <?php if((!empty($single_data)) && $single_data->branch_id == 'Pune'){ echo'selected';} ?>>Pune</option>
+                                                    <option value="Mumbai" <?php if((!empty($single_data)) && $single_data->branch_id == 'Mumbai'){ echo'selected';} ?>>Mumbai</option>
+                                                    <option value="Nashik" <?php if((!empty($single_data)) && $single_data->branch_id == 'Nashik'){ echo'selected';} ?>>Nashik</option>
+                                                    <option value="Delhi" <?php if((!empty($single_data)) && $single_data->branch_id == 'Delhi'){ echo'selected';} ?>>Delhi</option>
+                                                    <option value="Other" <?php if((!empty($single_data)) && $single_data->branch_id == 'Other'){ echo'selected';} ?>>Other</option>
+                                                </select>
+                                                
+                                                </div>
+
+                                                <div class="col-md-3 position-relative">
+                                                    <label for="invoice_date" class="form-label"> Date</label>
+                                                    <input type="text" name="invoice_date" id="invoice_date" value="<?php if(!empty($single_data)){ echo $single_data->invoice_date; } ?>" class="form-control date_flatpicker" >
+                                                    
+                                                </div>
+
+                                                
+                                                <div class="col-md-3">
+                                                    <label for="customer_name" class="form-label"> Customer Name</label>
+                                                    <input type="text" class="form-control" id="customer_name" name="customer_name" value="<?php if(!empty($single_data)){ echo $single_data->customer_name; } ?>" required>
+                                                
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label for="contact_no" class="form-label"> Contact No.</label>
+                                                    <input type="text" class="form-control" id="contact_no" name="contact_no" value="<?php if(!empty($single_data)){ echo $single_data->contact_no; } ?>" required>
+                                                
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="delivery_address" class="form-label"> Delivery Address</label>
+                                                    <textarea class="form-control" id="delivery_address" name="delivery_address" rows="4" cols="30" required><?php if(!empty($single_data)){ echo $single_data->delivery_address; } ?></textarea>
+                                                
+                                                </div>
+
+                                                <div class="col-xl-6 col-md-6 col-sm-12 col-12 tax_id">
+                                                            <div class="form-group">
+                                                                <label>Tax</label>
+                                                                <select name="tax_id" id="tax_id" class="form-control">
+                                                                    <option> Select Tax</option>
+                                                                    <?php foreach ($tax_data as $data): ?>
+                                                                        <option value="<?= $data->id; ?>" <?php if (!empty($single_data)) { echo ($single_data->tax_id == $data->id) ? 'selected="selected"' : ''; } ?>>
+                                                                            <?= $data->tax; ?>
+                                                                        </option>
+                                                                    <?php endforeach; ?>
+                                                                </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-lg-5 plfortotatal">
-                                                            <table>
-                                                            <tr>
-                                                                    <td><b>Subtotal : </b></td>
-                                                                    <td class="pfortd"> 
-                                                                        <input type="text" name="totalamounttotal" id="totalamounttotal" class="form-control rallstyles" readonly   value="<?php if(!empty($single_data)){ echo $single_data->totalamounttotal;} ?>">
-                                                                    </td>   
-                                                                </tr>
-                                                                <tr class="cgst">
-                                                                    <td><b>CGST (%) :</b></td>
-                                                                    <td class="pfortd">
-                                                                        <input type="text" name="cgst" id="cgst" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->cgst;} ?>">
-                                                                    </td>
-                                                                </tr>
-                                                                <tr class="sgst">
-                                                                    <td><b>SGST (%) :</b></td>
-                                                                    <td class="pfortd">
-                                                                        <input type="text" name="sgst" id="sgst" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->sgst;} ?>">
-                                                                    </td>
-                                                                </tr>
-                                                                <tr class="igst">
-                                                                    <td><b>IGST (%) : </b></td>
-                                                                    <td class="pfortd">
-                                                                        <input type="text" name="igst" id="igst" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->igst;} ?>">
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><b>Total : </b></td>
-                                                                    <td class="pfortd"> 
-                                                                        <input type="text" name="final_total" id="final_total" class="form-control rallstyles" readonly value="<?php if(!empty($single_data)){ echo $single_data->final_total;} ?>">
-                                                                    </td>   
-                                                                </tr>
-                                                            </table>
+
+                                                        <div class="invoice-add-table col-lg-12 col-md-12 col-12">
+                                                            <h4>Item Details   <a href="javascript:void(0);" class="add_more_iteam add-btn me-2 "><i class="fas fa-plus-circle"></i></a></h4>
+                                                                    <div>
+                                                                        <table class="table table-center add-table-items">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Product</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Quantity</th>
+                                                                                    <th>Unit Price</th>
+                                                                                    <th>Amount</th>
+                                                                                    <th>Actions</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <?php if(empty($iteam)){
+                                                                            // echo "<pre>";print_r($iteam);exit();    
+                                                                        
+                                                                            ?>    
+                                                                            <tbody >
+                                                                                <tr class="add-row">
+                                                                                    <td>
+                                                                                        <select class="form-control" name="iteam[]" id="iteam_0" required>
+                                                                                            <option value="">Select Product</option>
+                                                                                            <?php if (!empty($product_data)) { ?>
+                                                                                            <?php foreach ($product_data as $data) { ?>
+                                                                                            <option value="<?= $data->id; ?>">
+                                                                                                <?= $data->product_name; ?>
+                                                                                            </option>
+                                                                                            <?php } ?>
+                                                                                            <?php } ?>
+                                                                                        </select>
+
+                                                                                    </td>
+
+                                                                                    <td>
+                                                                                        <input type="text" name="description[]" id="description_0" class="dynamic-items form-control">
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        <input type="text" name="quantity[]" class="dynamic-quantity form-control">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" name="price[]" class="dynamic-price form-control">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" name="total_amount[]"  class="dynamic-total_amount form-control" readonly >
+                                                                                    </td>
+                                                                                    <td class="add-remove text-end">
+                                                                                        <!-- <a href="javascript:void(0);" class="add-btn me-2 add_more_iteam "><i class="fas fa-plus-circle"></i></a>  -->
+                                                                                    <a href="javascript:void(0);" class="remove-btn"><i class="fas fa-trash"></i></a>
+                                                                                    </td>
+                                                                                </tr>  
+                                                                            
+                                                                            </tbody>
+                                                                            <?php }else{
+                                                                                foreach($iteam as $data){
+                                                                                ?>
+
+                                                                                <tr class="now add-row">
+
+                                                                                <td>
+                                                                                        <select class="form-control" name="iteam[]" id="iteam_0" required>
+                                                                                            <option value="">Select Product</option>
+                                                                                            <?php if (!empty($product_data)) { ?>
+                                                                                            <?php foreach ($product_data as $sdata) { ?>
+                                                                                            <option value="<?= $sdata->id; ?>"
+                                                                                                <?= ($data->iteam === $sdata->id) ? "selected" : "" ?>>
+                                                                                                <?= $sdata->product_name; ?>
+                                                                                            </option>
+                                                                                            <?php } ?>
+                                                                                            <?php } ?>
+                                                                                        </select>
+
+                                                                                    </td>
+
+                                                                                    <td>
+                                                                                        <input type="text" name="description[]" id="description_0" value="<?=$data->description;?>" class="dynamic-items form-control">
+                                                                                    </td>
+                                                                                
+                                                                                    <td>
+                                                                                        <input type="text" name="quantity[]" value="<?=$data->quantity;?>" class="dynamic-quantity form-control">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" name="price[]" value="<?=$data->price;?>" class="dynamic-price form-control">
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <input type="text" name="total_amount[]"  value="<?=$data->total_amount;?>"  class="dynamic-total_amount form-control" readonly >
+                                                                                    </td>
+                                                                                    <td class="add-remove text-end">
+                                                                                        <!-- <a href="javascript:void(0);" class="add-btn me-2 add_more_iteam"><i class="fas fa-plus-circle"></i></a>  -->
+                                                                                    <a href="javascript:void(0);" class="remove-btn btn_remove"><i class="fas fa-trash"></i></a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            <?php }} ?>
+                                                                            <tbody class="dynamic_iteam"></tbody>
+                                                                            <tbody>
+                                                                            </tbody>
+                                                                        </table>   
+                                                                        <hr>
+                                                                        <div class="row">
+                                                                            <div class="col-lg-7 plopd">
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-4">
+                                                                                    <p><b>Total Amount In Words : </b><p>    
+                                                                                    </div>
+                                                                                    <div class="col-lg-8">
+                                                                                        <input class="form-control" type="text" name="totalamount_in_words" id="totalamount_in_words" readonly value="<?php if(!empty($single_data)){ echo $single_data->totalamount_in_words;} ?>">  
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-5 plfortotatal">
+                                                                                <table>
+                                                                                <tr>
+                                                                                        <td><b>Subtotal : </b></td>
+                                                                                        <td class="pfortd"> 
+                                                                                            <input type="text" name="totalamounttotal" id="totalamounttotal" class="form-control rallstyles" readonly   value="<?php if(!empty($single_data)){ echo $single_data->totalamounttotal;} ?>">
+                                                                                        </td>   
+                                                                                    </tr>
+                                                                                    <tr class="cgst">
+                                                                                        <td><b>CGST (%) :</b></td>
+                                                                                        <td class="pfortd">
+                                                                                            <input type="text" name="cgst" id="cgst" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->cgst;} ?>">
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr class="sgst">
+                                                                                        <td><b>SGST (%) :</b></td>
+                                                                                        <td class="pfortd">
+                                                                                            <input type="text" name="sgst" id="sgst" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->sgst;} ?>">
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr class="igst">
+                                                                                        <td><b>IGST (%) : </b></td>
+                                                                                        <td class="pfortd">
+                                                                                            <input type="text" name="igst" id="igst" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->igst;} ?>">
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td><b>Total : </b></td>
+                                                                                        <td class="pfortd"> 
+                                                                                            <input type="text" name="final_total" id="final_total" class="form-control rallstyles" readonly value="<?php if(!empty($single_data)){ echo $single_data->final_total;} ?>">
+                                                                                        </td>   
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                         </div>
-                                                    </div>
+
+                                            
+
+                                                <div class="col-12">
+                                                    <!-- <button id="submit-button" class="btn btn-primary" type="submit">Submit</button> -->
+                                                    <button type="submit" value="" name="Save" id="submit" class="btn btn-lg btn-success">
+                                                    <?php if(!empty($single_data)){ echo 'Update'; }else{ echo 'Save';} ?>
                                                 </div>
+                                            </form>
                                     </div>
-
-                        
-
-                            <div class="col-12">
-                                <button id="submit-button" class="btn btn-primary" type="submit">Submit</button>
+                                </div>    
                             </div>
-                        </form>
+                            <!-- End of Invoice List -->
+                        </div>
                     </div>
-                    <!-- End of Form -->
-
-                    <!-- Invoice List -->
-                    <div id="Invoice-list" style="display:none;">
-
-                        
-                        
-                    <div class="table-responsive">
-                  <table id="datatable" class="table table-striped" data-toggle="data-table">
-                     <thead>
-                        <tr>
-                            <th>Sr.No</th>
-                            <th>Action</th>
-                            <th>Payment Status</th>
-                            <th>Invoice Date</th>
-                            <th>Customer Name</th>
-                            
-                            <th>Total Amount</th>
-                            <th>CGST</th>
-                            <th>SGST</th>
-                            <th>IGST</th>
-                            <th>Final Total</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <?php if (!empty($invoice_data)) {
-                            $i = 1;
-                            foreach ($invoice_data as $data) {
-                                if ($data->tax_id == 1 || $data->tax_id == 2) { // Assuming there's a flag for GST applicability
-                                    $adminModel = new \App\Models\AdminModel();
-                        ?>
-                                        <tr>
-                                            <td><?php echo $i; ?></td>
-                                            <td>
-                                                <a href="edit_invoice/<?=$data->id; ?>"><i class="far fa-edit me-2"></i></a>
-                                                <a href="<?=base_url(); ?>delete_compan/<?php echo $data->id; ?>/tbl_invoice" onclick="return confirm('Are You Sure You Want To Delete This Record?')"><i class="far fa-trash-alt me-2"></i></a>
-                                                <a href="invoice/<?=$data->id; ?>" target="_blank"><i class="far fa-eye me-2"> </i></a>
-                                            </td>
-                                            <td>
-                                                <select class="form-select" name="payment_status" onchange="updatestatus(this, <?= $data->id; ?>)">
-                                                    <option value="" selected>Select status</option>
-                                                    <option value="Received" <?php if ($data->payment_status == 'Received') { echo "selected"; } ?>>Received</option>
-                                                    <option value="Pending" <?php if ($data->payment_status == 'Pending') { echo "selected"; } ?>>Pending</option>
-                                                    <option value="Cancelled" <?php if ($data->payment_status == 'Cancelled') { echo "selected"; } ?>>Cancelled</option>
-                                                </select>
-                                            </td>
-                                            <td><?php echo $data->invoice_date; ?></td>
-                                            <td><?php echo $data->customer_name; ?></td>
-                                        
-                                            <td><?php echo $data->totalamounttotal; ?></td>
-                                            <td><?php if($data->tax_id == 1 ){ echo $data->cgst; }else{ echo("0");}?></td>
-                                            <td><?php if($data->tax_id == 1 ){ echo $data->sgst; }else{ echo("0");}?></td>
-                                            <td><?php if($data->tax_id == 2 ){ echo $data->igst; }else{ echo("0");}?></td>
-                                            <td><?php echo $data->final_total; ?></td>
-                                        </tr>
-                        <?php $i++;
-                                        }
-                                    }
-                                } ?>
-                        </tbody>
-    
-                  </table>
-               </div>
-                    </div>
-                    <!-- End of Invoice List -->
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 <?php include __DIR__.'/../Admin/footer.php'; ?>
+<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip(); 
+});
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var url = window.location.href;
@@ -624,9 +686,7 @@ $('.btn_remove').on('click', function() {
  
 
 
-</script>
 
-<script>
 $(document).ready(function(){
     function updateTaxFields() {
         var selectedTaxId = $('#tax_id').val();
@@ -659,12 +719,7 @@ $(document).ready(function(){
     updateTaxFields();
     $('#tax_id').change(updateTaxFields);
 });
-</script>
 
-
-
-
-<script>
 // Function to format the date as yyyy-mm-dd
 function formatDate(date) {
     let day = ("0" + date.getDate()).slice(-2);
@@ -680,9 +735,7 @@ document.addEventListener('DOMContentLoaded', function () {
         invoiceDateInput.value = formatDate(new Date());
     }
 });
-</script>
 
-<script>
     $(document).ready(function () {
         // Custom validator methods
         $.validator.addMethod("validMobileNumber", function (value, element) {
@@ -727,6 +780,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     required: 'Please enter address.'
                 },
              
+            }
+        });
+    });
+
+
+    $(document).ready(function() {
+        $('#viewCreateAppointmentLetterBtn').on('click', function() {
+            var $viewAppointmentLetterListCard = $('#viewAppointmentLetterListCard');
+            var $addAppointmentLetterFormCard = $('#addAppointmentLetterFormCard');
+            var $button = $('#viewCreateAppointmentLetterBtn');
+
+            if ($viewAppointmentLetterListCard.is(':visible')) {
+                $viewAppointmentLetterListCard.hide();
+                $addAppointmentLetterFormCard.show();
+                $button.text('Appointment Letter List');
+            } else {
+                $viewAppointmentLetterListCard.show();
+                $addAppointmentLetterFormCard.hide();
+                $button.text('Add Appointment Letter');
             }
         });
     });

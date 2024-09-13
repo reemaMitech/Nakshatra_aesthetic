@@ -15,7 +15,9 @@
                         method="post" enctype="multipart/form-data" novalidate>
                         <input type="hidden" id="employee_id" name="id">
                         <input type="hidden" name="id" class="form-control" id="id" value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>">
-                   
+                   <!-- <?php // if(!empty($single_data)){
+                    
+                   // print_r($single_data);exit();} ?> -->
                         <!-- Field for User ID -->
                         <div class="col-md-6">
                             <label for="username" class="form-label">User ID</label>
@@ -71,7 +73,7 @@
                         </div>
 
                         <!-- Field for Password -->
-                        <!-- Field for Password -->
+                    
                         <div class="col-md-6">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password" name="password" value="<?php if(!empty($single_data)){ echo $single_data->password; }?>" required>
@@ -107,6 +109,23 @@
                                 Please provide a valid department.
                             </div>
                         </div>
+
+                        <!-- <div class="row"> -->
+                         <!-- Radio Buttons for User Role -->
+                        <div class="col-md-12">
+                            <label class="form-label">Add this user as:</label>
+                            <div class="d-flex">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" id="admin" name="user_role" value="Admin" required>
+                                    <label class="form-check-label" for="admin">Admin</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="employee" name="user_role" value="Employee">
+                                    <label class="form-check-label" for="employee">Employee</label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- </div> -->
 
                        <!-- Checkbox List for Menu Names -->
                         <div class="col-md-12">

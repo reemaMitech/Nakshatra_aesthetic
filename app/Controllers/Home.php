@@ -311,14 +311,14 @@ public function create_user()
         'email' => $this->request->getPost('email'),
         'designation' => $this->request->getPost('designation'),
         'department' => $this->request->getPost('department'),
-        'role' =>'Admin',
+        'role' => $this->request->getPost('user_role'),
+        // 'role' =>'Admin',
         'menu_names' => $menuNames, 
     ];
     if ($id) {
         $db->table('tbl_register')->where('id', $id)->update($data);
         session()->setFlashdata('success', 'Employee updated successfully.');
     } else {
-       
         $db->table('tbl_register')->insert($data);
         session()->setFlashdata('success', 'Employee created successfully.');
     }
@@ -472,6 +472,7 @@ public function add_invoice()
 
     $wherecond = array('is_deleted' => 'N');
     $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
+    // echo'<pre>';print_r($data);die;
 
     $id = request()->getUri()->getSegment(2); // Adjust the segment number based on your route
     $data['single_data'] = [];
@@ -796,6 +797,24 @@ public function invoice()
         echo view('Admin/invoice');
     }
 }
+
+public function bill_label()
+{
+    $session = \Config\Services::session();
+
+    $model = new AdminModel();
+
+    $id = request()->getUri()->getSegment(2);
+    if (!empty($id)) {
+        // Fetching single data using the ID
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
+        $data['invoice_data'] = $model->getsingleuser('tbl_invoice', $wherecond1);
+        // echo "<pre>";print_r($data['invoice_data']);exit();
+        echo view('Admin/bill_label',$data);
+    } else {
+        echo view('Admin/bill_label');
+    }
+}
     
     public function add_courierService()
 {
@@ -839,10 +858,12 @@ public function set_courierService()
   
     $provider_name = $this->request->getPost('courier_service_provider');
     $mobile_number = $this->request->getPost('mobile_number');
+    $address = $this->request->getPost('address');
     
     $data = [
         'provider_name' => $provider_name,
         'mobile_number' => $mobile_number,
+        'address' => $address
     ];
 
     // Instantiate your model
