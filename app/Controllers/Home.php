@@ -24,14 +24,30 @@ class Home extends BaseController
             return redirect()->to('/');
         }
         $model = new AdminModel();
-        $wherecond = array('Is_active' => 'Y');
-        $data['product'] = $model->getalldata('tbl_product', $wherecond);
-        // print_r($data['product']);die;
-        $model = new AdminModel();
-        $data['country'] = $model->get_country_name();
-        $data['states'] = $model->get_states_name();
-        $data['citys'] = $model->get_citys_name();
-        
+
+    $uri = service('uri');
+    $order_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+  
+    $model = new AdminModel();
+    $data['country'] = $model->get_country_name();
+    $data['states'] = $model->get_states_name();
+    $data['citys'] = $model->get_citys_name();
+    $wherecond = array( 'Is_active' => 'Y');
+    $data['product'] = $model->getalldata('tbl_product', $wherecond);
+    if(!empty($order_id)){
+        // echo'<pre>';print_r($localbrand_id);exit();
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $order_id);
+
+        $data['single_data'] = $model->get_single_data('tbl_order', $wherecond1);
+        // print_r($data['single_data']);die;
+
+    }else{
+        $wherecond = array( 'is_active' => 'Y','is_deleted' => 'N');
+        $data['order_data'] = $model->getalldata('tbl_order', $wherecond);
+    }
+        // print_r($data['order_data']);die;
+      
         return  view('Admin/add_order',$data);
     }
     public function add_product()
