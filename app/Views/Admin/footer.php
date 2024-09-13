@@ -216,7 +216,7 @@
     
     <!-- App Script -->
     <script src="<?php echo base_url(); ?>public/assets/js/hope-ui.js" defer></script>
-=======
+
     <script src="<?=base_url(); ?>public/assets/js/core/libs.min.js"></script>
     
     <!-- External Library Bundle Script -->
