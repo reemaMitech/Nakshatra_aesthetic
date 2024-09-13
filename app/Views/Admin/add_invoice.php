@@ -15,9 +15,9 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                     <h4 class="card-title mb-0" id="form-title">Add Invoice</h4>
                     <div>
                         <!-- Button to toggle between form and invoice list -->
-                        <button id="toggle-view" class="btn btn-warning">Invoice List</button>
+                        <!-- <button id="toggle-view" class="btn btn-warning">Invoice List</button> -->
                         <!-- Button styled as a link with direct link in href -->
-                        <a id="back-button" href="<?=base_url(); ?>add_invoice" class="btn btn-secondary" style="display: none;">Back</a>
+                        <!-- <a id="back-button" href="<?=base_url(); ?>add_invoice" class="btn btn-secondary" style="display: none;">Back</a> -->
                     
                     
                     
@@ -40,7 +40,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
 
 
                         <div class="tab-content" id="pills-tabContent">
-                            <div id="viewAppointmentLetterListCard" class="card mt-2" <?php if ($showForm) echo 'style="display: none;"'; ?>>
+                            
                                 <div class="tab-pane fade show <?php echo !$showForm ? 'show active' : ''; ?>" id="pills-home1" role="tabpanel"
                                         aria-labelledby="pills-home-tab1">
                                         <div id="Invoice-list" >
@@ -130,7 +130,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                             <!-- Invoice List -->
                             <div class="tab-pane fade <?php echo $showForm ? 'show active' : ''; ?>" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
                                 
-                                <div id="addAppointmentLetterFormCard" class="card card-primary mt-2" <?php if (!$showForm) echo 'style="display: none;"'; ?>>
+                               
                                     <div id="access-form">
                                             <!-- Form for Adding/Editing Invoice Access Level -->
                                             <form class="row g-3" id="invoice_form" action="<?= base_url('set_invoice'); ?>" method="post" enctype="multipart/form-data" novalidate>
