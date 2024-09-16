@@ -20,7 +20,7 @@ $routes->post('dispatch_details', 'Home::dispatch_details');
 $routes->get('salary_slip', 'Home::salary_slip');
 $routes->get('leave_application', 'Home::leave_application');
 $routes->get('punch_in_out', 'Home::punch_in_out');
-$routes->get('petty_cash', 'Home::petty_cash');
+
 
 $routes->get('product_enquiry', 'Home::product_enquiry');
 // $routes->post('product_enquiry', 'Home::product_enquiry');
@@ -81,3 +81,7 @@ $routes->get('edit_product/(:any)', 'Home::add_product/$1');
 
 $routes->post('transfer_branch_quantity', 'Home::transfer_branch_quantity');
 
+
+$routes->get('petty_cash', 'Home::petty_cash');
+$routes->post('add_cash', 'Home::addCash');
+$routes->post('add_expense', 'Home::addExpense');
