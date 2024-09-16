@@ -35,17 +35,22 @@
                                 <div class="card-body">
                                     <form class="row g-3 needs-validation" action="<?= base_url('save_product'); ?>"
                                         method="post" novalidate>
+                                        <input type="hidden" name="id" class="form-control" id="id"
+                                  value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>">
                                         <div class="col-md-3">
                                             <label for="productName" class="form-label">Product Name</label>
-                                            <input type="text" class="form-control" id="productName"  value="<?php if(!empty($single_data)){ echo $single_data->product_name; }?>" name="product_name"
-                                                required>
+                                            <input type="text" class="form-control" id="productName"
+                                                value="<?php if(!empty($single_data)){ echo $single_data->product_name; }?>"
+                                                name="product_name" required>
                                             <div class="invalid-feedback">
                                                 Please provide a valid product name.
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <label for="unit" class="form-label">Size(weight)</label>
-                                            <input type="text" class="form-control" id="unit" name="unit" value="<?php if(!empty($single_data)){ echo $single_data->unit; }?>" required>
+                                            <input type="text" class="form-control" id="unit" name="unit"
+                                                value="<?php if(!empty($single_data)){ echo $single_data->unit; }?>"
+                                                required>
                                             <div class="invalid-feedback">
                                                 Please provide the unit.
                                             </div>
@@ -53,12 +58,20 @@
 
                                         <div class="col-md-3">
                                             <label for="unitType" class="form-label">Unit Type</label>
-                                            <select class="form-select" id="unitType" name="unit_type" value="<?php if(!empty($single_data)){ echo $single_data->unit_type; }?>" required>
+                                            <select class="form-select" id="unitType" name="unit_type" required>
                                                 <option selected disabled value="">Choose...</option>
-                                                <option value="gm">Grams (gm)</option>
-                                                <option value="kg">Kilograms (kg)</option>
-                                                <option value="ml">Milliliters (ml)</option>
-                                                <option value="ltr">Liters (ltr)</option>
+                                                <option value="gm"
+                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'gm') echo 'selected'; ?>>
+                                                    Grams (gm)</option>
+                                                <option value="kg"
+                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'kg') echo 'selected'; ?>>
+                                                    Kilograms (kg)</option>
+                                                <option value="ml"
+                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'ml') echo 'selected'; ?>>
+                                                    Milliliters (ml)</option>
+                                                <option value="ltr"
+                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'ltr') echo 'selected'; ?>>
+                                                    Liters (ltr)</option>
                                                 <!-- Add more unit types as needed -->
                                             </select>
                                             <div class="invalid-feedback">
@@ -68,14 +81,24 @@
 
                                         <div class="col-md-3">
                                             <label for="containerType" class="form-label">Type of Container</label>
-                                            <select class="form-select" id="containerType" value="<?php if(!empty($single_data)){ echo $single_data->container_type; }?>" name="container_type"
+                                            <select class="form-select" id="containerType" name="container_type"
                                                 required>
                                                 <option selected disabled value="">Choose...</option>
-                                                <option value="Bottle">Bottle</option>
-                                                <option value="Can">Can</option>
-                                                <option value="Box">Box</option>
-                                                <option value="Pouch">Pouch</option>
-                                                <option value="Jar">Jar</option>
+                                                <option value="Bottle"
+                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Bottle') echo 'selected'; ?>>
+                                                    Bottle</option>
+                                                <option value="Can"
+                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Can') echo 'selected'; ?>>
+                                                    Can</option>
+                                                <option value="Box"
+                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Box') echo 'selected'; ?>>
+                                                    Box</option>
+                                                <option value="Pouch"
+                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Pouch') echo 'selected'; ?>>
+                                                    Pouch</option>
+                                                <option value="Jar"
+                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Jar') echo 'selected'; ?>>
+                                                    Jar</option>
                                                 <!-- Add more container types as needed -->
                                             </select>
                                             <div class="invalid-feedback">
@@ -85,8 +108,8 @@
 
                                         <div class="col-md-12">
                                             <label for="ingredients" class="form-label">Ingredients</label>
-                                            <textarea class="form-control" id="ingredients" value="<?php if(!empty($single_data)){ echo $single_data->ingredients; }?>" name="ingredients"
-                                                rows="3"></textarea>
+                                            <textarea class="form-control" id="ingredients" name="ingredients"
+                                                rows="3"><?php if(!empty($single_data)){ echo $single_data->ingredients; }?></textarea>
                                             <div class="invalid-feedback">
                                                 Please provide the ingredients.
                                             </div>
@@ -96,7 +119,9 @@
 
                                         <div class="col-md-4">
                                             <label for="mrpWithTax" class="form-label">MRP</label>
-                                            <input type="text" class="form-control" id="mrpWithTax" value="<?php if(!empty($single_data)){ echo $single_data->mrp; }?>" name="mrp" required>
+                                            <input type="text" class="form-control" id="mrpWithTax"
+                                                value="<?php if(!empty($single_data)){ echo $single_data->mrp; }?>"
+                                                name="mrp" required>
                                             <div class="invalid-feedback">
                                                 Please provide the MRP including tax.
                                             </div>
@@ -114,21 +139,27 @@
                                                 </option>
                                                 <?php endforeach; ?>
                                             </select>
+
                                             <div class="invalid-feedback">
                                                 Please select the type of Tax.
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <label for="tax_ammount" class="form-label">Tax Ammount</label>
-                                            <input type="text" class="form-control" id="tax_ammount" name="tax_ammount"
-                                                required>
+                                            <input type="text" class="form-control"
+                                                value="<?php if(!empty($single_data)){ echo $single_data->tax_ammount; }?>"
+                                                id="tax_ammount" name="tax_ammount" required>
                                             <div class="invalid-feedback">
                                                 Please provide the tax Ammount.
                                             </div>
                                         </div>
-                                        <div class="col-12">
+                                        <!-- <div class="col-12">
                                             <button class="btn btn-primary" type="submit">Add Product</button>
-                                        </div>
+                                        </div> -->
+                                        <div class="col-12">
+                            <button type="submit" value="" name="Save" id="submit" class="btn btn-lg btn-success">
+                                <?php if(!empty($single_data)){ echo 'Update'; }else{ echo 'Save';} ?>
+                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -142,7 +173,7 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="table-responsive">
-                                            <table id="datatable" class="table table-striped" >
+                                            <table id="datatable" class="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>Sr. No.</th>
@@ -181,7 +212,7 @@
                                                     <p>No employees found.</p>
                                                     <?php endif; ?>
                                                 </tbody>
-                                               
+
                                             </table>
                                         </div>
                                     </div>

@@ -50,35 +50,78 @@ class Home extends BaseController
       
         return  view('Admin/add_order',$data);
     }
-    public function add_product()
-    {
-        $uri = service('uri');
-        $localbrand_id = $uri->getSegment(2);  
-        // print_r($localbrand_id);die;
-           $session = \Config\Services::session();
-            if (!$session->has('id')) {
-                return redirect()->to('/');
-            }
-            $model = new AdminModel();
-            if(!empty($localbrand_id)){
+    // public function add_product()
+    // {
+    //     $uri = service('uri');
+    //     $localbrand_id = $uri->getSegment(2);  
+    //     // print_r($localbrand_id);die;
+    //        $session = \Config\Services::session();
+    //         if (!$session->has('id')) {
+    //             return redirect()->to('/');
+    //         }
+    //         $model = new AdminModel();
+    //         if(!empty($localbrand_id)){
 
-                $wherecond1 = array('Is_active' => 'Y', 'id' => $localbrand_id);
+    //             $wherecond1 = array('Is_active' => 'Y', 'id' => $localbrand_id);
     
-                $data['single_data'] = $model->get_single_data('tbl_product', $wherecond1);
-                // print_r($data['single_data']);die;
-    
-            }
-          else{
-            $wherecond = array('is_deleted' => 'N');
-            $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
-            $wherecond = array('Is_active' => 'Y');
-            $data['Product'] = $model->getalldata('tbl_product', $wherecond);
-          }
-        return view('Admin/add_product',$data);
+    //             $data['single_data'] = $model->get_single_data('tbl_product', $wherecond1);
+    //             // print_r($data['single_data']);die;
+    //             $wherecond = array('is_deleted' => 'N');
+    //             $data['tax_data'] = $model->get_single_data('tbl_tax', $wherecond);
+    //             print_r($data['tax_data']);die;
+    //             $wherecond = array('Is_active' => 'Y');
+    //             $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    //         }
+    //       else{
+    //         $wherecond = array('is_deleted' => 'N');
+    //         $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+    //         $wherecond = array('Is_active' => 'Y');
+    //         $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    //       }
+    //     //   print_r($data['tax_data']);die;
+    //     return view('Admin/add_product',$data);
+    // }
+    public function add_product()
+{
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2);  
+
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
     }
+
+    $model = new AdminModel();
+
+    if (!empty($localbrand_id)) {
+        // Get single product data
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $data['single_data'] = $model->get_single_data('tbl_product', $wherecond1);
+
+        // Get all active tax data
+        $wherecond = array('is_deleted' => 'N');
+        $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
+        // Get all active product data
+        $wherecond = array('is_deleted' => 'N');
+        $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    } else {
+        // Get all active tax data
+        $wherecond = array('is_deleted' => 'N');
+        $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
+        // Get all active product data
+        $wherecond = array('is_deleted' => 'N');
+        $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    }
+
+    return view('Admin/add_product', $data);
+}
+
   public function save_product()
   {
 //    print_r($_POST);die;
+  $id = $this->request->getPost('id');
    $db = \Config\Database::connect();
    $data = [
        'product_name' => $this->request->getPost('product_name'),
@@ -91,7 +134,14 @@ class Home extends BaseController
        'tax_ammount' => $this->request->getPost('tax_ammount'),
 
    ];
-   $db->table('tbl_product')->insert($data);
+   if ($id) {
+    $db->table('tbl_product')->where('id', $id)->update($data);
+    session()->setFlashdata('success', 'Employee updated successfully.');
+} else {
+    $db->table('tbl_product')->insert($data);
+    session()->setFlashdata('success', 'Employee created successfully.');
+}
+//    $db->table('tbl_product')->insert($data);
    return redirect()->to('add_product');
   }
   public function take_order()
