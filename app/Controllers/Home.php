@@ -631,6 +631,7 @@ public function set_invoice()
         'discount' => $this->request->getVar('discount'),
         'final_total' => $this->request->getVar('final_total'),
         'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
+        'courier_charges' => $this->request->getVar('courier_charges'),
         
     ];
     $db = \Config\Database::connect();
@@ -681,6 +682,8 @@ public function set_invoice()
             'discount' => $this->request->getVar('discount'),
             'final_total' => $this->request->getVar('final_total'),
             'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
+            'courier_charges' => $this->request->getVar('courier_charges'),
+
             
         ];
 
@@ -1281,6 +1284,9 @@ public function getProductDetails() {
         $wherecond1 = array('is_deleted' => 'N', 'id' => $productId);
 
         $productData = $model->get_single_data('tbl_product', $wherecond1);
+
+
+        
         if (!empty($productData)) {
             // Return product details as a JSON response
             echo json_encode([
@@ -1315,5 +1321,35 @@ print_r($expenseData);die;        // Combine the data
 
         return view('balance_sheet', $data);
     }
+
+
+public function updatestatus() {
+    $id = $this->request->getPost('id');
+    $payment_status = $this->request->getPost('payment_status');
+
+    // Initialize database
+    $db = \Config\Database::connect();
+    $table = 'tbl_invoice';  // your table name
+
+    // Data to update
+    $data = [
+        'payment_status' => $payment_status,
+    ];
+
+    // Update the status
+    $update_data = $db->table($table)->where('id', $id);
+    $update_data->update($data);
+
+    // Set flashdata for success, though not needed in AJAX
+    session()->setFlashdata('success', 'Payment status updated successfully.');
+
+    // Return JSON response for AJAX
+    return $this->response->setJSON([
+        'status' => 'success',
+        'message' => 'Payment status updated successfully.',
+    ]);
+}
+
+
 
 }

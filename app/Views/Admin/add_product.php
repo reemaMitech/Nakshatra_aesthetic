@@ -138,7 +138,7 @@
 
                                             <textarea class="form-control" id="ingredients"  name="ingredients"
 
-                                            <textarea class="form-control" id="ingredients" name="ingredients"
+
 
                                                 rows="3"><?php if(!empty($single_data)){ echo $single_data->ingredients; }?></textarea>
                                             <div class="invalid-feedback">

@@ -235,21 +235,7 @@
                                                             </div>
                                                             </div>
 
-                                                            <!-- <div class="col-md-4">
-                                                                <div class="form-group">
-                                                                    <label>Vendor Type</label>
-                                                                    <select name="vendor_type_id" id="vendor_type_id" class="form-control">
-                                                                        <option>Please Select Vendor Type</option>
-                                                                        <?php if(!empty($vendor_type)){ ?>
-                                                                        <?php foreach ($vendor_type as $data): ?>
-                                                                            <option value="<?= $data['id']; ?>" <?php if (isset($single_data)) { echo ($$single_data->vendor_type_id == $data['id']) ? 'selected="selected"' : ''; } ?>>
-                                                                                <?= $data['vendor_type']; ?>
-                                                                            </option>
-                                                                        <?php endforeach; ?>
-                                                                        <?php } ?>
-                                                                    </select>   
-                                                                </div>
-                                                            </div> -->
+                                     
 
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
