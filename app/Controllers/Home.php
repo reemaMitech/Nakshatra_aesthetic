@@ -1148,6 +1148,11 @@ public function punch_in_out(){
 
 
 public function leave_application(){
+    $session = \CodeIgniter\Config\Services::session();
+
+    if (!$session->has('id')) {
+        return redirect()->to('/login'); // Redirect to login if not logged in
+    }
     return view('Admin/leave_application');
 }
 
@@ -1212,6 +1217,32 @@ public function punchPage()
     return view('punch_in_out');
 }
 
+public function Packaging_Material()
+{
+    $session = \CodeIgniter\Config\Services::session();
 
+    if (!$session->has('id')) {
+        return redirect()->to('/'); // Redirect to login if not logged in
+    }
+    return view('Admin/Add_Packaging_Material');
+}
+public function add_packaging_material()
+{
+    // print_r($_POST);die;
+    $id = $this->request->getPost('id');
+    $db = \Config\Database::connect();
+    $data = [
+        'Material_Name' => $this->request->getPost('Material_Name'),
+        'Material_Quantity' => $this->request->getPost('Material_Quantity'),
+    ];
+    if ($id) {
+        $db->table('tbl_packaging_material')->where('id', $id)->update($data);
+        session()->setFlashdata('success', 'Employee updated successfully.');
+    } else {
+        $db->table('tbl_packaging_material')->insert($data);
+        session()->setFlashdata('success', 'Employee created successfully.');
+    }
+    return redirect()->to('Packaging_Material');
 
+}
 }
