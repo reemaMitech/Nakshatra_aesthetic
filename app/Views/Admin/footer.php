@@ -90,7 +90,9 @@
                <div class="text-center">
                  <img src="<?=base_url(); ?>public/assets/images/settings/dark/02.png" alt="" class="mode dark-img img-fluid btn-border p-0 flex-column mb-2" data-setting="dir-mode" data-name="dir" data-value="rtl">
                   <img src="<?=base_url(); ?>public/assets/images/settings/light/02.png" alt="" class="mode light-img img-fluid btn-border p-0 flex-column mb-2" data-setting="dir-mode" data-name="dir" data-value="rtl">
+         
                   <span class="mt-2 "> RTL  </span>
+
               </div>
             </div>
             <hr class="hr-horizontal">
@@ -217,140 +219,38 @@
     <!-- App Script -->
     <script src="<?php echo base_url(); ?>public/assets/js/hope-ui.js" defer></script>
 
-    <script src="<?=base_url(); ?>public/assets/js/core/libs.min.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/core/libs.min.js"></script>
     
     <!-- External Library Bundle Script -->
-    <script src="<?=base_url(); ?>public/assets/js/core/external.min.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/core/external.min.js"></script>
     
     <!-- Widgetchart Script -->
-    <script src="<?=base_url(); ?>public/assets/js/charts/widgetcharts.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/charts/widgetcharts.js"></script>
     
     <!-- mapchart Script -->
-    <script src="<?=base_url(); ?>public/assets/js/charts/vectore-chart.js"></script>
-    <script src="<?=base_url(); ?>public/assets/js/charts/dashboard.js" ></script>
+    <script src="<? echo base_url(); ?>public/assets/js/charts/vectore-chart.js"></script>
+    <script src="<?echo base_url(); ?>public/assets/js/charts/dashboard.js" ></script>
     
     <!-- fslightbox Script -->
-    <script src="<?=base_url(); ?>public/assets/js/plugins/fslightbox.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/plugins/fslightbox.js"></script>
     
     <!-- Settings Script -->
-    <script src="<?=base_url(); ?>public/assets/js/plugins/setting.js"></script>
-    
-    <!-- Slider-tab Script -->
-    <script src="<?=base_url(); ?>public/assets/js/plugins/slider-tabs.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/plugins/setting.js"></script>
     
     <!-- Form Wizard Script -->
-    <script src="<?=base_url(); ?>public/assets/js/plugins/form-wizard.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/plugins/form-wizard.js"></script>
     
     <!-- AOS Animation Plugin-->
-    <script src="<?=base_url(); ?>public/assets/vendor/aos/dist/aos.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/vendor/aos/dist/aos.js"></script>
     
-    <!-- App Script -->
-    <script src="<?=base_url(); ?>public/assets/js/hope-ui.js" defer></script>
+    <script src="<? echo base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/plugins/flatpickr.js" defer></script>
 
-    <script src="<?=base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="<?=base_url(); ?>public/assets/js/plugins/flatpickr.js" defer></script>
-
-    <script src="<?=base_url(); ?>public/assets/js/plugins/jquery.validate.min.js"></script>
+    <script src="<? echo base_url(); ?>public/assets/js/plugins/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/number-to-words@1.2.4/numberToWords.min.js"></script>
 
 
-    <script>
 
-$("#country_id").change(function() {
-
-    $.ajax({
-
-        type: "post",
-
-        url: "<?=base_url();?>get_state_name_location",
-
-        data: {
-
-            'country_id': $("#country_id").val()
-
-        },
-
-        success: function(data) {
-
-            console.log(data);
-
-            $('#state_id').empty();
-
-            $('#state_id').append('<option value="">Choose ...</option>');
-
-            var opts = $.parseJSON(data);
-
-            $.each(opts, function(i, d) {
-
-                $('#state_id').append('<option value="' + d.id + '">' + d.name +
-
-                    '</option>');
-
-            });
-
-            $('#state_id').trigger("chosen:updated");
-
-        },
-
-        error: function(jqXHR, textStatus, errorThrown) {
-
-            console.log(textStatus, errorThrown);
-
-        }
-
-    });
-
-});
-
-$("#state_id").change(function() {
-
-
-
-    $.ajax({
-
-        type: "post",
-
-        url: "<?=base_url();?>get_city_name_location",
-
-        data: {
-
-            'state_id': $("#state_id").val()
-
-        },
-
-        success: function(data) {
-
-            console.log(data);
-
-            $('#city_id').empty();
-
-            $('#city_id').append('<option value="">Choose ...</option>');
-
-            var opts = $.parseJSON(data);
-
-            $.each(opts, function(i, d) {
-
-                $('#city_id').append('<option value="' + d.id + '">' + d.name +
-
-                    '</option>');
-
-            });
-
-            $('#city_id').trigger("chosen:updated");
-
-        },
-
-        error: function(jqXHR, textStatus, errorThrown) {
-
-            console.log(textStatus, errorThrown);
-
-        }
-
-    });
-
-})
-
-</script>
   
     
   </body>
