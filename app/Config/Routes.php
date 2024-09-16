@@ -59,6 +59,7 @@ $routes->get('add_invoice', 'Home::add_invoice');
 
 $routes->get('Packaging_Material', 'Home::Packaging_Material');
 $routes->post('add_packaging_material', 'Home::add_packaging_material');
+$routes->get('edit_Packaging_Material/(:any)', 'Home::Packaging_Material/$1');
 
 
 $routes->get('add_branch', 'Home::add_branch');
