@@ -1163,6 +1163,9 @@ public function punchPage()
     return view('punch_in_out');
 }
 
+public function petty_cash(){
+    return view('Admin/petty_cash');
+} 
 
 
 }
