@@ -86,9 +86,31 @@ class Home extends BaseController
     $uri = service('uri');
     $localbrand_id = $uri->getSegment(2);  
 
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
+
+                $wherecond1 = array('Is_active' => 'Y', 'id' => $localbrand_id);
+    
+                $data['single_data'] = $model->get_single_data('tbl_product', $wherecond1);
+                // print_r($data['single_data']);die;
+
+                $wherecond = array('is_deleted' => 'N');
+                $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
+                $wherecond = array('is_deleted' => 'N');
+                $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    
+            }
+          else{
+            
+            $wherecond = array('is_deleted' => 'N');
+            $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+            $wherecond = array('is_deleted' => 'N');
+            $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+
+                            // print_r($data['Product']);die;
+
+          }
+        return view('Admin/add_product',$data);
+
     }
 
     $model = new AdminModel();
@@ -134,6 +156,18 @@ class Home extends BaseController
        'tax_ammount' => $this->request->getPost('tax_ammount'),
 
    ];
+
+
+   if ($this->request->getVar('id') == "") {
+    $add_data = $db->table('tbl_product');
+    $add_data->insert($data);
+    session()->setFlashdata('success', 'Product added successfully.');
+} else {
+    $update_data = $db->table('tbl_product')->where('id', $this->request->getVar('id'));
+    $update_data->update($data);
+    session()->setFlashdata('success', 'Product updated successfully.');
+}
+
    if ($id) {
     $db->table('tbl_product')->where('id', $id)->update($data);
     session()->setFlashdata('success', 'Employee updated successfully.');
@@ -142,6 +176,7 @@ class Home extends BaseController
     session()->setFlashdata('success', 'Employee created successfully.');
 }
 //    $db->table('tbl_product')->insert($data);
+
    return redirect()->to('add_product');
   }
   public function take_order()
@@ -514,11 +549,13 @@ public function add_invoice()
         return redirect()->to('/');
     }
     $model = new AdminModel();
-    $wherecond = array('is_deleted' => 'N');
-    $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
 
     $wherecond = array('is_deleted' => 'N');
     $data['product_data'] = $model->getalldata('tbl_product', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N');
+    $data['branch_data'] = $model->getalldata('tbl_branch', $wherecond);
 
     $wherecond = array('is_deleted' => 'N');
     $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
@@ -641,12 +678,10 @@ public function set_invoice()
         'customer_name' => $this->request->getVar('customer_name'),
         'contact_no' => $this->request->getVar('contact_no'),
         'delivery_address' => $this->request->getVar('delivery_address'),
-        'tax_id' => $this->request->getVar('tax_id'),
         'invoiceNo' => $invoiceNo,
         'totalamounttotal' => $this->request->getVar('totalamounttotal'),
-        'cgst' => $this->request->getVar('cgst'),
-        'sgst' => $this->request->getVar('sgst'),
-        'igst' => $this->request->getVar('igst'),
+        'total_tax_amt' => $this->request->getVar('total_tax_amt'),
+        'discount' => $this->request->getVar('discount'),
         'final_total' => $this->request->getVar('final_total'),
         'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
         
@@ -660,19 +695,21 @@ public function set_invoice()
         $last_id =  $db->insertID();
 
         $iteam = $this->request->getVar('iteam');
-        $description = $this->request->getVar('description');
 
         $quantity = $this->request->getVar('quantity');
         $price = $this->request->getVar('price');
+
+        $gst_amount = $this->request->getVar('gst_amount');
     
         $total_amount = $this->request->getVar('total_amount');
 
         for($k=0;$k<count($iteam);$k++){
             $product_data = array(
                 'invoice_id' 	=> $last_id,
-                'iteam' 		=> $iteam[$k],
-                'description' 		=> $description[$k],
+                'product_id' 		=> $iteam[$k],
                 'quantity' 		=> $quantity[$k],
+                'gst_amount' 		=> $gst_amount[$k],
+
                 'price' 		=> $price[$k],
                 'total_amount'  => $total_amount[$k],
                 
@@ -692,11 +729,9 @@ public function set_invoice()
             'customer_name' => $this->request->getVar('customer_name'),
             'contact_no' => $this->request->getVar('contact_no'),
             'delivery_address' => $this->request->getVar('delivery_address'),
-            'tax_id' => $this->request->getVar('tax_id'),
             'totalamounttotal' => $this->request->getVar('totalamounttotal'),
-            'cgst' => $this->request->getVar('cgst'),
-            'sgst' => $this->request->getVar('sgst'),
-            'igst' => $this->request->getVar('igst'),
+            'total_tax_amt' => $this->request->getVar('total_tax_amt'),
+            'discount' => $this->request->getVar('discount'),
             'final_total' => $this->request->getVar('final_total'),
             'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
             
@@ -710,20 +745,22 @@ public function set_invoice()
         $delete = $db->table('tbl_iteam')->where('invoice_id', $this->request->getVar('id'))->delete();
 
         $iteam = $this->request->getVar('iteam');
-        $description = $this->request->getVar('description');
 
 
         $quantity = $this->request->getVar('quantity');
         $price = $this->request->getVar('price');
+        $gst_amount = $this->request->getVar('gst_amount');
+
     
         $total_amount = $this->request->getVar('total_amount');
 
         for($k=0;$k<count($iteam);$k++){
             $product_data = array(
                 'invoice_id' 	=> $last_id,
-                'iteam' 		=> $iteam[$k],
-                'description' 		=> $description[$k],
+                'product_id' 		=> $iteam[$k],
                 'quantity' 		=> $quantity[$k],
+                'gst_amount' 		=> $gst_amount[$k],
+
                 'price' 		=> $price[$k],
                 'total_amount'  => $total_amount[$k],
             ); 
@@ -827,21 +864,7 @@ public function invoice()
         $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
         $data['invoice_data'] = $model->getsingleuser('tbl_invoice', $wherecond1);
         
-        // $select = 'tbl_invoice.*, tbl_invoice.id as invoiceid, tbl_client.*, tbl_client.id as clientid, tbl_client.vendor_code, tbl_currencies.symbol as currency_symbol';
-        // $table1 = 'tbl_invoice';
-        // $table2 = 'tbl_client';
-        // $table3 = 'tbl_currencies';
-        // $joinCond1 = 'tbl_invoice.client_id = tbl_client.id';
-        // $joinCond2 = 'tbl_invoice.currancy_id = tbl_currencies.id';  // Assuming this is the correct join condition
-        // $wherecond = [
-        //     'tbl_invoice.is_deleted' => 'N',
-        //     'tbl_invoice.id' => $id[1]
-        // ];
-
-        // $data['invoice_data'] = $model->joinThreeTablessingal($select, $table1, $table2, $table3, $joinCond1, $joinCond2, $wherecond);
-
-
-        // echo "<pre>";print_r($data['invoice_data']);exit();
+      
         echo view('Admin/invoice',$data);
     } else {
         echo view('Admin/invoice');
@@ -1299,11 +1322,41 @@ public function addExpense()
     }
 }
 
+
+public function getProductDetails() {
+    $model = new AdminModel();
+
+    $productId = $this->request->getPost('product_id');
+    
+    if ($productId) {
+
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $productId);
+
+        $productData = $model->get_single_data('tbl_product', $wherecond1);
+        if (!empty($productData)) {
+            // Return product details as a JSON response
+            echo json_encode([
+                'success' => true,
+                'price' => $productData->mrp,
+                'gst_amount' => $productData->tax_ammount,
+
+            ]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Product not found']);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Invalid product ID']);
+    }
+}
+
+
 public function getBalanceSheetData()
     {
         $db = \Config\Database::connect();
         $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
         $builderExpenses = $db->table('tbl_pattyExpenses')->select('date, expense_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+
 
         $cashData = $builderCash->get()->getResultArray();
         $expenseData = $builderExpenses->get()->getResultArray();

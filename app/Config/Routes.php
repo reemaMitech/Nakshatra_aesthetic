@@ -77,6 +77,10 @@ $routes->post('save_row_Materials', 'Home::save_row_Materials');
 $routes->get('delete/(:any)/(:any)', 'Home::delete/$1/$1');
 
 $routes->get('edit_product/(:any)', 'Home::add_product/$1');
+$routes->post('getProductDetails', 'Home::getProductDetails');
+$routes->get('getProductDetails', 'Home::getProductDetails');
+
+
 
 
 

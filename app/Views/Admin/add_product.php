@@ -38,10 +38,19 @@
                                         <input type="hidden" name="id" class="form-control" id="id"
                                   value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>">
                                         <div class="col-md-3">
+                                        <input type="hidden" class="form-control" id="id"  value="<?php if(!empty($single_data)){ echo $single_data->id; }?>" name="id"
+                                                required>
+
                                             <label for="productName" class="form-label">Product Name</label>
+
+
+                                            <input type="text" class="form-control" id="productName"  value="<?php if(!empty($single_data)){ echo $single_data->product_name; }?>" name="product_name"
+                                                required>
+
                                             <input type="text" class="form-control" id="productName"
                                                 value="<?php if(!empty($single_data)){ echo $single_data->product_name; }?>"
                                                 name="product_name" required>
+
                                             <div class="invalid-feedback">
                                                 Please provide a valid product name.
                                             </div>
@@ -58,6 +67,14 @@
 
                                         <div class="col-md-3">
                                             <label for="unitType" class="form-label">Unit Type</label>
+
+                                            <select class="form-select" id="unitType" name="unit_type"  required>
+                                                <option selected disabled value="">Choose...</option>
+                                                <option value="gm" <?php if (!empty($single_data) && ($single_data->unit_type == 'gm')){ echo "selected";  } ?>>Grams (gm)</option>
+                                                <option value="kg" <?php if (!empty($single_data) && ($single_data->unit_type == 'kg')){ echo "selected";  } ?>>Kilograms (kg)</option>
+                                                <option value="ml" <?php if (!empty($single_data) && ($single_data->unit_type == 'ml')){ echo "selected";  } ?>>Milliliters (ml)</option>
+                                                <option value="ltr" <?php if (!empty($single_data) && ($single_data->unit_type == 'ltr')){ echo "selected";  } ?>>Liters (ltr)</option>
+
                                             <select class="form-select" id="unitType" name="unit_type" required>
                                                 <option selected disabled value="">Choose...</option>
                                                 <option value="gm"
@@ -72,6 +89,7 @@
                                                 <option value="ltr"
                                                     <?php if (!empty($single_data) && $single_data->unit_type == 'ltr') echo 'selected'; ?>>
                                                     Liters (ltr)</option>
+
                                                 <!-- Add more unit types as needed -->
                                             </select>
                                             <div class="invalid-feedback">
@@ -84,6 +102,14 @@
                                             <select class="form-select" id="containerType" name="container_type"
                                                 required>
                                                 <option selected disabled value="">Choose...</option>
+
+                                                <option value="Bottle" <?php if (!empty($single_data) && ($single_data->container_type == 'Bottle')) { echo "selected"; } ?>>Bottle</option>
+                                                <option value="Can" <?php if (!empty($single_data) && ($single_data->container_type == 'Can')) { echo "selected"; } ?>>Can</option>
+                                                <option value="Box" <?php if (!empty($single_data) && ($single_data->container_type == 'Box')) { echo "selected"; } ?>>Box</option>
+                                                <option value="Pouch" <?php if (!empty($single_data) && ($single_data->container_type == 'Pouch')) { echo "selected"; } ?>>Pouch</option>
+                                                <option value="Jar" <?php if (!empty($single_data) && ($single_data->container_type == 'Jar')) { echo "selected"; } ?>>Jar</option>
+
+
                                                 <option value="Bottle"
                                                     <?php if (!empty($single_data) && $single_data->container_type == 'Bottle') echo 'selected'; ?>>
                                                     Bottle</option>
@@ -99,6 +125,7 @@
                                                 <option value="Jar"
                                                     <?php if (!empty($single_data) && $single_data->container_type == 'Jar') echo 'selected'; ?>>
                                                     Jar</option>
+
                                                 <!-- Add more container types as needed -->
                                             </select>
                                             <div class="invalid-feedback">
@@ -108,7 +135,11 @@
 
                                         <div class="col-md-12">
                                             <label for="ingredients" class="form-label">Ingredients</label>
+
+                                            <textarea class="form-control" id="ingredients"  name="ingredients"
+
                                             <textarea class="form-control" id="ingredients" name="ingredients"
+
                                                 rows="3"><?php if(!empty($single_data)){ echo $single_data->ingredients; }?></textarea>
                                             <div class="invalid-feedback">
                                                 Please provide the ingredients.
@@ -146,9 +177,14 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="tax_ammount" class="form-label">Tax Ammount</label>
+
+                                            <input type="text" class="form-control" id="tax_ammount" name="tax_ammount" value="<?php if(!empty($single_data)){ echo $single_data->tax_ammount; }?>"
+                                                required>
+
                                             <input type="text" class="form-control"
                                                 value="<?php if(!empty($single_data)){ echo $single_data->tax_ammount; }?>"
                                                 id="tax_ammount" name="tax_ammount" required>
+
                                             <div class="invalid-feedback">
                                                 Please provide the tax Ammount.
                                             </div>
@@ -185,7 +221,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php if (is_array($Product) || is_object($Product)): 
+
+                                                    <?php 
+                                                                    // print_r($data['Product']);die;
+
+                                                    if (!empty($Product)): 
                                                         $i = 1; 
                                                          foreach ($Product as $Product):
                                                              ?>
@@ -200,7 +240,7 @@
                                                             <a
                                                                 href="<?= base_url(); ?>edit_product/<?= $Product->id; ?>"><i
                                                                     class="far fa-edit me-2"></i></a>
-                                                            <a href="<?= base_url(); ?>delete/<?= base64_encode($Product->id); ?>/tbl_product"
+                                                            <a href="<?= base_url(); ?>delete_compan/<?= $Product->id; ?>/tbl_product"
                                                                 onclick="return confirm('Are You Sure You Want To Delete This Record?')"><i
                                                                     class="far fa-trash-alt me-2"></i></a>
                                                         </td>
