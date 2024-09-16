@@ -1217,9 +1217,15 @@ public function punchPage()
     return view('punch_in_out');
 }
 
+
+public function petty_cash(){
+    return view('Admin/petty_cash');
+} 
+
 public function Packaging_Material()
 {
     $session = \CodeIgniter\Config\Services::session();
+
 
     if (!$session->has('id')) {
         return redirect()->to('/'); // Redirect to login if not logged in
