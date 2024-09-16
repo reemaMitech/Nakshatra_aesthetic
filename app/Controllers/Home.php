@@ -353,6 +353,78 @@ public function product_enquiry_details()
     return redirect()->to('product_enquiry');
 }
 
+public function add_follow_up()
+{
+    $db = \Config\Database::connect();
+    $enquiry_id = $this->request->getPost('enquiry_id');
+    $follow_up_date = $this->request->getPost('follow_up_date');
+    $status_remark = $this->request->getPost('status_remark');
+
+    // Validate the inputs (basic validation for demonstration)
+    if (empty($enquiry_id) || empty($follow_up_date) || empty($status_remark)) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Missing required fields.'
+        ]);
+    }
+
+    try {
+        // Get the current follow-up count for this enquiry
+        $last_follow_up = $db->table('tbl_follow_up')
+            ->select('follow_up_count')
+            ->where('enquiry_id', $enquiry_id)
+            ->orderBy('follow_up_count', 'DESC')
+            ->get()
+            ->getRow();
+
+        // Set the new follow-up count (increment by 1)
+        $new_follow_up_count = $last_follow_up ? $last_follow_up->follow_up_count + 1 : 1;
+
+        // Insert the new follow-up entry
+        $data = [
+            'enquiry_id' => $enquiry_id,
+            'follow_up_date' => $follow_up_date,
+            'status_remark' => $status_remark,
+            'follow_up_count' => $new_follow_up_count,
+        ];
+        $db->table('tbl_follow_up')->insert($data);
+
+        // Return success response
+        return $this->response->setJSON([
+            'success' => true,
+            'enquiry_id' => $enquiry_id,
+            'new_count' => $new_follow_up_count
+        ]);
+    } catch (\Exception $e) {
+        // Return error response in case of an exception
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'An error occurred while saving follow-up: ' . $e->getMessage()
+        ]);
+    }
+}
+
+public function get_follow_up_data()
+{
+    $db = \Config\Database::connect();
+
+    // Assuming `tbl_customers` has the customer name and `tbl_product_enquiry` stores enquiry details
+    $followUpData = $db->table('tbl_follow_up')
+        ->select('tbl_follow_up.enquiry_id, tbl_follow_up.follow_up_date, tbl_follow_up.status_remark, tbl_follow_up.follow_up_count, tbl_product_enquiry.cust_name')  // Select required fields
+        ->join('tbl_product_enquiry', 'tbl_follow_up.enquiry_id = tbl_product_enquiry.id')  // Join enquiry table
+        ->get()
+        ->getResult();
+
+    // Return data as JSON
+    return $this->response->setJSON([
+        'success' => true,
+        'data' => $followUpData
+    ]);
+}
+
+
+
+
 
 public function access_level()
 {
@@ -552,34 +624,46 @@ public function increment_follow_up_count()
 {
     $id = $this->request->getPost('id');  // Get enquiry ID from the POST request
 
+    // Check if ID is provided
     if ($id) {
         $db = \Config\Database::connect();
         $builder = $db->table('tbl_product_enquiry');
 
-        // Use IFNULL to treat null values as 0 before incrementing
-        $builder->set('follow_up_count', 'IFNULL(follow_up_count, 0) + 1', FALSE);
-        $builder->where('id', $id);
-        $builder->update();
+        try {
+            // Increment the follow_up_count (use IFNULL to treat null as 0)
+            $builder->set('follow_up_count', 'IFNULL(follow_up_count, 0) + 1', FALSE);
+            $builder->where('id', $id);
+            $builder->update();
 
-        // Fetch the updated follow_up_count value
-        $query = $builder->select('follow_up_count')->where('id', $id)->get();
-        $result = $query->getRow();
+            // Fetch the updated follow_up_count value
+            $query = $builder->select('follow_up_count')->where('id', $id)->get();
+            $result = $query->getRow();
 
-        if ($result) {
-            return $this->response->setJSON([
-                'success' => true,
-                'follow_up_count' => $result->follow_up_count
-            ]);
-        } else {
+            if ($result) {
+                // Return success with the updated count
+                return $this->response->setJSON([
+                    'success' => true,
+                    'follow_up_count' => $result->follow_up_count
+                ]);
+            } else {
+                // If no result was found for the given ID
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Follow-up count not found for the given enquiry.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Handle any database errors or exceptions
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Could not retrieve updated follow-up count.'
+                'message' => 'An error occurred: ' . $e->getMessage()
             ]);
         }
     } else {
+        // Invalid or missing ID
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'Invalid ID'
+            'message' => 'Invalid enquiry ID.'
         ]);
     }
 }

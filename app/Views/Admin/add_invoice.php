@@ -128,10 +128,10 @@ if (strpos($current_url, 'edit_invoice') !== false) {
 
                                     
                                 </div> 
-                            </div> 
-                            <!-- End of Form -->
+                            <!-- </div>  -->
+                            <!-- End of List -->
 
-                            <!-- Invoice List -->
+                            <!-- Invoice Form -->
                             <div class="tab-pane fade <?php echo $showForm ? 'show active' : ''; ?>" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
                                 
                                
