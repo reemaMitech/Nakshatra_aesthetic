@@ -978,7 +978,6 @@ public function set_vendor_data()
 public function dispatch() {
     $db = \Config\Database::connect();
     
-
     $courierBuilder = $db->table('tbl_courierservice');
     $data['courier_services'] = $courierBuilder->get()->getResultArray();
 
