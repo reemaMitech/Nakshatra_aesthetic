@@ -12,7 +12,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
         <div class="col-sm-12 col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="card-title mb-0" id="form-title">Add Invoice</h4>
+                    <h4 class="card-title mb-0" id="form-title">Order Booking</h4>
                     <div>
                         <!-- Button to toggle between form and invoice list -->
                         <!-- <button id="toggle-view" class="btn btn-warning">Invoice List</button> -->
@@ -30,10 +30,10 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                     <div class="bd-example">
                     <ul class="nav nav-pills" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Invoice List</button>
+                                <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Bill List</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Add Invoice</button>
+                                <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Add Bill</button>
                             </li>
                         </ul>
 

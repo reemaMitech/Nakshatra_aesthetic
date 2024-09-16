@@ -1,6 +1,6 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
 
-<div class="conatiner-fluid content-inner mt-n5 py-0">
+<div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="row row-cols-1">
@@ -292,7 +292,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img class="rounded bg-soft-primary img-fluid avatar-40 me-3"
-                                                        src="../assets/images/shapes/01.png" alt="profile">
+                                                        src="<?php  echo base_url(); ?>public/assets/images/shapes/01.png" alt="profile">
                                                     <h6>Addidis Sportwear</h6>
                                                 </div>
                                             </td>
@@ -326,7 +326,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img class="rounded bg-soft-primary img-fluid avatar-40 me-3"
-                                                        src="../assets/images/shapes/05.png" alt="profile">
+                                                        src="<?php  echo base_url(); ?>public/assets/images/shapes/05.png" alt="profile">
                                                     <h6>Netflixer Platforms</h6>
                                                 </div>
                                             </td>
@@ -357,7 +357,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img class="rounded bg-soft-primary img-fluid avatar-40 me-3"
-                                                        src="../assets/images/shapes/02.png" alt="profile">
+                                                        src="<?php  echo base_url(); ?>public/assets/images/shapes/02.png" alt="profile">
                                                     <h6>Shopifi Stores</h6>
                                                 </div>
                                             </td>
@@ -388,7 +388,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img class="rounded bg-soft-primary img-fluid avatar-40 me-3"
-                                                        src="../assets/images/shapes/03.png" alt="profile">
+                                                        src="<?php  echo base_url(); ?>public/assets/images/shapes/03.png" alt="profile">
                                                     <h6>Bootstrap Technologies</h6>
                                                 </div>
                                             </td>
@@ -425,7 +425,7 @@
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <img class="rounded bg-soft-primary img-fluid avatar-40 me-3"
-                                                        src="../assets/images/shapes/04.png" alt="profile">
+                                                        src="<?php  echo base_url(); ?>public/assets/images/shapes/04.png" alt="profile">
                                                     <h6>Community First</h6>
                                                 </div>
                                             </td>
