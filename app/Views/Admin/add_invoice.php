@@ -15,13 +15,8 @@ if (strpos($current_url, 'edit_invoice') !== false) {
 
                     <h4 class="card-title mb-0" id="form-title">Add Invoice</h4>
 
-                    <h4 class="card-title mb-0" id="form-title">Order Booking</h4>
                     <div>
-                        <!-- Button to toggle between form and invoice list -->
-                        <!-- <button id="toggle-view" class="btn btn-warning">Invoice List</button> -->
-                        <!-- Button styled as a link with direct link in href -->
-                        <!-- <a id="back-button" href="<?=base_url(); ?>add_invoice" class="btn btn-secondary" style="display: none;">Back</a> -->
-                    
+                     
                     
                     
                     
@@ -75,6 +70,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                             <tr>
                                                                                 <td><?php echo $i; ?></td>
                                                                                 <td>
+                                                                                    <?php if($data->payment_status === 'Received'){ ?>
                                                                                     <!-- Bill Label with Tooltip -->
                                                                                     <a href="bill_label/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill Label">
                                                                                         <i class="far fa-file-alt me-2"></i>
@@ -83,7 +79,11 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                     <!-- Invoice with Tooltip -->
                                                                                     <a href="invoice/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill">
                                                                                         <i class='far fa-money-bill-alt me-2'></i>
-                                                                                    </a><br>
+                                                                                    </a>
+
+                                                                                    <?php } ?>
+
+
                                                                                     
                                                                                     <!-- Edit with Tooltip -->
                                                                                     <!-- <a href="edit_invoice/<?=$data->id; ?>" data-toggle="tooltip" title="Edit Invoice">
@@ -193,7 +193,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                        
 
                                                         <div class="invoice-add-table col-lg-12 col-md-12 col-12">
-                                                            <h4>Item Details   <a href="javascript:void(0);" class="add_more_iteam add-btn me-2 "><i class="fas fa-plus-circle"></i></a></h4>
+                                                            <h4>Product Details   <a href="javascript:void(0);" class="add_more_iteam add-btn me-2 "><i class="fas fa-plus-circle"></i></a></h4>
                                                                     <div>
                                                                         <table class="table table-center add-table-items">
                                                                             <thead>
@@ -322,6 +322,13 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                             <input type="text" name="total_tax_amt" id="total_tax_amt" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->total_tax_amt;} ?>">
                                                                                         </td>
                                                                                     </tr>
+
+                                                                                    <tr class="courier_charges">
+                                                                                        <td><b>Courier Charges : </b></td>
+                                                                                        <td class="pfortd">
+                                                                                            <input type="text" name="courier_charges" id="courier_charges" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->courier_charges;} ?>">
+                                                                                        </td>
+                                                                                    </tr>
                                                                                     <tr class="discount">
                                                                                     <td><b> Discount : </b></td>
                                                                                     <td class="pfortd">
@@ -343,7 +350,6 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                             
 
                                                 <div class="col-12">
-                                                    <!-- <button id="submit-button" class="btn btn-primary" type="submit">Submit</button> -->
                                                     <button type="submit" value="" name="Save" id="submit" class="btn btn-lg btn-success">
                                                     <?php if(!empty($single_data)){ echo 'Update'; }else{ echo 'Save';} ?>
                                                 </div>
@@ -405,16 +411,18 @@ $(document).ready(function(){
 
 
 <script>
-$(document).on("change", ".add-row input[type='text'], input[name='gst_amount[]'], #total_tax_amt, #discount", function () {
+$(document).on("change", ".add-row input[type='text'], input[name='gst_amount[]'], #total_tax_amt, #discount, #courier_charges", function () {
     var taxId = $("#tax_id").val();
     var row = $(this).closest(".add-row");
     var quantity = parseFloat(row.find("input[name='quantity[]']").val()) || 0;
     var price = parseFloat(row.find("input[name='price[]']").val()) || 0;
     var discount = parseFloat($("#discount").val()) || 0; // Use the global discount value
+
+    var courier_charges = parseFloat($("#courier_charges").val()) || 0; // Use the global discount value
+
     var amount = quantity * price;
 
     // Apply row-specific discount
-    amount = amount - (amount * discount / 100);
     row.find("input[name='total_amount[]']").val(amount.toFixed(2));
 
     // Calculate total amount across all rows
@@ -430,7 +438,7 @@ $(document).on("change", ".add-row input[type='text'], input[name='gst_amount[]'
     });
 
     // Calculate the final total including tax and discount
-    var final_total = total_amount + totaltaxamt - discount;
+    var final_total = total_amount + courier_charges + totaltaxamt - discount;
 
     // Update fields for total amount and final total
     $("#totalamounttotal").val(total_amount.toFixed(2));
@@ -448,7 +456,7 @@ $(document).on("change", ".add-row input[type='text'], input[name='gst_amount[]'
 
 // Automatically trigger change event on page load to initialize calculations
 $(document).ready(function() {
-    $('.add-row input[type="text"], input[name="gst_amount[]"], #total_tax_amt, #discount').change();
+    $('.add-row input[type="text"], input[name="gst_amount[]"], #total_tax_amt, #discount, #courier_charges').change();
 });
 
 
@@ -461,7 +469,7 @@ $(document).ready(function() {
     
 
     // Listen for changes in relevant inputs
-    $(document).on("change", ".add-row input[type='text'], input[name='gst_amount[]'], #total_tax_amt, #discount", function () {
+    $(document).on("change", ".add-row input[type='text'], input[name='gst_amount[]'], #total_tax_amt, #discount, #courier_charges", function () {
         calculateAndStoreTotals();
 
         // handleTaxChange();
@@ -473,10 +481,12 @@ $(document).ready(function() {
     var quantity = parseFloat(row.find("input[name='quantity[]']").val()) || 0;
     var price = parseFloat(row.find("input[name='price[]']").val()) || 0;
     var discount = parseFloat($("#discount").val()) || 0; // Use the global discount value
+
+    var courier_charges = parseFloat($("#courier_charges").val()) || 0; // Use the global discount value
+
     var amount = quantity * price;
 
     // Apply discount
-    amount = amount - (amount * discount / 100);
     row.find("input[name='total_amount[]']").val(amount.toFixed(2));
 
     // Calculate total amount
@@ -492,7 +502,7 @@ $(document).ready(function() {
     });
 
     // Calculate final total
-    var final_total = total_amount + totaltaxamt - discount;
+    var final_total = total_amount + courier_charges + totaltaxamt - discount;
 
     // Update fields
     $("#totalamounttotal").val(total_amount.toFixed(2));
@@ -543,6 +553,9 @@ $(document).ready(function () {
     var quantity = parseFloat(row.find("input[name='quantity[]']").val()) || 0;
     var price = parseFloat(row.find("input[name='price[]']").val()) || 0;
     var discount = parseFloat($("#discount").val()) || 0; // Use the global discount value
+
+    var courier_charges = parseFloat($("#courier_charges").val()) || 0; // Use the global discount value
+
     var amount = quantity * price;
 
     // Apply row-specific discount
@@ -562,7 +575,7 @@ $(document).ready(function () {
     });
 
     // Calculate the final total including tax and discount
-    var final_total = total_amount + totaltaxamt - discount;
+    var final_total = total_amount + courier_charges + totaltaxamt - discount;
 
     // Update fields for total amount and final total
     $("#totalamounttotal").val(total_amount.toFixed(2));
@@ -590,10 +603,12 @@ $('.btn_remove').on('click', function() {
     var quantity = parseFloat(row.find("input[name='quantity[]']").val()) || 0;
     var price = parseFloat(row.find("input[name='price[]']").val()) || 0;
     var discount = parseFloat($("#discount").val()) || 0; // Use the global discount value
+
+    var courier_charges = parseFloat($("#courier_charges").val()) || 0; // Use the global discount value
+
     var amount = quantity * price;
 
     // Apply row-specific discount
-    amount = amount - (amount * discount / 100);
     row.find("input[name='total_amount[]']").val(amount.toFixed(2));
 
     // Calculate total amount across all rows
@@ -609,7 +624,7 @@ $('.btn_remove').on('click', function() {
     });
 
     // Calculate the final total including tax and discount
-    var final_total = total_amount + totaltaxamt - discount;
+    var final_total = total_amount + courier_charges + totaltaxamt - discount;
 
     // Update fields for total amount and final total
     $("#totalamounttotal").val(total_amount.toFixed(2));
@@ -741,4 +756,31 @@ document.addEventListener('DOMContentLoaded', function () {
         invoiceDateInput.value = formatDate(new Date());
     }
 });
+</script>
+
+<script>
+    function updatestatus(selectElement, id) {
+        var payment_status = selectElement.value;
+
+        $.ajax({
+            url: 'updatestatus', // Your Controller method URL
+            type: 'POST',
+            data: {
+                id: id,
+                payment_status: payment_status
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert('Payment status updated successfully.');
+                    location.reload(); // Refresh the page after successful update
+                } else {
+                    alert('Failed to update payment status.');
+                }
+            },
+            error: function() {
+                alert('An error occurred while updating the payment status.');
+            }
+        });
+    }
 </script>

@@ -93,3 +93,6 @@ $routes->post('transfer_branch_quantity', 'Home::transfer_branch_quantity');
 $routes->get('petty_cash', 'Home::petty_cash');
 $routes->post('add_cash', 'Home::addCash');
 $routes->post('add_expense', 'Home::addExpense');
+
+$routes->get('updatestatus', 'Home::updatestatus');
+$routes->post('updatestatus', 'Home::updatestatus');
