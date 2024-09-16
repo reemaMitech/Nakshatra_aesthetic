@@ -57,6 +57,9 @@ $routes->post('add_stocksin', 'Home::add_stocksin');
 $routes->post('add_invoice', 'Home::add_invoice');
 $routes->get('add_invoice', 'Home::add_invoice');
 
+$routes->get('Packaging_Material', 'Home::Packaging_Material');
+$routes->post('add_packaging_material', 'Home::add_packaging_material');
+
 
 $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
