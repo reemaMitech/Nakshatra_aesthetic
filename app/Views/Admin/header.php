@@ -756,6 +756,7 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                             </i>
                         </a>
                         <ul class="sub-nav collapse" id="Accounts" data-bs-parent="#sidebar-menu">
+                             <?php  endif; ?>
                             <?php if (in_array('petty_cash', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= base_url(); ?>petty_cash">
