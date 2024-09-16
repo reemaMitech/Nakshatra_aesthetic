@@ -1226,11 +1226,20 @@ public function Packaging_Material()
 {
     $session = \CodeIgniter\Config\Services::session();
 
-
+    $model = new AdminModel();
     if (!$session->has('id')) {
         return redirect()->to('/'); // Redirect to login if not logged in
     }
-    return view('Admin/Add_Packaging_Material');
+    $wherecond = array('is_deleted' => 'N');
+    $data['packaging_material'] = $model->getalldata('tbl_packaging_material', $wherecond);
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2); 
+    if(!empty($localbrand_id)){
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $data['single_data'] = $model->get_single_data('tbl_packaging_material', $wherecond1);
+        // print_r($data['single_data']);die;
+    }
+    return view('Admin/Add_Packaging_Material',$data);
 }
 public function add_packaging_material()
 {
