@@ -219,34 +219,34 @@
     <!-- App Script -->
     <script src="<?php echo base_url(); ?>public/assets/js/hope-ui.js" defer></script>
 
-    <script src="<? echo base_url(); ?>public/assets/js/core/libs.min.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/core/libs.min.js"></script>
     
     <!-- External Library Bundle Script -->
-    <script src="<? echo base_url(); ?>public/assets/js/core/external.min.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/core/external.min.js"></script>
     
     <!-- Widgetchart Script -->
-    <script src="<? echo base_url(); ?>public/assets/js/charts/widgetcharts.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/charts/widgetcharts.js"></script>
     
     <!-- mapchart Script -->
-    <script src="<? echo base_url(); ?>public/assets/js/charts/vectore-chart.js"></script>
-    <script src="<?echo base_url(); ?>public/assets/js/charts/dashboard.js" ></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/charts/vectore-chart.js"></script>
+    <script src="<?php  echo base_url(); ?>public/assets/js/charts/dashboard.js" ></script>
     
     <!-- fslightbox Script -->
-    <script src="<? echo base_url(); ?>public/assets/js/plugins/fslightbox.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/fslightbox.js"></script>
     
     <!-- Settings Script -->
-    <script src="<? echo base_url(); ?>public/assets/js/plugins/setting.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/setting.js"></script>
     
     <!-- Form Wizard Script -->
-    <script src="<? echo base_url(); ?>public/assets/js/plugins/form-wizard.js"></script>
+    <script src="<?php  echo base_url(); ?>public/assets/js/plugins/form-wizard.js"></script>
     
     <!-- AOS Animation Plugin-->
-    <script src="<? echo base_url(); ?>public/assets/vendor/aos/dist/aos.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/vendor/aos/dist/aos.js"></script>
     
-    <script src="<? echo base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="<? echo base_url(); ?>public/assets/js/plugins/flatpickr.js" defer></script>
+    <script src="<?php echo base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/flatpickr.js" defer></script>
 
-    <script src="<? echo base_url(); ?>public/assets/js/plugins/jquery.validate.min.js"></script>
+    <script src="<?php echo base_url(); ?>public/assets/js/plugins/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/number-to-words@1.2.4/numberToWords.min.js"></script>
 
 
