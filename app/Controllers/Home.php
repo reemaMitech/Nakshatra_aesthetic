@@ -1157,70 +1157,29 @@ public function leave_application(){
 }
 
 
-public function punch()
-{
-    $session = \CodeIgniter\Config\Services::session();
-    $userId = $session->get('id'); // Get user ID from session
-    $punchType = $this->request->getPost('punch_type');
-    $db = \Config\Database::connect(); // Connect to the database
-
-    if ($punchType === 'in') {
-        // Handle Punch In logic
-        $data = [
-            'user_id' => $userId,
-            'punch_in' => date('Y-m-d H:i:s'),
-            'action' => 'punch in',
-        ];
-
-        $db->table('tbl_punch_log')->insert($data); // Insert punch in data
-
-        session()->setFlashdata('success', 'Punched In successfully!');
-    } elseif ($punchType === 'out') {
-        // Handle Punch Out logic
-        // Find the last punch in entry with no punch out
-        $query = $db->table('tbl_punch_log')
-                    ->where('user_id', $userId)
-                    ->where('punch_out IS NULL', null, false)
-                    ->orderBy('punch_in', 'DESC')
-                    ->limit(1)
-                    ->get();
-        $lastPunch = $query->getRow();
-
-        if ($lastPunch) {
-            // Update the punch out time for the last punch in entry
-            $db->table('tbl_punch_log')
-               ->where('id', $lastPunch->id)
-               ->update([
-                   'punch_out' => date('Y-m-d H:i:s'),
-                   'action' => 'punch out',
-               ]);
-
-            session()->setFlashdata('success', 'Punched Out successfully!');
-        } else {
-            session()->setFlashdata('error', 'You need to punch in first!');
-        }
-    }
-
-    return redirect()->to('/punchpage'); // Redirect back to the punch page
-
-}
-
-public function punchPage()
-{
-    $session = \CodeIgniter\Config\Services::session();
-
-    if (!$session->has('id')) {
-        return redirect()->to('/login'); // Redirect to login if not logged in
-    }
-
-
-    return view('punch_in_out');
-}
-
 
 public function petty_cash(){
-    return view('Admin/petty_cash');
-} 
+
+    $db = \Config\Database::connect();
+
+    $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+
+    $builderExpenses = $db->table('tbl_pattyExpenses')
+        ->select('date, expense_by as `by`, reason as `for`, amount, biller_or_shop, bill_number') 
+        ->orderBy('date', 'desc');
+
+    $cashData = $builderCash->get()->getResultArray();
+    $expenseData = $builderExpenses->get()->getResultArray();
+
+ 
+    $data = [
+        'cashData' => $cashData,
+        'expenseData' => $expenseData,
+    ];
+
+    return view('Admin/petty_cash', $data);
+}
+
 
 public function Packaging_Material()
 {
@@ -1228,7 +1187,7 @@ public function Packaging_Material()
 
     $model = new AdminModel();
     if (!$session->has('id')) {
-        return redirect()->to('/'); // Redirect to login if not logged in
+        return redirect()->to('/'); 
     }
     $wherecond = array('is_deleted' => 'N');
     $data['packaging_material'] = $model->getalldata('tbl_packaging_material', $wherecond);
@@ -1260,4 +1219,101 @@ public function add_packaging_material()
     return redirect()->to('Packaging_Material');
 
 }
+
+
+
+public function addCash()
+{
+    
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_pattyCash'); 
+
+    $validation = \Config\Services::validation();
+    $validation->setRules([
+        'date' => 'required|valid_date',
+        'cash_by' => 'required|min_length[3]',
+        'amount' => 'required|decimal',
+        'for' => 'required'
+    ]);
+
+    if (!$validation->withRequest($this->request)->run()) {
+       
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+    }
+
+    $data = [
+        'date' => $this->request->getPost('date'),
+        'cash_by' => $this->request->getPost('cash_by'),
+        'amount' => $this->request->getPost('amount'),
+        'reason' => $this->request->getPost('for'),
+       
+    ];
+  //  echo '<pre>'; print_r($_POST);die;
+
+    if ($builder->insert($data)) {
+        return redirect()->to('petty_cash')->with('message', 'Cash added successfully!');
+
+    } else {
+      
+        return redirect()->back()->with('error', 'Failed to add cash.');
+    }
+}
+
+public function addExpense()
+{
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_pattyExpenses'); 
+
+    // Load validation service
+    $validation = \Config\Services::validation();
+    $validation->setRules([
+        'date' => 'required|valid_date',
+        'bill_number' => 'required',
+        'expense_by' => 'required|min_length[3]',
+        'for' => 'required',
+        'biller_or_shop' => 'required',
+        'amount' => 'required|decimal'
+    ]);
+
+    if (!$validation->withRequest($this->request)->run()) {
+      
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+    }
+
+    $data = [
+        'date' => $this->request->getPost('date'),
+        'bill_number' => $this->request->getPost('bill_number'),
+        'expense_by' => $this->request->getPost('expense_by'),
+        'reason' => $this->request->getPost('for'),
+        'biller_or_shop' => $this->request->getPost('biller_or_shop'),
+        'amount' => $this->request->getPost('amount')
+    ];
+
+   // echo '<pre>'; print_r($_POST);die;
+    if ($builder->insert($data)) {
+       
+        return redirect()->to('petty_cash')->with('message', 'Expense added successfully!');
+    } else {
+        
+        return redirect()->back()->with('error', 'Failed to add expense.');
+    }
+}
+
+public function getBalanceSheetData()
+    {
+        $db = \Config\Database::connect();
+        $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+        $builderExpenses = $db->table('tbl_pattyExpenses')->select('date, expense_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+
+        $cashData = $builderCash->get()->getResultArray();
+        $expenseData = $builderExpenses->get()->getResultArray();
+print_r($expenseData);die;        // Combine the data
+        $data = [
+            'cashData' => $cashData,
+            'expenseData' => $expenseData,
+        ];
+
+        return view('balance_sheet', $data);
+    }
+
 }
