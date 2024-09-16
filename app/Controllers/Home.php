@@ -52,17 +52,33 @@ class Home extends BaseController
     }
     public function add_product()
     {
-
+        $uri = service('uri');
+        $localbrand_id = $uri->getSegment(2);  
+        // print_r($localbrand_id);die;
            $session = \Config\Services::session();
             if (!$session->has('id')) {
                 return redirect()->to('/');
             }
+            $model = new AdminModel();
+            if(!empty($localbrand_id)){
 
-        return view('Admin/add_product');
+                $wherecond1 = array('Is_active' => 'Y', 'id' => $localbrand_id);
+    
+                $data['single_data'] = $model->get_single_data('tbl_product', $wherecond1);
+                // print_r($data['single_data']);die;
+    
+            }
+          else{
+            $wherecond = array('is_deleted' => 'N');
+            $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+            $wherecond = array('Is_active' => 'Y');
+            $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+          }
+        return view('Admin/add_product',$data);
     }
   public function save_product()
   {
-   
+//    print_r($_POST);die;
    $db = \Config\Database::connect();
    $data = [
        'product_name' => $this->request->getPost('product_name'),
@@ -70,7 +86,10 @@ class Home extends BaseController
        'unit' => $this->request->getPost('unit'),
        'container_type' => $this->request->getPost('container_type'),
        'ingredients' => $this->request->getPost('ingredients'),
-       'mrp_with_tax' => $this->request->getPost('mrp_with_tax'),
+       'mrp' => $this->request->getPost('mrp'),
+       'tax_id' => $this->request->getPost('tax_id'),
+       'tax_ammount' => $this->request->getPost('tax_ammount'),
+
    ];
    $db->table('tbl_product')->insert($data);
    return redirect()->to('add_product');
