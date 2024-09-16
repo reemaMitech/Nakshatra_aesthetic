@@ -156,4 +156,13 @@ public function get_single_data($table, $wherecond)
                         ->update(['quantity' => $quantitys]);
     }
 
+public function getPattyCashData($whereCond){
+    return $this->db->table('tbl_pattycash')->where($whereCond)->get()->getResult();
+}
+
+public function getPattyExpensesData($whereCond){
+    return $this->db->table('tbl_pattyexpenses')->where($whereCond)->get()->getResult();
+}
+
+
 }

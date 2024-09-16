@@ -50,17 +50,42 @@ class Home extends BaseController
       
         return  view('Admin/add_order',$data);
     }
+    // public function add_product()
+    // {
+    //     $uri = service('uri');
+    //     $localbrand_id = $uri->getSegment(2);  
+    //     // print_r($localbrand_id);die;
+    //        $session = \Config\Services::session();
+    //         if (!$session->has('id')) {
+    //             return redirect()->to('/');
+    //         }
+    //         $model = new AdminModel();
+    //         if(!empty($localbrand_id)){
+
+    //             $wherecond1 = array('Is_active' => 'Y', 'id' => $localbrand_id);
+    
+    //             $data['single_data'] = $model->get_single_data('tbl_product', $wherecond1);
+    //             // print_r($data['single_data']);die;
+    //             $wherecond = array('is_deleted' => 'N');
+    //             $data['tax_data'] = $model->get_single_data('tbl_tax', $wherecond);
+    //             print_r($data['tax_data']);die;
+    //             $wherecond = array('Is_active' => 'Y');
+    //             $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    //         }
+    //       else{
+    //         $wherecond = array('is_deleted' => 'N');
+    //         $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+    //         $wherecond = array('Is_active' => 'Y');
+    //         $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    //       }
+    //     //   print_r($data['tax_data']);die;
+    //     return view('Admin/add_product',$data);
+    // }
     public function add_product()
-    {
-        $uri = service('uri');
-        $localbrand_id = $uri->getSegment(2);  
-        // print_r($localbrand_id);die;
-           $session = \Config\Services::session();
-            if (!$session->has('id')) {
-                return redirect()->to('/');
-            }
-            $model = new AdminModel();
-            if(!empty($localbrand_id)){
+{
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2);  
+
 
                 $wherecond1 = array('Is_active' => 'Y', 'id' => $localbrand_id);
     
@@ -85,10 +110,40 @@ class Home extends BaseController
 
           }
         return view('Admin/add_product',$data);
+
     }
+
+    $model = new AdminModel();
+
+    if (!empty($localbrand_id)) {
+        // Get single product data
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $data['single_data'] = $model->get_single_data('tbl_product', $wherecond1);
+
+        // Get all active tax data
+        $wherecond = array('is_deleted' => 'N');
+        $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
+        // Get all active product data
+        $wherecond = array('is_deleted' => 'N');
+        $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    } else {
+        // Get all active tax data
+        $wherecond = array('is_deleted' => 'N');
+        $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
+        // Get all active product data
+        $wherecond = array('is_deleted' => 'N');
+        $data['Product'] = $model->getalldata('tbl_product', $wherecond);
+    }
+
+    return view('Admin/add_product', $data);
+}
+
   public function save_product()
   {
 //    print_r($_POST);die;
+  $id = $this->request->getPost('id');
    $db = \Config\Database::connect();
    $data = [
        'product_name' => $this->request->getPost('product_name'),
@@ -102,6 +157,7 @@ class Home extends BaseController
 
    ];
 
+
    if ($this->request->getVar('id') == "") {
     $add_data = $db->table('tbl_product');
     $add_data->insert($data);
@@ -111,6 +167,16 @@ class Home extends BaseController
     $update_data->update($data);
     session()->setFlashdata('success', 'Product updated successfully.');
 }
+
+   if ($id) {
+    $db->table('tbl_product')->where('id', $id)->update($data);
+    session()->setFlashdata('success', 'Employee updated successfully.');
+} else {
+    $db->table('tbl_product')->insert($data);
+    session()->setFlashdata('success', 'Employee created successfully.');
+}
+//    $db->table('tbl_product')->insert($data);
+
    return redirect()->to('add_product');
   }
   public function take_order()
@@ -1004,7 +1070,6 @@ public function set_vendor_data()
 public function dispatch() {
     $db = \Config\Database::connect();
     
-
     $courierBuilder = $db->table('tbl_courierservice');
     $data['courier_services'] = $courierBuilder->get()->getResultArray();
 
@@ -1106,69 +1171,157 @@ public function punch_in_out(){
 
 
 public function leave_application(){
-    return view('Admin/leave_application');
-}
-
-
-public function punch()
-{
-    $session = \CodeIgniter\Config\Services::session();
-    $userId = $session->get('id'); // Get user ID from session
-    $punchType = $this->request->getPost('punch_type');
-    $db = \Config\Database::connect(); // Connect to the database
-
-    if ($punchType === 'in') {
-        // Handle Punch In logic
-        $data = [
-            'user_id' => $userId,
-            'punch_in' => date('Y-m-d H:i:s'),
-            'action' => 'punch in',
-        ];
-
-        $db->table('tbl_punch_log')->insert($data); // Insert punch in data
-
-        session()->setFlashdata('success', 'Punched In successfully!');
-    } elseif ($punchType === 'out') {
-        // Handle Punch Out logic
-        // Find the last punch in entry with no punch out
-        $query = $db->table('tbl_punch_log')
-                    ->where('user_id', $userId)
-                    ->where('punch_out IS NULL', null, false)
-                    ->orderBy('punch_in', 'DESC')
-                    ->limit(1)
-                    ->get();
-        $lastPunch = $query->getRow();
-
-        if ($lastPunch) {
-            // Update the punch out time for the last punch in entry
-            $db->table('tbl_punch_log')
-               ->where('id', $lastPunch->id)
-               ->update([
-                   'punch_out' => date('Y-m-d H:i:s'),
-                   'action' => 'punch out',
-               ]);
-
-            session()->setFlashdata('success', 'Punched Out successfully!');
-        } else {
-            session()->setFlashdata('error', 'You need to punch in first!');
-        }
-    }
-
-    return redirect()->to('/punchpage'); // Redirect back to the punch page
-
-}
-
-public function punchPage()
-{
     $session = \CodeIgniter\Config\Services::session();
 
     if (!$session->has('id')) {
         return redirect()->to('/login'); // Redirect to login if not logged in
     }
-
-
-    return view('punch_in_out');
+    return view('Admin/leave_application');
 }
+
+
+
+public function petty_cash(){
+
+    $db = \Config\Database::connect();
+
+    $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+
+    $builderExpenses = $db->table('tbl_pattyExpenses')
+        ->select('date, expense_by as `by`, reason as `for`, amount, biller_or_shop, bill_number') 
+        ->orderBy('date', 'desc');
+
+    $cashData = $builderCash->get()->getResultArray();
+    $expenseData = $builderExpenses->get()->getResultArray();
+
+ 
+    $data = [
+        'cashData' => $cashData,
+        'expenseData' => $expenseData,
+    ];
+
+    return view('Admin/petty_cash', $data);
+}
+
+
+public function Packaging_Material()
+{
+    $session = \CodeIgniter\Config\Services::session();
+
+    $model = new AdminModel();
+    if (!$session->has('id')) {
+        return redirect()->to('/'); 
+    }
+    $wherecond = array('is_deleted' => 'N');
+    $data['packaging_material'] = $model->getalldata('tbl_packaging_material', $wherecond);
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2); 
+    if(!empty($localbrand_id)){
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $data['single_data'] = $model->get_single_data('tbl_packaging_material', $wherecond1);
+        // print_r($data['single_data']);die;
+    }
+    return view('Admin/Add_Packaging_Material',$data);
+}
+public function add_packaging_material()
+{
+    // print_r($_POST);die;
+    $id = $this->request->getPost('id');
+    $db = \Config\Database::connect();
+    $data = [
+        'Material_Name' => $this->request->getPost('Material_Name'),
+        'Material_Quantity' => $this->request->getPost('Material_Quantity'),
+    ];
+    if ($id) {
+        $db->table('tbl_packaging_material')->where('id', $id)->update($data);
+        session()->setFlashdata('success', 'Employee updated successfully.');
+    } else {
+        $db->table('tbl_packaging_material')->insert($data);
+        session()->setFlashdata('success', 'Employee created successfully.');
+    }
+    return redirect()->to('Packaging_Material');
+
+}
+
+
+
+public function addCash()
+{
+    
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_pattyCash'); 
+
+    $validation = \Config\Services::validation();
+    $validation->setRules([
+        'date' => 'required|valid_date',
+        'cash_by' => 'required|min_length[3]',
+        'amount' => 'required|decimal',
+        'for' => 'required'
+    ]);
+
+    if (!$validation->withRequest($this->request)->run()) {
+       
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+    }
+
+    $data = [
+        'date' => $this->request->getPost('date'),
+        'cash_by' => $this->request->getPost('cash_by'),
+        'amount' => $this->request->getPost('amount'),
+        'reason' => $this->request->getPost('for'),
+       
+    ];
+  //  echo '<pre>'; print_r($_POST);die;
+
+    if ($builder->insert($data)) {
+        return redirect()->to('petty_cash')->with('message', 'Cash added successfully!');
+
+    } else {
+      
+        return redirect()->back()->with('error', 'Failed to add cash.');
+    }
+}
+
+public function addExpense()
+{
+    $db = \Config\Database::connect();
+    $builder = $db->table('tbl_pattyExpenses'); 
+
+    // Load validation service
+    $validation = \Config\Services::validation();
+    $validation->setRules([
+        'date' => 'required|valid_date',
+        'bill_number' => 'required',
+        'expense_by' => 'required|min_length[3]',
+        'for' => 'required',
+        'biller_or_shop' => 'required',
+        'amount' => 'required|decimal'
+    ]);
+
+    if (!$validation->withRequest($this->request)->run()) {
+      
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+    }
+
+    $data = [
+        'date' => $this->request->getPost('date'),
+        'bill_number' => $this->request->getPost('bill_number'),
+        'expense_by' => $this->request->getPost('expense_by'),
+        'reason' => $this->request->getPost('for'),
+        'biller_or_shop' => $this->request->getPost('biller_or_shop'),
+        'amount' => $this->request->getPost('amount')
+    ];
+
+   // echo '<pre>'; print_r($_POST);die;
+    if ($builder->insert($data)) {
+       
+        return redirect()->to('petty_cash')->with('message', 'Expense added successfully!');
+    } else {
+        
+        return redirect()->back()->with('error', 'Failed to add expense.');
+    }
+}
+
 
 public function getProductDetails() {
     $model = new AdminModel();
@@ -1198,6 +1351,22 @@ public function getProductDetails() {
 }
 
 
+public function getBalanceSheetData()
+    {
+        $db = \Config\Database::connect();
+        $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+        $builderExpenses = $db->table('tbl_pattyExpenses')->select('date, expense_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
 
+
+        $cashData = $builderCash->get()->getResultArray();
+        $expenseData = $builderExpenses->get()->getResultArray();
+print_r($expenseData);die;        // Combine the data
+        $data = [
+            'cashData' => $cashData,
+            'expenseData' => $expenseData,
+        ];
+
+        return view('balance_sheet', $data);
+    }
 
 }

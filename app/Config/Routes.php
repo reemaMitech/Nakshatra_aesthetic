@@ -57,6 +57,10 @@ $routes->post('add_stocksin', 'Home::add_stocksin');
 $routes->post('add_invoice', 'Home::add_invoice');
 $routes->get('add_invoice', 'Home::add_invoice');
 
+$routes->get('Packaging_Material', 'Home::Packaging_Material');
+$routes->post('add_packaging_material', 'Home::add_packaging_material');
+$routes->get('edit_Packaging_Material/(:any)', 'Home::Packaging_Material/$1');
+
 
 $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
@@ -82,3 +86,7 @@ $routes->get('getProductDetails', 'Home::getProductDetails');
 
 $routes->post('transfer_branch_quantity', 'Home::transfer_branch_quantity');
 
+
+$routes->get('petty_cash', 'Home::petty_cash');
+$routes->post('add_cash', 'Home::addCash');
+$routes->post('add_expense', 'Home::addExpense');

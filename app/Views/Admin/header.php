@@ -93,7 +93,7 @@
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/commanstylefile.css" />
     <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> -->
-  
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -242,8 +242,8 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                                 </a>
                             </li>
 
-                          <?php endif; ?>
-                          <?php if (in_array('add_row_Materials', $menu_names)) : ?>
+                            <?php endif; ?>
+                            <?php if (in_array('add_row_Materials', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link " href="<?=base_url(); ?>add_row_Materials">
                                     <i class="icon">
@@ -258,8 +258,24 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                                     <span class="item-name">Add Row Materials</span>
                                 </a>
                             </li>
-                          <?php endif; ?>
-                          <?php if (in_array('add_branch', $menu_names)) : ?>
+                            <?php endif; ?>
+                            <?php if (in_array('Packaging_Material', $menu_names)) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link " href="<?=base_url(); ?>Packaging_Material">
+                                    <i class="icon">
+                                        <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                            viewBox="0 0 24 24" fill="currentColor">
+                                            <g>
+                                                <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                    <i class="sidenav-mini-icon"> H </i>
+                                    <span class="item-name">Packaging Materials</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                            <?php if (in_array('add_branch', $menu_names)) : ?>
                             <li class="nav-item">
                                 <a class="nav-link " href="<?=base_url(); ?>add_branch">
                                     <i class="icon">
@@ -587,6 +603,46 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
 
                         </ul>
 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#Accounts" role="button"
+                            aria-expanded="false" aria-controls="Accounts">
+                            <i class="icon">
+                                <!-- SVG icon for Accounts -->
+                                <svg class="icon-20" xmlns="http://www.w3.org/2000/svg" width="20" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </i>
+                            <span class="item-name">Accounts</span>
+                            <i class="right-icon">
+                                <svg class="icon-18" xmlns="http://www.w3.org/2000/svg" width="18" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </i>
+                        </a>
+                        <ul class="sub-nav collapse" id="Accounts" data-bs-parent="#sidebar-menu">
+                            <?php if (in_array('petty_cash', $menu_names)) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url(); ?>petty_cash">
+                                    <i class="icon">
+                                        <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                            viewBox="0 0 24 24" fill="currentColor">
+                                            <g>
+                                                <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                    <i class="sidenav-mini-icon"> P </i>
+                                    <span class="item-name">Petty Cash</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+                          
+                        </ul>
                     </li>
 
                 </ul>
