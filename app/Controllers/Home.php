@@ -950,11 +950,13 @@ public function set_courierService()
     $provider_name = $this->request->getPost('courier_service_provider');
     $mobile_number = $this->request->getPost('mobile_number');
     $address = $this->request->getPost('address');
+    $location_type = $this->request->getPost('location_type');
     
     $data = [
         'provider_name' => $provider_name,
         'mobile_number' => $mobile_number,
-        'address' => $address
+        'address' => $address,
+        'location_type' => $location_type
     ];
 
     // Instantiate your model
