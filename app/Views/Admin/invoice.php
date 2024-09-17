@@ -329,6 +329,16 @@ $item_data = $adminModel->getalldata('tbl_iteam', $wherecond1);
                     <td></td>
                     <td></td>
                   
+                    <td colspan=2 class="text-right"><strong>Courier Charges</strong></td>
+
+                    <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->courier_charges; } ?></b></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  
                     <td colspan=2 class="text-right"><strong>Discount</strong></td>
 
                     <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->discount; } ?></b></td>

@@ -29,6 +29,9 @@ $routes->get('edit_enquiry/(:any)', 'Home::product_enquiry/$1');
 $routes->post('get_state_name_location','Home::get_state_name_location');
 $routes->post('get_city_name_location','Home::get_city_name_location');
 $routes->post('increment_follow_up_count', 'Home::increment_follow_up_count');
+$routes->post('add_follow_up', 'Home::add_follow_up');
+$routes->get('get_follow_up_data', 'Home::get_follow_up_data');
+
 
 $routes->get('add_courierService', 'Home::add_courierService');
 $routes->post('add_courierService', 'Home::add_courierService');
@@ -91,3 +94,6 @@ $routes->post('transfer_branch_quantity', 'Home::transfer_branch_quantity');
 $routes->get('petty_cash', 'Home::petty_cash');
 $routes->post('add_cash', 'Home::addCash');
 $routes->post('add_expense', 'Home::addExpense');
+
+$routes->get('updatestatus', 'Home::updatestatus');
+$routes->post('updatestatus', 'Home::updatestatus');
