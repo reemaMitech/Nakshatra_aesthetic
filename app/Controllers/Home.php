@@ -1316,4 +1316,41 @@ print_r($expenseData);die;        // Combine the data
         return view('balance_sheet', $data);
     }
 
+    public function sales_reports()
+    {
+        $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
+        
+        $model = new AdminModel();
+        
+        // Get all orders where is_deleted is 'N'
+        $wherecond = array('is_deleted' => 'N');
+        $orders = $model->getalldata('tbl_invoice', $wherecond);
+        
+        // Fetch branch information to match branch_id
+        $branches = $model->getalldata('tbl_branch', ['is_deleted' => 'N']);
+        
+        // Create an associative array of branch_id => branch_location for easy lookup
+        $branch_locations = [];
+        foreach ($branches as $branch) {
+            $branch_locations[$branch->id] = $branch->branch_location;
+        }
+        
+        // Loop through orders to match branch_id and fetch branch_location
+        foreach ($orders as &$order) {
+            if (!empty($order->branch_id) && isset($branch_locations[$order->branch_id])) {
+                $order->branch_location = $branch_locations[$order->branch_id];
+            } else {
+                $order->branch_location = 'Unknown'; // Default if no match found
+            }
+        }
+        
+        $data['orders'] = $orders;
+    
+        return view('Admin/sales_reports', $data);
+    }
+    
+
 }
