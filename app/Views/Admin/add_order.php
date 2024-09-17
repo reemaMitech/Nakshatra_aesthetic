@@ -97,7 +97,7 @@
                                             <select class="form-select" id="productName" name="product_name" required>
                                                 <option selected disabled value="">Choose...</option>
                                                 <?php foreach ($product as $item): ?>
-                                                <option value="<?= $item->id; ?>" data-mrp="<?= $item->mrp_with_tax; ?>" data-unit="<?= $item->unit; ?>" data-unit_type="<?= $item->unit_type; ?>">
+                                                <option value="<?= $item->id; ?>" data-mrp="<?= $item->mrp; ?>" data-unit="<?= $item->unit; ?>" data-unit_type="<?= $item->unit_type; ?>">
                                                     <?= $item->product_name; ?>
                                                 </option>
                                                 <?php endforeach; ?>

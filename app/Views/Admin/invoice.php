@@ -283,7 +283,7 @@ $item_data = $adminModel->getalldata('tbl_iteam', $wherecond1);
                     ?>
                     <?php foreach($item_data as $data){
 
-                    $wherecond = array('is_deleted' => 'N', 'id' => $data->iteam);
+                    $wherecond = array('is_deleted' => 'N', 'id' => $data->product_id);
                     $product_data = $adminModel->getsingleuser('tbl_product', $wherecond);
 
                     // echo "<pre>";print_r($product_data);exit();
@@ -291,7 +291,7 @@ $item_data = $adminModel->getalldata('tbl_iteam', $wherecond1);
                      ?>
                     <tr class="no-border">
                         <td class="text-center"><?=$i;?></td>
-                        <td><b><?php if(!empty($product_data)){ echo $product_data->product_name;} ?></b><br><?=$data->description; ?></td>
+                        <td><b><?php if(!empty($product_data)){ echo $product_data->product_name;} ?></b></td>
                         <td  class="text-center">  <?php if(!empty($product_data)){ echo $product_data->unit;} ?>
                         <?php if(!empty($product_data)){ echo $product_data->unit_type;} ?>
                         </td>
@@ -324,81 +324,42 @@ $item_data = $adminModel->getalldata('tbl_iteam', $wherecond1);
 
                     <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->totalamounttotal; } ?></b></td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  
+                    <td colspan=2 class="text-right"><strong>Courier Charges</strong></td>
+
+                    <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->courier_charges; } ?></b></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  
+                    <td colspan=2 class="text-right"><strong>Discount</strong></td>
+
+                    <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->discount; } ?></b></td>
+                </tr>
+
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  
+                    <td colspan=2 class="text-right"><strong>Tax Amount Total</strong></td>
+
+                    <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->total_tax_amt; } ?></b></td>
+                </tr>
+
+
+
 
               
-                    
-                    <?php if($invoice_data){
-                       
-                        // echo "<pre>";print_r($invoice_data);exit();
-                        ?>
-                   
-
-             <?php 
-
-                                if($invoice_data->tax_id == 1 ){
-                                    if (!empty($invoice_data) && isset($invoice_data->cgst) && isset($invoice_data->sgst)) { 
-                                        $cgst = $invoice_data->cgst ;
-
-                                        $sgst = $invoice_data->sgst ;
-
-
-
-                                        $total_amount = '';
-                                        
-                                        if(!empty($invoice_data)){ $total_amount =  $invoice_data->totalamounttotal; }
-                                    
-
-                                        $cgst_rate = $total_amount * ($cgst / 100);
-                                         $sgst_rate = $total_amount * ($sgst / 100);?>
-                                    
-                                        <?php  } ?>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td  colspan=2 class="text-right"><strong>CGST <?php echo $invoice_data->cgst; ?> %</strong></td>
-                                            <td class="text-right">₹ <?=$cgst_rate;?></td>
-
-
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td  colspan=2 class="text-right"><strong>SGST <?php echo $invoice_data->sgst; ?> %</strong></td>
-                                            <td class="text-right">₹ <?=$sgst_rate;?></td>
-
-                                        </tr>
-
-                        <?php }else if($invoice_data->tax_id == 2){
-
-                            if(isset($invoice_data->igst)){
-
-                                $igst = $invoice_data->igst ;
-
-                                $total_amount = '';
-                                
-                                if(!empty($invoice_data)){ $total_amount =  $invoice_data->totalamounttotal; }
-                               
-
-                                 $igst_rate = $total_amount * ($gst / 100);
-                            
-                            } ?>
-
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td  colspan=2 class="text-right"><strong>IGST <?php echo $invoice_data->igst; ?> %</strong></td>
-                                            <td class="text-right">₹ <?=$igst_rate;?></td>
-
-                                        </tr>
-                      <?php  }
-                        ?>
-                        </b>
-                    </td>
-                    <?php } ?>
-              
+                
                 <tr>
                     <td></td>
                     <td></td>
