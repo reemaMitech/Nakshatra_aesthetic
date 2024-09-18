@@ -56,6 +56,9 @@ $routes->post('create_user', 'Home::create_user');
 // $routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
 $routes->get('Add_stock', 'Home::Add_stock');
 $routes->post('add_stocksin', 'Home::add_stocksin');
+$routes->get('manageStocks', 'Home::manageStocks');
+$routes->get('balanceStock', 'Home::balanceStock');
+
 
 $routes->post('add_invoice', 'Home::add_invoice');
 $routes->get('add_invoice', 'Home::add_invoice');

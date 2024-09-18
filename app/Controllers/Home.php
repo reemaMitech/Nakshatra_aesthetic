@@ -493,6 +493,8 @@ public function Add_stock()
     $wherecond = array('active' => 'Y');
     $data['stck'] = $model->getalldata('tbl_stock', $wherecond);
     // Create an associative array of product IDs and names for easy lookup
+
+    // print_r( $data['stck']);die;
     $productNames = array();
     foreach ($data['product'] as $product) {
         $productNames[$product->id] = $product->product_name;
@@ -517,7 +519,7 @@ public function Add_stock()
             }
         }
     }
-
+//   echo '<pre>'  ; print_r( $data);die;
     return view('Admin/Add_stock', $data);
 }
 
@@ -539,6 +541,8 @@ public function add_stocksin()
     $db->table('tbl_stock')->insert($data);
     return redirect()->to('Add_stock');
 }
+
+
 public function add_branch()
 {
     $session = \Config\Services::session();
@@ -716,99 +720,56 @@ public function set_invoice()
         'final_total' => $this->request->getVar('final_total'),
         'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
         'courier_charges' => $this->request->getVar('courier_charges'),
-        
     ];
-    $db = \Config\Database::connect();
 
-    if ($this->request->getVar('id') == "") {
+    $invoiceId = $this->request->getVar('id');
+
+    if (empty($invoiceId)) {
+        // Insert invoice data
         $add_data = $db->table('tbl_invoice');
         $add_data->insert($data);
 
-        $last_id =  $db->insertID();
-
-        $iteam = $this->request->getVar('iteam');
-
-        $quantity = $this->request->getVar('quantity');
-        $price = $this->request->getVar('price');
-
-        $gst_amount = $this->request->getVar('gst_amount');
-    
-        $total_amount = $this->request->getVar('total_amount');
-
-        for($k=0;$k<count($iteam);$k++){
-            $product_data = array(
-                'invoice_id' 	=> $last_id,
-                'product_id' 		=> $iteam[$k],
-                'quantity' 		=> $quantity[$k],
-                'gst_amount' 		=> $gst_amount[$k],
-
-                'price' 		=> $price[$k],
-                'total_amount'  => $total_amount[$k],
-                
-            ); 
-            // echo "<pre>";print_r($product_data);exit();
-            $add_data = $db->table('tbl_iteam');
-            $add_data->insert($product_data);
-    
-        }
+        $invoiceId = $db->insertID();
         session()->setFlashdata('success', 'Invoice added successfully.');
     } else {
+        // Update invoice data
+        $update_data = $db->table('tbl_invoice')->where('id', $invoiceId);
+        $update_data->update($data);
 
-
-        $data1 = [
-            'branch_id' => $this->request->getVar('branch_id'),
-            'invoice_date' => $this->request->getVar('invoice_date'),
-            'customer_name' => $this->request->getVar('customer_name'),
-            'contact_no' => $this->request->getVar('contact_no'),
-            'delivery_address' => $this->request->getVar('delivery_address'),
-            'totalamounttotal' => $this->request->getVar('totalamounttotal'),
-            'total_tax_amt' => $this->request->getVar('total_tax_amt'),
-            'discount' => $this->request->getVar('discount'),
-            'final_total' => $this->request->getVar('final_total'),
-            'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
-            'courier_charges' => $this->request->getVar('courier_charges'),
-
-            
-        ];
-
-        $update_data = $db->table('tbl_invoice')->where('id', $this->request->getVar('id'));
-        $update_data->update($data1);
-
-        $last_id =  $this->request->getVar('id');
-
-        $delete = $db->table('tbl_iteam')->where('invoice_id', $this->request->getVar('id'))->delete();
-
-        $iteam = $this->request->getVar('iteam');
-
-
-        $quantity = $this->request->getVar('quantity');
-        $price = $this->request->getVar('price');
-        $gst_amount = $this->request->getVar('gst_amount');
-
-    
-        $total_amount = $this->request->getVar('total_amount');
-
-        for($k=0;$k<count($iteam);$k++){
-            $product_data = array(
-                'invoice_id' 	=> $last_id,
-                'product_id' 		=> $iteam[$k],
-                'quantity' 		=> $quantity[$k],
-                'gst_amount' 		=> $gst_amount[$k],
-
-                'price' 		=> $price[$k],
-                'total_amount'  => $total_amount[$k],
-            ); 
-            $add_data = $db->table('tbl_iteam');
-            $add_data->insert($product_data);
-    
-        }
+        // Delete existing items for this invoice
+        $db->table('tbl_iteam')->where('invoice_id', $invoiceId)->delete();
         session()->setFlashdata('success', 'Invoice updated successfully.');
-            
+    }
+
+    // Retrieve items and update stock
+    $items = $this->request->getVar('iteam');
+    $quantity = $this->request->getVar('quantity');
+    $price = $this->request->getVar('price');
+    $gst_amount = $this->request->getVar('gst_amount');
+    $total_amount = $this->request->getVar('total_amount');
+
+    for ($k = 0; $k < count($items); $k++) {
+        $product_data = array(
+            'invoice_id'  => $invoiceId,
+            'product_id'  => $items[$k],
+            'quantity'    => $quantity[$k],
+            'gst_amount'  => $gst_amount[$k],
+            'price'       => $price[$k],
+            'total_amount' => $total_amount[$k],
+        ); 
+        $add_data = $db->table('tbl_iteam');
+        $add_data->insert($product_data);
+
+        // Update stock
+        $db->table('tbl_stock')
+            ->where('product_name', $items[$k]) // Adjust if necessary
+            ->where('branch_name', $this->request->getVar('branch_id')) // Adjust if necessary
+            ->set('quantity', 'quantity - ' . $quantity[$k], false)
+            ->update();
     }
 
     return redirect()->to('add_invoice');
 }
-
 
 
 public function transfer_branch_quantity()
@@ -1481,7 +1442,7 @@ public function add_withdrawal()
     } else {
         return redirect()->back()->with('error', 'Failed to add withdrawal');
     }
-
+}
 
     public function sales_reports()
     {
