@@ -29,6 +29,9 @@ $routes->get('edit_enquiry/(:any)', 'Home::product_enquiry/$1');
 $routes->post('get_state_name_location','Home::get_state_name_location');
 $routes->post('get_city_name_location','Home::get_city_name_location');
 $routes->post('increment_follow_up_count', 'Home::increment_follow_up_count');
+$routes->post('add_follow_up', 'Home::add_follow_up');
+$routes->get('get_follow_up_data', 'Home::get_follow_up_data');
+
 
 $routes->get('add_courierService', 'Home::add_courierService');
 $routes->post('add_courierService', 'Home::add_courierService');
@@ -61,6 +64,7 @@ $routes->get('Packaging_Material', 'Home::Packaging_Material');
 $routes->post('add_packaging_material', 'Home::add_packaging_material');
 $routes->get('edit_Packaging_Material/(:any)', 'Home::Packaging_Material/$1');
 
+$routes->get('sales_reports', 'Home::sales_reports');
 
 $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
@@ -94,3 +98,7 @@ $routes->post('add_expense', 'Home::addExpense');
 $routes->get('bank_transaction', 'Home::bank_transaction');
 $routes->post('add_deposit', 'Home::add_deposit');
 $routes->post('add_withdrawal', 'Home::add_withdrawal');
+
+$routes->get('updatestatus', 'Home::updatestatus');
+$routes->post('updatestatus', 'Home::updatestatus');
+

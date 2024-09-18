@@ -21,9 +21,9 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false">Enquiry List</button>
                             </li>
-                            <!-- <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact" aria-selected="false">Contact</button>
-                            </li> -->
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact" aria-selected="false">Follow Up List</button>
+                            </li>
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
@@ -199,73 +199,234 @@
                                                         endforeach; 
                                                     } ?>
                                                 </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                    <th>Sr. No.</th>
-                                                        <th>Customer Name</th>
-                                                        <th>Mobile Number</th>
-                                                        <th>Product Name</th>
-                                                        <th>Product Quantity</th>
-                                                        <th>Follow-Up Action</th>
-                                                        <th>Action</th>
-                                            
-                                                    </tr>
-                                                </tfoot>
+                                               
                                             </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="tab-pane fade" id="pills-contact1" role="tabpanel"
+                            <div class="tab-pane fade" id="pills-contact1" role="tabpanel"
                                 aria-labelledby="pills-contact-tab1">
-                                <p>
-                                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu
-                                    stumptown aliqua, retro synth master cleanse. Mustache cliche tempor,
-                                    williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh
-                                    dreamcatcher synth.
-                                </p>
-                                <p>
-                                    Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu
-                                    stumptown aliqua, retro synth master cleanse.
-                                </p>
-                            </div> -->
+                               
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<!-- Follow-Up Modal -->
+<div class="modal fade" id="followUpModal" tabindex="-1" aria-labelledby="followUpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="followUpModalLabel">Add Follow-Up</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="followUpForm">
+                <div class="modal-body">
+                    <input type="hidden" id="enquiry_id" name="enquiry_id" value="">
+                    <input type="hidden" id="follow_up_count" name="follow_up_count" value="">
+
+                    <div class="mb-3">
+                        <label for="follow_up_date" class="form-label">Follow-Up Date</label>
+                        <input type="date" class="form-control" id="follow_up_date" name="follow_up_date" required>
+                    </div>
+
+                    <!-- Replace textarea with select dropdown -->
+                    <div class="mb-3">
+                        <label for="status_remark" class="form-label">Status/Remark</label>
+                        <select class="form-control" id="status_remark" name="status_remark" required>
+                            <option value="">Select a status/remark</option>
+                            <option value="Interested">Interested</option>
+                            <option value="Not Interested">Not Interested</option>
+                            <option value="After Some Days">After Some Days</option>
+                            <option value="Phone Not Answered">Phone Not Answered</option>
+                            <option value="Wrong Number">Wrong Number</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Follow-Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 </div>
 
 <?php include __DIR__.'/../Admin/footer.php'; ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-   $(document).ready(function() {
-    $(".follow-up-btn").click(function() {
-        var enquiryId = $(this).data("id"); // Get the enquiry ID
-        var followUpCountSpan = $("#follow-up-count-" + enquiryId); // Target the follow-up count span
+    $(document).ready(function() {
+    $('#datatable').DataTable({
+        "order": [[2, "desc"]] // Adjust column index and order direction as needed
+    });
+});
 
-        // Make an AJAX request to increment the follow-up count
+$(document).ready(function() {
+    // Handle the button click to show the modal and set enquiry_id
+    $('.follow-up-btn').on('click', function() {
+        var enquiryId = $(this).data('id'); // Get the enquiry ID
+        var followUpCountElem = $('#follow-up-count-' + enquiryId); // Target the follow-up count span
+        var currentCount = parseInt(followUpCountElem.text().replace('(', '').replace(')', ''), 10); // Extract the count
+
+        // Check if follow-up count is less than 3
+        if (currentCount < 3) {
+            // Set the enquiry_id and increment the follow-up count in the hidden field
+            $('#enquiry_id').val(enquiryId);
+            $('#follow_up_count').val(currentCount + 1);
+
+            // Show the modal
+            $('#followUpModal').modal('show');
+        } else {
+            // If count is 3 or more, show an alert or take no action
+            alert('Follow-up limit reached. You cannot add more follow-ups.');
+        }
+    });
+
+    // Handle the form submission for adding a follow-up
+    $('#followUpForm').on('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting normally
+        var formData = $(this).serialize(); // Serialize the form data
+
         $.ajax({
-            url: "<?= base_url('increment_follow_up_count'); ?>", // URL of the controller method
-            type: "POST",
-            data: {
-                id: enquiryId
-            },
+            url: "<?= base_url('add_follow_up'); ?>", // URL of the controller method to handle follow-up
+            method: "POST",
+            data: formData,
+            dataType: 'json', // Expect a JSON response
             success: function(response) {
                 if (response.success) {
-                    // Update the follow-up count in the span
-                    followUpCountSpan.text("(" + response.follow_up_count + ")");
+                    // Update the follow-up count in the table
+                    var followUpCountElement = $('#follow-up-count-' + response.enquiry_id);
+                    followUpCountElement.text('(' + response.new_count + ')');
+
+                    // Close the modal
+                    $('#followUpModal').modal('hide');
                 } else {
-                    alert(response.message || 'Error updating follow-up count.');
+                    alert(response.message || 'Error saving follow-up!');
                 }
             },
             error: function() {
-                alert('Error processing the request.');
+                alert('An error occurred while saving the follow-up.');
+            }
+        });
+    });
+
+    // Handle the follow-up count increment via AJAX
+    $(".follow-up-btn").click(function() {
+        var enquiryId = $(this).data("id"); // Get the enquiry ID
+        var followUpCountSpan = $("#follow-up-count-" + enquiryId); // Target the follow-up count span
+        var currentCount = parseInt(followUpCountSpan.text().replace('(', '').replace(')', ''), 10); // Extract the count
+
+        // Check if follow-up count is less than 3
+        if (currentCount < 3) {
+            // Make an AJAX request to increment the follow-up count
+            $.ajax({
+                url: "<?= base_url('increment_follow_up_count'); ?>", // URL of the controller method
+                type: "POST",
+                data: {
+                    id: enquiryId
+                },
+                dataType: 'json', // Expect JSON response
+                success: function(response) {
+                    if (response.success) {
+                        // Update the follow-up count in the span
+                        followUpCountSpan.text("(" + response.follow_up_count + ")");
+                    } else {
+                        alert(response.message || 'Error updating follow-up count.');
+                    }
+                },
+                error: function() {
+                    alert('Error processing the request.');
+                }
+            });
+        } else {
+            // If count is 3 or more, do not increment or open modal
+            alert('Follow-up limit reached. No more follow-ups can be added.');
+        }
+    });
+});
+
+
+$(document).ready(function() {
+    // When the 'Follow Up List' tab is clicked
+    $('#contact-tab').on('click', function() {
+        // Make an AJAX request to fetch follow-up data
+        $.ajax({
+            url: "<?= base_url('get_follow_up_data'); ?>", // URL to fetch follow-up data
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    // Clear the existing data in the Follow Up List tab
+                    $('#pills-contact1').empty();
+
+                    // Create the table
+                    var table = `
+                        <div class="table-responsive">
+                           <table id="datatable" class="table table-striped follow_up_table" data-toggle="data-table">
+                               <thead>
+                                   <tr>
+                                       <th>Customer Name</th>
+                                       <th>Follow Up Count</th>
+                                       <th>Date</th>
+                                       <th>Status/Remark</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                    `;
+
+                    // Loop through the follow-up data and append rows to the table
+                    response.data.forEach(function(item) {
+                        table += `
+                            <tr>
+                                <td>${item.cust_name}</td>
+                                <td>${item.follow_up_count}</td>
+                                <td>${item.follow_up_date}</td>
+                                <td>${item.status_remark}</td>
+                            </tr>
+                        `;
+                    });
+
+                    // Close the table tags
+                    table += `
+                           </tbody>
+                       </table>
+                    </div>
+                    `;
+
+                    // Append the table to the tab content
+                    $('#pills-contact1').html(table);
+
+                    // Initialize DataTables with sorting by follow_up_date in descending order
+                    $('.follow_up_table').DataTable({
+                        "paging": true,
+                        "searching": true,
+                        "ordering": true,
+                        "order": [[2, 'desc']] // Sort by the third column (follow_up_date) in descending order
+                    });
+                } else {
+                    $('#pills-contact1').html('<p>No follow-up data available.</p>');
+                }
+            },
+            error: function() {
+                alert('Error fetching follow-up data.');
             }
         });
     });
 });
+
+
+
+
+
+
 
 </script>
 
