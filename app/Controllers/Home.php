@@ -1481,7 +1481,7 @@ public function add_withdrawal()
     } else {
         return redirect()->back()->with('error', 'Failed to add withdrawal');
     }
-
+}
 
     public function sales_reports()
     {
