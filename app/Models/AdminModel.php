@@ -164,5 +164,12 @@ public function getPattyExpensesData($whereCond){
     return $this->db->table('tbl_pattyexpenses')->where($whereCond)->get()->getResult();
 }
 
+public function getBalanceStock()
+{
+    return $this->db->table('stock_table')
+                    ->select('product_name, quantity, branch_name')
+                    ->get()
+                    ->getResultArray(); // or getResult() based on your requirement
+}
 
 }

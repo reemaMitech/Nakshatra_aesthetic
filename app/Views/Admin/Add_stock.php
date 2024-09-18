@@ -1,5 +1,7 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
 
+
+
 <div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
         <div class="col-sm-12 col-lg-12">
@@ -23,15 +25,16 @@
                                     aria-selected="false">Transfer Stocks</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
-                                    data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact"
-                                    aria-selected="false">Contact</button>
+                                <button class="nav-link" id="balance-stock-tab" data-bs-toggle="tab"
+                                    data-bs-target="#pills-balance-stock" type="button" role="tab"
+                                    aria-controls="balance-stock" aria-selected="false">Balance Stock</button>
                             </li>
+
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <!-- Add Stocks Form -->
                             <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
-                                aria-labelledby="pills-home-tab1">
+                                aria-labelledby="home-tab">
                                 <form class="row g-3 needs-validation mt-3" action="<?= base_url('add_stocksin'); ?>"
                                     method="post" novalidate>
                                     <!-- Product Name Field -->
@@ -129,9 +132,9 @@
                                 </form>
                             </div>
 
-                            <!-- Profile Tab Content -->
+                            <!-- Transfer Stocks Form -->
                             <div class="tab-pane fade" id="pills-profile1" role="tabpanel"
-                                aria-labelledby="pills-profile-tab1">
+                                aria-labelledby="profile-tab">
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">Transfer Branch Quantity</h4>
@@ -198,31 +201,73 @@
                                                     required>
                                                     <option selected disabled value="">Choose...</option>
                                                     <?php foreach ($branch as $item): ?>
-                                                    <option value="<?= $item->id; ?>"><?= $item->branch_name; ?>
+                                                    <option value="<?= $item->id; ?>">
+                                                        <?= $item->branch_name; ?>
                                                     </option>
                                                     <?php endforeach; ?>
                                                 </select>
                                                 <div class="invalid-feedback">
-                                                    Please select a branch.
+                                                    Please select a transfer branch.
                                                 </div>
                                             </div>
 
                                             <!-- Submit Button -->
                                             <div class="col-12">
-                                                <button class="btn btn-primary" type="submit">Transfer</button>
+                                                <button class="btn btn-primary" type="submit">Submit</button>
                                             </div>
-
                                         </form>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Balance Stock Tab -->
+                            <div class="tab-pane fade" id="pills-balance-stock" role="tabpanel"
+                                aria-labelledby="balance-stock-tab">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Stock Balance</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <?php if (!empty($branch)): ?>
+                                        <?php foreach ($branch as $branchItem): ?>
+                                        <h5>Branch: <?= esc($branchItem->branch_name); ?>
+                                            (<?= esc($branchItem->branch_location); ?>)</h5>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">S.No</th>
+                                                    <th scope="col">Product Name</th>
+                                                    <th scope="col">Size</th>
+                                                    <th scope="col">Unit</th>
+                                                    <th scope="col">Stock Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $i = 1; if (!empty($branchItem->stock_quantity)): ?>
+                                                <?php foreach ($branchItem->stock_quantity as $stock): ?>
+                                                <tr>
+                                                    <th scope="row"><?= $i++; ?></th>
+                                                    <td><?= esc($stock->product_name); ?></td>
+                                                    <td><?= esc($stock->size); ?></td>
+                                                    <td><?= esc($stock->unit); ?></td>
+                                                    <td><?= esc($stock->quantity); ?></td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                                <?php else: ?>
+                                                <tr>
+                                                    <td colspan="5">No stocks available</td>
+                                                </tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                        <hr />
+                                        <?php endforeach; ?>
+                                        <?php else: ?>
+                                        <p>No branches available</p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
 
-
-                            <!-- Contact Tab Content -->
-                            <div class="tab-pane fade" id="pills-contact1" role="tabpanel"
-                                aria-labelledby="pills-contact-tab1">
-                                <!-- Contact content can be added here -->
                             </div>
                         </div>
                     </div>
@@ -232,43 +277,55 @@
     </div>
 </div>
 
-<?php include __DIR__.'/../Admin/footer.php'; ?>
+
+<!-- JavaScript to handle branch and product selection -->
 <script>
-document.getElementById('selectBranch').addEventListener('change', function() {
-    var selectedOption = this.options[this.selectedIndex];
-    var stockData = JSON.parse(selectedOption.getAttribute('data-stock'));
-    var productDropdown = document.getElementById('selectProduct');
+document.addEventListener('DOMContentLoaded', function() {
+    const branchSelect = document.getElementById('selectBranch');
+    const productSelect = document.getElementById('selectProduct');
+    const branchQuantityInput = document.getElementById('branchQuantity');
+    const transferQuantityInput = document.getElementById('transferQuantity');
 
-    // Clear previous options
-    productDropdown.innerHTML = '<option selected disabled value="">Choose a product...</option>';
+    branchSelect.addEventListener('change', function() {
+        const selectedBranch = this.options[this.selectedIndex];
+        const products = selectedBranch.getAttribute('data-stock');
 
-    if (stockData && stockData.length > 0) {
-        productDropdown.disabled = false;
+        if (products) {
+            const stock = JSON.parse(products);
+            productSelect.innerHTML = '<option selected disabled value="">Choose...</option>';
+            stock.forEach(item => {
+                productSelect.innerHTML +=
+                    `<option value="${item.product_id}">${item.product_name}</option>`;
+            });
+            productSelect.disabled = false;
+        } else {
+            productSelect.innerHTML =
+                '<option selected disabled value="">Choose a branch first...</option>';
+            productSelect.disabled = true;
+        }
+    });
 
-        // Populate product dropdown
-        stockData.forEach(function(stock) {
-            var option = document.createElement('option');
-            console.log(stock)
-            option.value = stock.product_id;
-            option.text = stock.product_name + ' (' + stock.size + stock.unit + ')';
-            option.setAttribute('data-quantity', stock.quantity);
-            productDropdown.appendChild(option);
-        });
-    } else {
-        productDropdown.disabled = true;
-        productDropdown.innerHTML = '<option selected disabled value="">No products available</option>';
-    }
+    productSelect.addEventListener('change', function() {
+        const selectedBranch = branchSelect.options[branchSelect.selectedIndex];
+        const stock = JSON.parse(selectedBranch.getAttribute('data-stock'));
+        const selectedProductId = this.value;
+        const selectedProduct = stock.find(item => item.product_id === selectedProductId);
 
-    // Clear the quantity field
-    document.getElementById('branchQuantity').value = '';
-});
+        if (selectedProduct) {
+            branchQuantityInput.value = selectedProduct.quantity;
+        } else {
+            branchQuantityInput.value = '';
+        }
+    });
 
-// Update quantity when a product is selected
-document.getElementById('selectProduct').addEventListener('change', function() {
-    var selectedOption = this.options[this.selectedIndex];
-    var quantity = selectedOption.getAttribute('data-quantity');
-
-    // Display the quantity in the read-only input field
-    document.getElementById('branchQuantity').value = quantity + ' units';
+    transferQuantityInput.addEventListener('input', function() {
+        if (parseInt(this.value) > parseInt(branchQuantityInput.value)) {
+            this.setCustomValidity('Transfer quantity cannot be more than available stock.');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
 });
 </script>
+
+<?php include __DIR__.'/../Admin/footer.php'; ?>
