@@ -13,7 +13,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
 
-                    <h4 class="card-title mb-0" id="form-title">Add Invoice</h4>
+                    <h4 class="card-title mb-0" id="form-title">Order Booking</h4>
 
                     <div>
                      
