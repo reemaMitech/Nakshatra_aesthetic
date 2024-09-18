@@ -164,6 +164,7 @@ public function getPattyExpensesData($whereCond){
     return $this->db->table('tbl_pattyexpenses')->where($whereCond)->get()->getResult();
 }
 
+
 public function get_vendor_By_Id($vendor_id){
     // echo $vendor_id; exit();
     $row = $this->db->table('tbl_vendor')->where('id', $vendor_id)->get()->getRow();
@@ -301,6 +302,15 @@ public function getUserModelById($id)
     return $this->db->table('tbl_branch')->where('id', $id)->get()->getRowArray();
 }
 
+
+
+public function getBalanceStock()
+{
+    return $this->db->table('stock_table')
+                    ->select('product_name, quantity, branch_name')
+                    ->get()
+                    ->getResultArray(); // or getResult() based on your requirement
+}
 
 
 }
