@@ -57,8 +57,8 @@ $routes->post('create_user', 'Home::create_user');
 $routes->get('Add_stock', 'Home::Add_stock');
 $routes->post('add_stocksin', 'Home::add_stocksin');
 
-$routes->post('add_invoice', 'Home::add_invoice');
-$routes->get('add_invoice', 'Home::add_invoice');
+$routes->post('add_bill', 'Home::add_invoice');
+$routes->get('add_bill', 'Home::add_invoice');
 
 $routes->get('Packaging_Material', 'Home::Packaging_Material');
 $routes->post('add_packaging_material', 'Home::add_packaging_material');
@@ -96,3 +96,15 @@ $routes->post('add_expense', 'Home::addExpense');
 
 $routes->get('updatestatus', 'Home::updatestatus');
 $routes->post('updatestatus', 'Home::updatestatus');
+
+$routes->post('add_daily_expense', 'Home::add_daily_expense');
+$routes->get('add_daily_expense', 'Home::add_daily_expense');
+$routes->post('edit_daily_expenses/(:any)', 'Home::add_daily_expense/$1');
+$routes->get('edit_daily_expenses/(:any)', 'Home::add_daily_expense/$1');
+
+$routes->post('set_invoice_data', 'Home::set_invoice_data');
+
+$routes->post('get_vendor_By_Id', 'Home::get_vendor_By_Id');
+$routes->get('get_vendor_By_Id', 'Home::get_vendor_By_Id');
+
+

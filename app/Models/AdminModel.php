@@ -164,5 +164,143 @@ public function getPattyExpensesData($whereCond){
     return $this->db->table('tbl_pattyexpenses')->where($whereCond)->get()->getResult();
 }
 
+public function get_vendor_By_Id($vendor_id){
+    // echo $vendor_id; exit();
+    $row = $this->db->table('tbl_vendor')->where('id', $vendor_id)->get()->getRow();
+
+    if ($row != '') {
+        return $row;
+    }else {
+        return false;
+    }
+
+}
+
+
+public function get_total_amount_with_gst($id)
+{
+
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_daily_expenses')
+                    ->selectSum('totalAmountWithtax')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+    }else{
+
+        $result = $this->db->table('tbl_daily_expenses')
+        ->selectSum('totalAmountWithtax')
+       ->where('is_deleted', 'N')
+        ->Where('user_idd', $id)
+
+        ->get()
+        ->getRow();
+
+    }
+
+    return $result->totalAmountWithtax;
+}
+
+public function get_total_paidamount_with_gst($id)
+{
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_daily_expenses')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Paid')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+
+                }else{
+
+                    $result = $this->db->table('tbl_daily_expenses')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Paid')
+                   ->where('is_deleted', 'N')
+                    ->Where('user_idd', $id)
+
+                    ->get()
+                    ->getRow();
+            
+                }
+
+    return $result->totalAmountWithtax;
+}
+
+public function get_total_dueamount_with_gst($id)
+{
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_daily_expenses')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Due')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+                }else{
+
+                    $result = $this->db->table('tbl_daily_expenses')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Due')
+                   ->where('is_deleted', 'N')
+                    ->Where('user_idd', $id)
+
+                    ->get()
+                    ->getRow();
+            
+                }
+
+    return $result->totalAmountWithtax;
+}
+
+public function get_total_overdueamount_with_gst($id)
+{
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_daily_expenses')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Overdue')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+                }else{
+
+                    $result = $this->db->table('tbl_daily_expenses')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Overdue')
+                   ->where('is_deleted', 'N')
+                    ->Where('user_idd', $id)
+
+                    ->get()
+                    ->getRow();
+            
+                }
+
+    return $result->totalAmountWithtax;
+}
+
+public function getvendorById($id)
+{
+    // echo "$id";exit();
+    $row = $this->db->table('tbl_vendor')->where('id', $id)->get()->getRowArray();
+        //  echo '<pre>';print_r($row);exit();
+
+    if ($row != '') {
+        return $row;
+    }else {
+        return false;
+    }
+    // print_r($row);die;
+}
+
+
+public function getUserModelById($id)
+{
+    return $this->db->table('tbl_branch')->where('id', $id)->get()->getRowArray();
+}
+
+
 
 }

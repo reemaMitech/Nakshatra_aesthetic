@@ -1,12 +1,6 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
 <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
-<!-- jQuery (required for DataTables) -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
@@ -160,77 +154,79 @@
                             <!-- Balance Sheet Section -->
                             <div class="tab-pane fade" id="balanceSheet" role="tabpanel"
                                 aria-labelledby="balanceSheet-tab">
-                                <h4 class="mt-3">Balance Sheet</h4>
-                                <table id="balanceSheetTable" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Bill Number</th>
-                                            <th>Biller / Oblick Shop</th>
-                                            <th>By</th>
-                                            <th>For</th>
-                                            <th>Debit Amount</th>
-                                            <th>Credit Amount</th>
-                                            <th>Balance Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php 
-                                            $totalCash = 0;
-                                            $totalExpenses = 0;
-                                            $netBalance = 0;
+                                <!-- <h4 class="mt-3">Balance Sheet</h4> -->
+                                <div class="table-responsive">
+                                    <table id="balanceSheetTable" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Bill Number</th>
+                                                <th>Biller / Oblick Shop</th>
+                                                <th>By</th>
+                                                <th>For</th>
+                                                <th>Debit Amount</th>
+                                                <th>Credit Amount</th>
+                                                <th>Balance Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php 
+                                                $totalCash = 0;
+                                                $totalExpenses = 0;
+                                                $netBalance = 0;
 
-                                            if (!empty($cashData) || !empty($expenseData)) {
-                                                $entries = array_merge(
-                                                    array_map(function($item) {
-                                                        return [
-                                                            'date' => $item['date'],
-                                                            'bill_number' => '',
-                                                            'biller' => '',
-                                                            'by' => $item['by'],
-                                                            'for' => $item['for'],
-                                                            'amount' => (float)$item['amount'],
-                                                            'type' => 'cash'
-                                                        ];
-                                                    }, $cashData),
-                                                    array_map(function($item) {
-                                                        return [
-                                                            'date' => $item['date'],
-                                                            'bill_number' => isset($item['bill_number']) ? $item['bill_number'] : '',
-                                                            'biller' => isset($item['biller_or_shop']) ? $item['biller_or_shop'] : '',
-                                                            'by' => $item['by'],
-                                                            'for' => $item['for'],
-                                                            'amount' => -(float)$item['amount'],
-                                                            'type' => 'expense'
-                                                        ];
-                                                    }, $expenseData)
-                                                );
+                                                if (!empty($cashData) || !empty($expenseData)) {
+                                                    $entries = array_merge(
+                                                        array_map(function($item) {
+                                                            return [
+                                                                'date' => $item['date'],
+                                                                'bill_number' => '',
+                                                                'biller' => '',
+                                                                'by' => $item['by'],
+                                                                'for' => $item['for'],
+                                                                'amount' => (float)$item['amount'],
+                                                                'type' => 'cash'
+                                                            ];
+                                                        }, $cashData),
+                                                        array_map(function($item) {
+                                                            return [
+                                                                'date' => $item['date'],
+                                                                'bill_number' => isset($item['bill_number']) ? $item['bill_number'] : '',
+                                                                'biller' => isset($item['biller_or_shop']) ? $item['biller_or_shop'] : '',
+                                                                'by' => $item['by'],
+                                                                'for' => $item['for'],
+                                                                'amount' => -(float)$item['amount'],
+                                                                'type' => 'expense'
+                                                            ];
+                                                        }, $expenseData)
+                                                    );
 
-                                                usort($entries, function($a, $b) {
-                                                    return strtotime($a['date']) - strtotime($b['date']);
-                                                });
+                                                    usort($entries, function($a, $b) {
+                                                        return strtotime($a['date']) - strtotime($b['date']);
+                                                    });
 
-                                                foreach ($entries as $entry) {
-                                                    $debitAmount = $entry['amount'] < 0 ? abs($entry['amount']) : 0;
-                                                    $creditAmount = $entry['amount'] > 0 ? abs($entry['amount']) : 0;
-                                                    $netBalance += $creditAmount - $debitAmount;
-                                                    ?>
-                                        <tr>
-                                            <td><?= $entry['date']; ?></td>
-                                            <td><?= $entry['bill_number']; ?></td>
-                                            <td><?= $entry['biller']; ?></td>
-                                            <td><?= $entry['by']; ?></td>
-                                            <td><?= $entry['for']; ?></td>
-                                            <td><?= $debitAmount > 0 ? number_format($debitAmount, 2) : '-'; ?></td>
-                                            <td><?= $creditAmount > 0 ? number_format($creditAmount, 2) : '-'; ?></td>
-                                            <td><?= number_format($netBalance, 2); ?></td>
-                                        </tr>
-                                        <?php
+                                                    foreach ($entries as $entry) {
+                                                        $debitAmount = $entry['amount'] < 0 ? abs($entry['amount']) : 0;
+                                                        $creditAmount = $entry['amount'] > 0 ? abs($entry['amount']) : 0;
+                                                        $netBalance += $creditAmount - $debitAmount;
+                                                        ?>
+                                            <tr>
+                                                <td><?= $entry['date']; ?></td>
+                                                <td><?= $entry['bill_number']; ?></td>
+                                                <td><?= $entry['biller']; ?></td>
+                                                <td><?= $entry['by']; ?></td>
+                                                <td><?= $entry['for']; ?></td>
+                                                <td><?= $debitAmount > 0 ? number_format($debitAmount, 2) : '-'; ?></td>
+                                                <td><?= $creditAmount > 0 ? number_format($creditAmount, 2) : '-'; ?></td>
+                                                <td><?= number_format($netBalance, 2); ?></td>
+                                            </tr>
+                                            <?php
+                                                    }
                                                 }
-                                            }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -240,6 +236,14 @@
     </div>
 </div>
 
+
+
+<?php include __DIR__.'/../Admin/footer.php'; ?>
+
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<!-- DataTables Responsive JS -->
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
 <!-- Success/Error message hide script -->
 <script>
 $(document).ready(function() {
@@ -254,5 +258,3 @@ $(document).ready(function() {
     });
 });
 </script>
-
-<?php include __DIR__.'/../Admin/footer.php'; ?>
