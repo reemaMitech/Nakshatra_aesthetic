@@ -1498,28 +1498,28 @@ public function add_withdrawal()
         
         // Fetch branch information to match branch_id
         $branches = $model->getalldata('tbl_branch', ['is_deleted' => 'N']);
-        
+        // print_r($branches);die;
         // Create an associative array of branch_id => branch_location for easy lookup
-        $branch_locations = [];
+        $branch_name = [];
         foreach ($branches as $branch) {
-            $branch_locations[$branch->id] = $branch->branch_location;
+            $branch_name[$branch->id] = $branch->branch_name;
         }
         
         // Loop through orders to match branch_id and fetch branch_location
         foreach ($orders as &$order) {
-            if (!empty($order->branch_id) && isset($branch_locations[$order->branch_id])) {
-                $order->branch_location = $branch_locations[$order->branch_id];
+            if (!empty($order->branch_id) && isset($branch_name[$order->branch_id])) {
+                $order->branch_name = $branch_name[$order->branch_id];
             } else {
-                $order->branch_location = 'Unknown'; // Default if no match found
+                $order->branch_name = 'Unknown'; // Default if no match found
             }
         }
         
         $data['orders'] = $orders;
-    
+    // print_r($data['orders']);die;
         return view('Admin/sales_reports', $data);
     }
     
-
+   
 
 public function updatestatus() {
     $id = $this->request->getPost('id');
