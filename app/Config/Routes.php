@@ -82,6 +82,7 @@ $routes->get('add_row_Materials', 'Home::add_row_Materials');
 
 $routes->get('delete_compan/(:any)/(:any)', 'Home::delete_compan/$1/$2');
 $routes->post('save_row_Materials', 'Home::save_row_Materials');
+$routes->post('edit_row_Materials', 'Home::edit_row_Materials');
 
 $routes->get('delete/(:any)/(:any)', 'Home::delete/$1/$1');
 

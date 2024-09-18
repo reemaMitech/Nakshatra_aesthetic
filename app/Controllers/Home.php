@@ -1621,6 +1621,23 @@ public function updatestatus() {
 
 }
 
+public function edit_row_Materials()
+{
+    $used_materials = $this->request->getVar('used_materials');
+    $materialunits = $this->request->getVar('materialunits');
+    $materialid = $this->request->getVar('materialid');
+    $remaining_units = $materialunits - $used_materials;
+    $data = [
+        'unit' => $remaining_units
+    ];
+    $db = \Config\Database::connect();
+    $update_data = $db->table('tbl_row_materials')->where('id', $materialid);
+    if ($update_data->update($data)) {
+        return redirect()->back()->with('success', 'Material updated successfully');
+    } else {
+        return redirect()->back()->with('error', 'Failed to update material');
+    }
+}
 
 
 
