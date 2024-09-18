@@ -1512,32 +1512,7 @@ public function add_withdrawal()
     }
 }
 
-    // public function sales_reports()
-    // {
-    //     $session = \Config\Services::session();
-    //     if (!$session->has('id')) {
-    //         return redirect()->to('/');
-    //     }
-        
-    //     $model = new AdminModel();
-    //     $wherecond = array('is_deleted' => 'N');
-    //     $orders = $model->getalldata('tbl_invoice', $wherecond);
-    //     print_r($orders);die;
-    //     $branches = $model->getalldata('tbl_branch', ['is_deleted' => 'N']);
-    //        $branch_name = [];
-    //     foreach ($branches as $branch) {
-    //         $branch_name[$branch->id] = $branch->branch_name;
-    //     }
-    //           foreach ($orders as &$order) {
-    //         if (!empty($order->branch_id) && isset($branch_name[$order->branch_id])) {
-    //             $order->branch_name = $branch_name[$order->branch_id];
-    //         } else {
-    //             $order->branch_name = 'Unknown'; // Default if no match found
-    //         }
-    //     }       
-    //     $data['orders'] = $orders;
-    //     return view('Admin/sales_reports', $data);
-    // }
+    
     
     public function sales_reports() 
     { 
