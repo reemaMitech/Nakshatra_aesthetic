@@ -13,7 +13,9 @@ if (strpos($current_url, 'edit_invoice') !== false) {
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
 
+
                     <h4 class="card-title mb-0" id="form-title">Order Booking</h4>
+
 
                     <div>
                      
@@ -315,6 +317,13 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                             <input type="text" name="totalamounttotal" id="totalamounttotal" class="form-control rallstyles" readonly   value="<?php if(!empty($single_data)){ echo $single_data->totalamounttotal;} ?>">
                                                                                         </td>   
                                                                                     </tr>
+
+                                                                                    <tr class="discount">
+                                                                                    <td><b> Discount : </b></td>
+                                                                                    <td class="pfortd">
+                                                                                        <input type="text" name="discount" id="discount" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->discount;} ?>">
+                                                                                    </td>
+                                                                                    </tr>
                                                                                     
                                                                                     <tr class="total_tax_amt">
                                                                                         <td><b>Total Tax Amount : </b></td>
@@ -329,12 +338,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                             <input type="text" name="courier_charges" id="courier_charges" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->courier_charges;} ?>">
                                                                                         </td>
                                                                                     </tr>
-                                                                                    <tr class="discount">
-                                                                                    <td><b> Discount : </b></td>
-                                                                                    <td class="pfortd">
-                                                                                        <input type="text" name="discount" id="discount" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->discount;} ?>">
-                                                                                    </td>
-                                                                                    </tr>
+                                                                                 
                                                                                     <tr>
                                                                                         <td><b>Total : </b></td>
                                                                                         <td class="pfortd"> 
@@ -394,7 +398,7 @@ $(document).ready(function(){
                 if (form.style.display === 'none') {
                     form.style.display = 'block';
                     list.style.display = 'none';
-                    title.textContent = 'Add Invoice';
+                    title.textContent = 'Add Bill';
                     toggleButton.textContent = 'View Invoice List';
                     document.getElementById('submit-button').textContent = 'Submit';
                     form.reset();

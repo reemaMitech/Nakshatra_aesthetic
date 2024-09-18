@@ -31,42 +31,8 @@
     <!-- RTL Css -->
     <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/rtl.min.css" />
     <!-- Font awesome Library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-    /* Ensure the table and buttons are displayed consistently */
-    /* .table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #212529;
-    border-collapse: collapse;
-}
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.dataTables.min.css">
 
-.table th, .table td {
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-
-.table thead th {
-    font-weight: bold;
-}
-
-.follow-up-btn {
-    width: 100%;
-    padding: 5px 10px;
-    text-align: center;
-}
-
-.me-2 {
-    margin-right: 10px;
-}
-
-.table-responsive {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-} */
-    </style>
 
     <link rel="shortcut icon" href="<?=base_url(); ?>public/assets/images/favicon.ico" />
 
@@ -92,12 +58,7 @@
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/rtl.min.css" />
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/commanstylefile.css" />
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> -->
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 
 
@@ -109,7 +70,9 @@
     <?php //echo "<pre>";print_r($_SESSION);die;?>
     <?php
 $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_names']) : [];
-// print_r($menu_names);die;
+
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
+// print_r($role);die;
 ?>
     <!-- loader Start -->
     <div id="loading">
@@ -389,9 +352,9 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                             </li>
                             <?php endif; ?>
 
-                            <?php if (in_array('add_invoice', $menu_names)) : ?>
+                            <?php if (in_array('add_bill', $menu_names)) : ?>
                             <li class="nav-item">
-                                <a class="nav-link " href="<?=base_url(); ?>add_invoice">
+                                <a class="nav-link " href="<?=base_url(); ?>add_bill">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -401,10 +364,28 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                                         </svg>
                                     </i>
                                     <i class="sidenav-mini-icon"> H </i>
-                                    <span class="item-name">Add Invoice</span>
+                                    <span class="item-name">Add Bill</span>
                                 </a>
                             </li>
                             <?php endif; ?>
+
+                            <?php if (in_array('add_daily_expense', $menu_names)) : ?>
+                                <li class="nav-item">
+                                    <a class="nav-link " href="<?=base_url(); ?>add_daily_expense">
+                                        <i class="icon">
+                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                                viewBox="0 0 24 24" fill="currentColor">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        <i class="sidenav-mini-icon"> H </i>
+                                        <span class="item-name">Add Daily Expense</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
 
                             <?php  if (in_array('add_courierService', $menu_names)) : ?>
                             <li class="nav-item">

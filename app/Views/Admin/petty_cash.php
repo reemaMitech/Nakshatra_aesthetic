@@ -1,18 +1,8 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
 <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
-<!-- jQuery (required for DataTables) -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<style>
-.text-right {
-    text-align: right;
 
-}
-</style>
 
 <div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
@@ -167,6 +157,8 @@
                             <!-- Balance Sheet Section -->
                             <div class="tab-pane fade" id="balanceSheet" role="tabpanel"
                                 aria-labelledby="balanceSheet-tab">
+
+                         
                                 <h4 class="mt-3">Balance Sheet</h4>
                                 <table id="balanceSheetTable" class="table table-bordered">
                                     <thead>
@@ -217,9 +209,11 @@
                                                     }, $expenseData)
                                                 );
 
-                                                usort($entries, function($a, $b) {
-                                                    return strtotime($a['date']) - strtotime($b['date']);
-                                                });
+
+                                                    usort($entries, function($a, $b) {
+                                                        return strtotime($a['date']) - strtotime($b['date']);
+                                                    });
+
 
                                                 foreach ($entries as $entry) {
                                                     $debitAmount = $entry['amount'] < 0 ? abs($entry['amount']) : 0;
@@ -252,6 +246,7 @@
                                         </tr>
                                     </tfoot>
                                 </table>
+
                             </div>
 
                         </div>
@@ -261,6 +256,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
 $(document).ready(function() {
@@ -275,5 +271,3 @@ $(document).ready(function() {
     });
 });
 </script>
-
-<?php include __DIR__.'/../Admin/footer.php'; ?>
