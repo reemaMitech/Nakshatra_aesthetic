@@ -38,6 +38,24 @@
                                 ?>
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label>Product Name</label>
+                            <select id="productFilter" class="form-control">
+                                <option value="">All Products</option>
+                                <?php
+                                // Ensure only unique product names are displayed
+                                $uniqueProducts = [];
+                                foreach ($orders as $order) {
+                                    foreach ($order->items as $item) {
+                                        if (!in_array($item->product_name, $uniqueProducts)) {
+                                            $uniqueProducts[] = $item->product_name;
+                                            echo "<option value=\"{$item->product_name}\">{$item->product_name}</option>";
+                                        }
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- Table section -->
@@ -46,25 +64,35 @@
                             <thead>
                                 <tr>
                                     <th>Invoice No</th>
+                                    <th>Invoice Date</th>
                                     <th>Customer Name</th>
                                     <th>Contact No</th>
                                     <th>Branch</th>
-                                    <th>Final Total</th>
-                                    <th>Invoice Date</th>
+                                    <th>Product Name</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($orders as $order): ?>
-                                <tr>
-                                    <td><?= $order->invoiceNo; ?></td>
-                                    <td><?= $order->customer_name; ?></td>
-                                    <td><?= $order->contact_no; ?></td>
-                                    <td><?= $order->branch_name; ?></td>
-                                    <td><?= $order->final_total; ?></td>
-                                    <td><?= $order->invoice_date; ?></td>
-                                </tr>
+                                    <?php foreach ($order->items as $item): ?>
+                                        <tr>
+                                            <td><?= $order->invoiceNo; ?></td>
+                                            <td><?= $order->invoice_date; ?></td>
+                                            <td><?= $order->customer_name; ?></td>
+                                            <td><?= $order->contact_no; ?></td>
+                                            <td><?= $order->branch_name; ?></td>
+                                            <td><?= $item->product_name; ?></td>
+                                            <td><?= $order->final_total; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 <?php endforeach; ?>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6" class="text-end"><strong>Total Amount:</strong></td>
+                                    <td id="totalAmount">0</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -78,14 +106,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const fromDateInput = document.getElementById('fromDate');
     const toDateInput = document.getElementById('toDate');
     const branchFilterInput = document.getElementById('branchFilter');
+    const productFilterInput = document.getElementById('productFilter');
     const salesTable = document.getElementById('salesTable');
     const exportBtn = document.getElementById('exportBtn');
     const rows = salesTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    const totalAmountCell = document.getElementById('totalAmount');
 
     function filterTable() {
         const fromDate = fromDateInput.value;
         const toDate = toDateInput.value;
         const branch = branchFilterInput.value.toLowerCase();
+        const productName = productFilterInput.value.toLowerCase();
         const today = new Date().toISOString().split('T')[0]; // Today's date
 
         // Validation for From Date greater than today's date
@@ -102,10 +133,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        let totalAmount = 0;
+
         for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
-            const invoiceDate = row.cells[5].innerText; // Invoice Date
-            const branchName = row.cells[3].innerText.toLowerCase(); // Branch Name
+            const invoiceDate = row.cells[1].innerText; // Invoice Date
+            const branchName = row.cells[4].innerText.toLowerCase(); // Branch Name
+            const rowProductName = row.cells[5].innerText.toLowerCase(); // Product Name
 
             let showRow = true;
 
@@ -122,13 +156,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 showRow = false;
             }
 
+            // Filter by product name
+            if (productName && productName !== rowProductName) {
+                showRow = false;
+            }
+
             // Show or hide the row
             row.style.display = showRow ? '' : 'none';
 
-            // If "All Branches" is selected, show all records
-            if (!branch) {
-                row.style.display = '';
+            // If row is shown, add its total to the overall total
+            if (showRow) {
+                totalAmount += parseFloat(row.cells[6].innerText);
             }
+        }
+
+        // Update total amount display
+        totalAmountCell.innerText = totalAmount.toFixed(2);
+
+        // If "All Branches" is selected, show all records
+        if (!branch) {
+            row.style.display = '';
         }
     }
 
@@ -148,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fromDateInput.addEventListener('change', filterTable);
     toDateInput.addEventListener('change', filterTable);
     branchFilterInput.addEventListener('change', filterTable);
+    productFilterInput.addEventListener('change', filterTable);
 
     // Export button event listener
     exportBtn.addEventListener('click', exportTableData);

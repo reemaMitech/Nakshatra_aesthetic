@@ -1483,29 +1483,96 @@ public function add_withdrawal()
     }
 }
 
-    public function sales_reports()
-    {
+    // public function sales_reports()
+    // {
+    //     $session = \Config\Services::session();
+    //     if (!$session->has('id')) {
+    //         return redirect()->to('/');
+    //     }
+        
+    //     $model = new AdminModel();
+    //     $wherecond = array('is_deleted' => 'N');
+    //     $orders = $model->getalldata('tbl_invoice', $wherecond);
+    //     print_r($orders);die;
+    //     $branches = $model->getalldata('tbl_branch', ['is_deleted' => 'N']);
+    //        $branch_name = [];
+    //     foreach ($branches as $branch) {
+    //         $branch_name[$branch->id] = $branch->branch_name;
+    //     }
+    //           foreach ($orders as &$order) {
+    //         if (!empty($order->branch_id) && isset($branch_name[$order->branch_id])) {
+    //             $order->branch_name = $branch_name[$order->branch_id];
+    //         } else {
+    //             $order->branch_name = 'Unknown'; // Default if no match found
+    //         }
+    //     }       
+    //     $data['orders'] = $orders;
+    //     return view('Admin/sales_reports', $data);
+    // }
+    
+    public function sales_reports() 
+    { 
+         $db = \Config\Database::connect();
         $session = \Config\Services::session();
         if (!$session->has('id')) {
             return redirect()->to('/');
         }
-        
+    
         $model = new AdminModel();
-        
-        // Get all orders where is_deleted is 'N'
-        $wherecond = array('is_deleted' => 'N');
+        $wherecond = ['is_deleted' => 'N','payment_status' => 'Received'];
         $orders = $model->getalldata('tbl_invoice', $wherecond);
-        
-        // Fetch branch information to match branch_id
+    
+        if (!$orders) {
+            $data['orders'] = [];
+            return view('Admin/sales_reports', $data);
+        }
+    
         $branches = $model->getalldata('tbl_branch', ['is_deleted' => 'N']);
-        // print_r($branches);die;
-        // Create an associative array of branch_id => branch_location for easy lookup
         $branch_name = [];
         foreach ($branches as $branch) {
-            $branch_name[$branch->id] = $branch->branch_name;
+            if (isset($branch->id) && isset($branch->branch_name)) {
+                $branch_name[$branch->id] = $branch->branch_name;
+            }
         }
-        
-        // Loop through orders to match branch_id and fetch branch_location
+    
+        $invoice_ids = array_column($orders, 'id');
+        $invoice_ids = array_map('intval', $invoice_ids); // Ensure invoice IDs are integers
+    
+        $builder = $db->table('tbl_iteam');
+        $builder->whereIn('invoice_id', $invoice_ids);
+        $items = $builder->get()->getResult();
+    
+        if (!$items) {
+            $data['orders'] = $orders;
+            return view('Admin/sales_reports', $data);
+        }
+    
+        $product_ids = array_column($items, 'product_id');
+        $product_ids = array_map('intval', $product_ids); // Ensure product IDs are integers
+    
+        $builder = $db->table('tbl_product');
+        $builder->whereIn('id', $product_ids);
+        $products = $builder->get()->getResult();
+    
+        $product_name_map = [];
+        foreach ($products as $product) {
+            if (isset($product->id) && isset($product->product_name)) {
+                $product_name_map[$product->id] = $product->product_name;
+            }
+        }
+        foreach ($items as &$item) {
+            if (isset($product_name_map[$item->product_id])) {
+                $item->product_name = $product_name_map[$item->product_id];
+            } else {
+                $item->product_name = 'Unknown'; // Default if no match found
+            }
+        }
+        foreach ($orders as &$order) {
+            $order->items = array_filter($items, function($item) use ($order) {
+                return $item->invoice_id === $order->id; // Ensure proper comparison
+            });
+        }
+    
         foreach ($orders as &$order) {
             if (!empty($order->branch_id) && isset($branch_name[$order->branch_id])) {
                 $order->branch_name = $branch_name[$order->branch_id];
@@ -1513,13 +1580,14 @@ public function add_withdrawal()
                 $order->branch_name = 'Unknown'; // Default if no match found
             }
         }
-        
         $data['orders'] = $orders;
-    // print_r($data['orders']);die;
         return view('Admin/sales_reports', $data);
     }
     
-   
+    
+    
+    
+    
 
 public function updatestatus() {
     $id = $this->request->getPost('id');
