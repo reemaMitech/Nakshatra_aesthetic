@@ -95,5 +95,10 @@ $routes->get('petty_cash', 'Home::petty_cash');
 $routes->post('add_cash', 'Home::addCash');
 $routes->post('add_expense', 'Home::addExpense');
 
+$routes->get('bank_transaction', 'Home::bank_transaction');
+$routes->post('add_deposit', 'Home::add_deposit');
+$routes->post('add_withdrawal', 'Home::add_withdrawal');
+
 $routes->get('updatestatus', 'Home::updatestatus');
 $routes->post('updatestatus', 'Home::updatestatus');
+

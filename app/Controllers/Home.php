@@ -1389,23 +1389,97 @@ public function getProductDetails() {
     }
 }
 
+public function bank_transaction()
+{
+    $db = \Config\Database::connect();
+    $builderDeposits = $db->table('tbl_bank_deposits')
+        ->select('transaction_date, description, deposit_amount, cheque_number, cheque_date')
+        ->orderBy('transaction_date', 'desc');
 
-public function getBalanceSheetData()
-    {
-        $db = \Config\Database::connect();
-        $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
-        $builderExpenses = $db->table('tbl_pattyExpenses')->select('date, expense_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+    $builderWithdrawals = $db->table('tbl_bank_withdrawals')
+        ->select('transaction_date, description, withdrawal_amount')
+        ->orderBy('transaction_date', 'desc');
+
+    $depositData = $builderDeposits->get()->getResultArray();
+    $withdrawalData = $builderWithdrawals->get()->getResultArray();
+
+    $balance = 0;
+    foreach ($depositData as $deposit) {
+        $balance += $deposit['deposit_amount'];
+    }
+
+    foreach ($withdrawalData as $withdrawal) {
+        $balance -= $withdrawal['withdrawal_amount'];
+    }
 
 
-        $cashData = $builderCash->get()->getResultArray();
-        $expenseData = $builderExpenses->get()->getResultArray();
-print_r($expenseData);die;        // Combine the data
-        $data = [
-            'cashData' => $cashData,
-            'expenseData' => $expenseData,
-        ];
+    $data = [
+        'depositData' => $depositData,
+        'withdrawalData' => $withdrawalData,
+        'balance' => $balance,
+    ];
 
-        return view('balance_sheet', $data);
+    return view('Admin/bank_transaction', $data);
+}
+
+
+
+
+public function add_deposit()
+{
+    $db = \Config\Database::connect();
+
+    // Get form data
+    $transactionDate = $this->request->getPost('transaction_date');
+    $description = $this->request->getPost('description');
+    $cheque = $this->request->getPost('cheque');
+    $chequeNumber = $this->request->getPost('cheque_number');
+    $chequeDate = $this->request->getPost('cheque_date');
+    $depositAmount = $this->request->getPost('deposit_amount');
+
+    $data = [
+        'transaction_date' => $transactionDate,
+        'description' => $description,
+        'cheque' => $cheque,
+        'cheque_number' => $chequeNumber,
+        'cheque_date' => $chequeDate,
+        'deposit_amount' => $depositAmount
+    ];
+   // echo '<pre>'; print_r($_POST);die;
+ 
+    $result = $db->table('tbl_bank_deposits')->insert($data);
+
+    if ($result) {
+        return redirect()->to('bank_transaction')->with('message', 'Deposit added successfully!');
+       
+    } else {
+        return redirect()->back()->with('error', 'Failed to add deposit');
+    }
+}
+
+public function add_withdrawal()
+{
+    $db = \Config\Database::connect();
+
+    $transactionDate = $this->request->getPost('transaction_date');
+    $description = $this->request->getPost('description');
+    $withdrawalAmount = $this->request->getPost('withdrawal_amount');
+
+    $data = [
+        'transaction_date' => $transactionDate,
+        'description' => $description,
+        'withdrawal_amount' => $withdrawalAmount
+    ];
+   // echo '<pre>'; print_r($_POST);die;
+ 
+    $result = $db->table('tbl_bank_withdrawals')->insert($data);
+
+  
+    if ($result) {
+        return redirect()->to('bank_transaction')->with('message', 'Withdrawal added successfully!');
+     
+    } else {
+        return redirect()->back()->with('error', 'Failed to add withdrawal');
     }
 
 
@@ -1472,6 +1546,7 @@ public function updatestatus() {
         'status' => 'success',
         'message' => 'Payment status updated successfully.',
     ]);
+
 }
 
 
