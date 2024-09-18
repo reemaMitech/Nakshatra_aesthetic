@@ -617,7 +617,8 @@ public function delete()
 
     // Set a flash message and redirect back
     session()->setFlashdata('success', 'Data deleted successfully.');
-    return redirect()->back();
+    return redirect()->back()->with('message', 'Data deleted successfully!');;
+
 }
 
 public function increment_follow_up_count()
@@ -958,13 +959,13 @@ public function save_row_Materials()
     $model = new AdminModel();
 
     $uri = service('uri');
-    $localbrand_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+    $courier_id = $uri->getSegment(2);   // Assuming the ID is the second segment
   
     $model = new AdminModel();
-    if(!empty($localbrand_id)){
+    if(!empty($courier_id)){
         // echo'<pre>';print_r($localbrand_id);exit();
 
-        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $courier_id);
 
         $data['single_data'] = $model->get_single_data('tbl_courierservice', $wherecond1);
         // print_r($data['single_data']);die;
@@ -1104,6 +1105,10 @@ public function set_vendor_data()
 
 
 public function dispatch() {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     $db = \Config\Database::connect();
     
     $courierBuilder = $db->table('tbl_courierservice');
@@ -1111,8 +1116,57 @@ public function dispatch() {
 
     $invoiceBuilder = $db->table('tbl_invoice');
     $data['invoice_data'] = $invoiceBuilder->get()->getResultArray();
+
+    $model = new AdminModel();
+
+    $uri = service('uri');
+    $dispatch_id = $uri->getSegment(2);   // Assuming the ID is the second segment
+  
+    $model = new AdminModel();
+    if(!empty($dispatch_id)){
+        // echo'<pre>';print_r($dispatch_id);exit();
+
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $dispatch_id);
+
+        $data['single_data'] = $model->get_single_data('tbl_dispatch', $wherecond1);
+        // print_r($data['single_data']);die;
+
+    }else{
+        $wherecond = array('is_deleted' => 'N');
+        $data['dispatch_data'] = $model->getalldata('tbl_dispatch', $wherecond);
+    }
+    // echo'<pre>';print_r($data);die;
     
     return view('Admin/dispatch', $data);
+}
+
+public function challan()
+{
+    $session = \Config\Services::session();
+
+    $model = new AdminModel();
+
+    $id = request()->getUri()->getSegment(2);
+    // print_r($id);die;
+    if (!empty($id)) {
+        // Fetching single data using the ID
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
+        $data['invoice_data'] = $model->getsingleuser('tbl_invoice', $wherecond1);
+
+        $select = 'tbl_invoice.*, tbl_dispatch.*';
+        $joinCond = 'tbl_invoice.invoiceNo  = tbl_dispatch.bill_number';
+        $wherecond = [
+            'tbl_invoice.is_deleted' => 'N',
+            'tbl_dispatch.is_deleted'=>'N',
+             'tbl_dispatch.id' => $id
+        ];
+            $data['challan_data'] = $model->jointwotables($select, 'tbl_invoice', 'tbl_dispatch',  $joinCond,  $wherecond, 'DESC');
+        // echo '<pre>';print_r($data['challan_data']);die;
+      
+        echo view('Admin/challan',$data);
+    } else {
+        // echo view('Admin/challan');
+    }
 }
 
 public function getCustomerData()
@@ -1188,13 +1242,27 @@ public function dispatch_details()
     ];
 
     // Insert data into the database
-    if ($builder->insert($data)) {
-        // Redirect back with a success message
-        return redirect()->back()->with('message', 'Dispatch details saved successfully!');
+    // if ($builder->insert($data)) {
+    //     // Redirect back with a success message
+    //     return redirect()->back()->with('message', 'Dispatch details saved successfully!');
+    // } else {
+    //     // Redirect back with an error message
+    //     return redirect()->back()->with('error', 'Failed to save dispatch details.');
+    // }
+
+    $db = \Config\Database::Connect();
+    if ($this->request->getVar('id') == "") {
+        $add_data = $db->table(' tbl_dispatch');
+        $add_data->insert($data);
+        return redirect()->to('dispatch')->with('message', 'Dispatch details saved successfully!');
     } else {
-        // Redirect back with an error message
-        return redirect()->back()->with('error', 'Failed to save dispatch details.');
+        print_r($this->request->getVar('id'));
+        $update_data = $db->table(' tbl_dispatch')->where('id', $this->request->getVar('id'));
+        $update_data->update($data);
+        return redirect()->to('dispatch')->with('message', 'Dispatch details updated successfully!');
     }
+
+return redirect()->to('dispatch');
 }
 
 public function salary_slip(){

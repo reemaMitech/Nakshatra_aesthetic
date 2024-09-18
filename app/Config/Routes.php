@@ -15,6 +15,8 @@ $routes->get('dispatch', 'Home::dispatch');
 $routes->get('getCourierMobile', 'Home::getCourierMobile');
 $routes->get('getCustomerData', 'Home::getCustomerData');
 $routes->post('dispatch_details', 'Home::dispatch_details');
+$routes->get('challan/(:any)', 'Home::challan/$1');
+$routes->get('edit_dispatch/(:any)', 'Home::dispatch/$1');
 
 
 $routes->get('salary_slip', 'Home::salary_slip');
