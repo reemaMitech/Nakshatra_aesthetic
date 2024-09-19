@@ -230,12 +230,12 @@ public function logout()
     //  echo '<pre>';  print_r($data['employees']);die;
     //    return view('Admin/add_employee',$data);
     // }
-    public function add_employee()
+    public function add_employee(){
 
     $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
 
     $model = new AdminModel();
 
