@@ -12,20 +12,12 @@ if (strpos($current_url, 'edit_invoice') !== false) {
         <div class="col-sm-12 col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-
                     <h4 class="card-title mb-0" id="form-title">Order Booking</h4>
-
-                    <div>
-                     
-                    
-                    
-                    
-                    </div>
-
                 </div>
+
                 <div class="card-body">
                     <div class="bd-example">
-                    <ul class="nav nav-pills" id="myTab" role="tablist">
+                        <ul class="nav nav-pills" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Bill List</button>
                             </li>
@@ -37,7 +29,6 @@ if (strpos($current_url, 'edit_invoice') !== false) {
 
 
                         <div class="tab-content" id="pills-tabContent">
-                            
                                 <div class="tab-pane fade show <?php echo !$showForm ? 'show active' : ''; ?>" id="pills-home1" role="tabpanel"
                                         aria-labelledby="pills-home-tab1">
                                         <div id="Invoice-list" >
@@ -133,21 +124,12 @@ if (strpos($current_url, 'edit_invoice') !== false) {
 
                             <!-- Invoice Form -->
                             <div class="tab-pane fade <?php echo $showForm ? 'show active' : ''; ?>" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
-                                
-                               
-                                    <div id="access-form">
-                                            <!-- Form for Adding/Editing Invoice Access Level -->
-                                            <form class="row g-3" id="invoice_form" action="<?= base_url('set_invoice'); ?>" method="post" enctype="multipart/form-data" novalidate>
-
-
+                                <div id="access-form">
+                                    <!-- Form for Adding/Editing Invoice Access Level -->
+                                    <form class="row g-3" id="invoice_form" action="<?= base_url('set_invoice'); ?>" method="post" enctype="multipart/form-data" novalidate>
                                                 <input type="hidden" id="invoice_id " name="id" value="<?php if(!empty($single_data)){ echo $single_data->id; } ?>">
-
-
-
                                                 <div class="col-md-3 position-relative">
                                                 <label for="branch_id" class="form-label">Branch</label>
-                                                
-
                                                 <select class="form-select" id="branch_id" name="branch_id" required>
                                                     <option disabled value="">Select Branch</option>
 
@@ -183,6 +165,44 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                     <label for="contact_no" class="form-label"> Contact No.</label>
                                                     <input type="text" class="form-control" id="contact_no" name="contact_no" value="<?php if(!empty($single_data)){ echo $single_data->contact_no; } ?>" required>
                                                 
+                                                </div>
+
+
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="country" class="form-label">Country:</label>
+                                                                <select class="form-select choosen" id="country_id" name="Country">
+                                                                    <option value="">Please select country</option>
+                                                                    <?php if(!empty($country)){foreach($country as $country_result){?>
+                                                                    <option value="<?=$country_result->id?>"
+                                                                        <?php if(!empty($single_data) && $single_data->country == $country_result->id){?>selected="selected"
+                                                                        <?php }?>><?=$country_result->name?></option>
+                                                                    <?php } } ?>
+                                                                </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="state" class="form-label">State:</label>
+                                                        <select class="form-select choosen" id="state_id" name="State">
+                                                            <option value="">Please select state</option>
+                                                        
+                                                            <?php 
+                                                                if(!empty($states)){
+                                                                foreach($states as $state_result){                ?>
+                                                            <option value="<?=$state_result->id?>"
+                                                                <?php if(!empty($single_data) && $single_data->state == $state_result->id){?>selected="selected"
+                                                                <?php }?>><?=$state_result->name?></option>
+                                                            <?php } } ?>
+                                                        
+                                                        </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="City" class="form-label">City</label>
+                                                    <input type="text" class="form-control" id="city_id" name="City" value="<?php if(!empty($single_data)){ echo $single_data->city; }?>"required>
+                                                    <div class="invalid-feedback">
+                                                        Please provide a valid city name.
+                                                    </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <label for="delivery_address" class="form-label"> Delivery Address</label>
@@ -353,18 +373,18 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                     <button type="submit" value="" name="Save" id="submit" class="btn btn-lg btn-success">
                                                     <?php if(!empty($single_data)){ echo 'Update'; }else{ echo 'Save';} ?>
                                                 </div>
-                                            </form>
-                                    </div>
-                                </div>    
-                            </div>
-                            <!-- End of Invoice List -->
+                                    </form>
+                                </div>
+                            </div>    
                         </div>
+                            <!-- End of Invoice List -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<!-- </div> -->
 <?php include __DIR__.'/../Admin/footer.php'; ?>
 <script>
 $(document).ready(function(){

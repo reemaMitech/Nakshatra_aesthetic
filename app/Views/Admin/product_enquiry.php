@@ -1,6 +1,5 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
 
-
 <div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
         <div class="col-sm-12 col-lg-12">
@@ -11,20 +10,40 @@
                     </div>
                 </div>
                 
-                
+
                 <div class="card-body">
                     <div class="bd-example">
                         <ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="true">Product Enquiry Form</button>
+                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                    data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home"
+                                    aria-selected="true">Product Enquiry Form</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false">Enquiry List</button>
+                                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" 
+                                data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" 
+                                aria-selected="false">Enquiry List</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact" aria-selected="false">Follow Up List</button>
+                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact" 
+                                aria-selected="false">Follow Up List</button>
                             </li>
                         </ul>
+                
+                        <!-- <div class="card-body">
+                        <div class="bd-example">
+                            <ul class="nav nav-pills" data-toggle="slider-tab" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="true">Product Enquiry Form</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="false">Enquiry List</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#pills-contact1" type="button" role="tab" aria-controls="contact" aria-selected="false">Follow Up List</button>
+                                </li>
+                            </ul> -->
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
                                 aria-labelledby="pills-home-tab1">
@@ -32,7 +51,7 @@
                                     <input type="hidden" name="id" class="form-control" id="id" value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>">
                                         <div class="col-md-4">
                                             <label class="form-label" for="enquiry_date"> Enquiry Date </label>
-                                            <input type="date" class="form-control" id="enquiry_date"  name="enquiry_date" value="<?php if(!empty($single_data)){ echo $single_data->enquiry_date; }?>"  >
+                                            <input type="date" class="form-control" id="enquiry_date"  name="enquiry_date" value="<?php if(!empty($single_data)){ echo $single_data->enquiry_date; }?>" min="<?= date('Y-m-d'); ?>" >
                                             <div class="invalid-feedback">
                                                 Please provide an enquiry date.
                                             </div>
@@ -44,10 +63,9 @@
                                                 Please provide a valid customer name.
                                             </div>
                                         </div>
-
                                         <div class="col-md-4">
                                             <label for="mobileNumber" class="form-label">Mobile Number</label>
-                                            <input type="text" class="form-control" id="mobileNumber" name="mobile_number" maxlength="10" value="<?php if(!empty($single_data)){ echo $single_data->mob_no; }?>" required >
+                                            <input type="text" class="form-control" id="mobileNumber" name="mobile_number" maxlength="10" minlength="10" pattern="\d{10}" value="<?php if(!empty($single_data)){ echo $single_data->mob_no; }?>" required >
                                             <div class="invalid-feedback">
                                                 Please provide a valid mobile number.
                                             </div>
@@ -80,7 +98,7 @@
                                                  
                                                 </select>
                                         </div>
-                                        <div class="col-md-4">
+                                        <!-- <div class="col-md-4">
                                             <label for="City" class="form-label">City:</label>
                                                 <select class="form-select choosen" id="city_id" name="City">
                                                     <option value="">Please select city</option>
@@ -92,6 +110,14 @@
                                                     <?php } } ?>
                                                   
                                                 </select>
+                                        </div> -->
+
+                                        <div class="col-md-4">
+                                            <label for="City" class="form-label">City</label>
+                                            <input type="text" class="form-control" id="city_id" name="City" value="<?php if(!empty($single_data)){ echo $single_data->city; }?>"required>
+                                            <div class="invalid-feedback">
+                                                Please provide a valid city name.
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -130,7 +156,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="form-label" for="pincode"> Pincode</label>
-                                                <input type="number" class="form-control" id="pincode" name="pincode" maxlength="6"  value="<?php if(!empty($single_data)){ echo $single_data->pincode; }?>" required>
+                                                <input type="text" class="form-control" id="pincode" name="pincode"  minlength="6"  value="<?php if(!empty($single_data)){ echo $single_data->pincode; }?>" required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid pincode.
                                                 </div>
@@ -151,8 +177,8 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="tab-pane fade" id="pills-profile1" role="tabpanel"
-                                aria-labelledby="pills-profile-tab1">
+                           
+                            <div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">Enquiry List</h4>
@@ -205,6 +231,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="tab-pane fade" id="pills-contact1" role="tabpanel"
                                 aria-labelledby="pills-contact-tab1">
                                
@@ -216,48 +243,45 @@
             </div>
         </div>
     </div>
-<!-- Follow-Up Modal -->
-<div class="modal fade" id="followUpModal" tabindex="-1" aria-labelledby="followUpModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="followUpModalLabel">Add Follow-Up</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Follow-Up Modal -->
+    <div class="modal fade" id="followUpModal" tabindex="-1" aria-labelledby="followUpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="followUpModalLabel">Add Follow-Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="followUpForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="enquiry_id" name="enquiry_id" value="">
+                        <input type="hidden" id="follow_up_count" name="follow_up_count" value="">
+
+                        <div class="mb-3">
+                            <label for="follow_up_date" class="form-label">Follow-Up Date</label>
+                            <input type="date" class="form-control" id="follow_up_date" name="follow_up_date" required>
+                        </div>
+
+                        <!-- Replace textarea with select dropdown -->
+                        <div class="mb-3">
+                            <label for="status_remark" class="form-label">Status/Remark</label>
+                            <select class="form-control" id="status_remark" name="status_remark" required>
+                                <option value="">Select a status/remark</option>
+                                <option value="Interested">Interested</option>
+                                <option value="Not Interested">Not Interested</option>
+                                <option value="After Some Days">After Some Days</option>
+                                <option value="Phone Not Answered">Phone Not Answered</option>
+                                <option value="Wrong Number">Wrong Number</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Follow-Up</button>
+                    </div>
+                </form>
             </div>
-            <form id="followUpForm">
-                <div class="modal-body">
-                    <input type="hidden" id="enquiry_id" name="enquiry_id" value="">
-                    <input type="hidden" id="follow_up_count" name="follow_up_count" value="">
-
-                    <div class="mb-3">
-                        <label for="follow_up_date" class="form-label">Follow-Up Date</label>
-                        <input type="date" class="form-control" id="follow_up_date" name="follow_up_date" required>
-                    </div>
-
-                    <!-- Replace textarea with select dropdown -->
-                    <div class="mb-3">
-                        <label for="status_remark" class="form-label">Status/Remark</label>
-                        <select class="form-control" id="status_remark" name="status_remark" required>
-                            <option value="">Select a status/remark</option>
-                            <option value="Interested">Interested</option>
-                            <option value="Not Interested">Not Interested</option>
-                            <option value="After Some Days">After Some Days</option>
-                            <option value="Phone Not Answered">Phone Not Answered</option>
-                            <option value="Wrong Number">Wrong Number</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save Follow-Up</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
-
-
-
 </div>
 
 <?php include __DIR__.'/../Admin/footer.php'; ?>
