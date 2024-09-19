@@ -82,7 +82,6 @@
                                             <option value="gm">gm</option>
                                             <option value="litre">litre</option>
                                             <option value="pcs">pcs</option>
-                                            <!-- Add more options as needed -->
                                         </select>
                                         <div class="invalid-feedback">
                                             Please select a valid unit.
@@ -118,7 +117,7 @@
                                     <!-- Expiry Date Field -->
                                     <div class="col-md-4">
                                         <label for="expiryDate" class="form-label">Expiry Date</label>
-                                        <input type="date" class="form-control" id="expiryDate" name="Expiry_date"
+                                        <input type="date" class="form-control" id="expiryDate" name="expiry_date"
                                             required>
                                         <div class="invalid-feedback">
                                             Please provide a valid expiry date.
@@ -237,6 +236,7 @@
                                                 <tr>
                                                     <th scope="col">S.No</th>
                                                     <th scope="col">Product Name</th>
+                                                    <th scope="col">Batch Name</th>
                                                     <th scope="col">Size</th>
                                                     <th scope="col">Unit</th>
                                                     <th scope="col">Stock Quantity</th>
@@ -248,6 +248,7 @@
                                                 <tr>
                                                     <th scope="row"><?= $i++; ?></th>
                                                     <td><?= esc($stock->product_name); ?></td>
+                                                    <td><?= esc($stock->batch_name); ?></td>
                                                     <td><?= esc($stock->size); ?></td>
                                                     <td><?= esc($stock->unit); ?></td>
                                                     <td><?= esc($stock->quantity); ?></td>
@@ -295,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
             productSelect.innerHTML = '<option selected disabled value="">Choose...</option>';
             stock.forEach(item => {
                 productSelect.innerHTML +=
-                    `<option value="${item.product_id}">${item.product_name}</option>`;
+                `<option value="${item.product_id}">${item.product_name} - ${item.batch_name}</option>`;
             });
             productSelect.disabled = false;
         } else {
@@ -325,6 +326,12 @@ document.addEventListener('DOMContentLoaded', function() {
             this.setCustomValidity('');
         }
     });
+});
+
+
+document.getElementById('useByDate').addEventListener('change', function() {
+    var useByDate = this.value;
+    document.getElementById('expiryDate').setAttribute('min', useByDate);
 });
 </script>
 

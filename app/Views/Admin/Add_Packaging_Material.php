@@ -35,7 +35,9 @@
                                 <div class="card-body">
                                     <form class="row g-3 needs-validation"
                                         action="<?= base_url('add_packaging_material'); ?>" method="post" novalidate>
-
+                                        <input type="hidden" class="form-control" id="id"
+                                                value="<?php if(!empty($single_data)){ echo $single_data->id; }?>"
+                                                name="id">
                                         <!-- Branch Name Field -->
                                         <div class="col-md-6">
                                             <label for="MaterialName" class="form-label">Material Name</label>
