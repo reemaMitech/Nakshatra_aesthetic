@@ -312,5 +312,36 @@ public function getBalanceStock()
                     ->getResultArray(); // or getResult() based on your requirement
 }
 
+public function getMonthlyAttendanceData($table, $startDate, $endDate, $emp_id = null)
+{
+   
+     $builder = $this->db->table($table)
+     ->where('is_deleted', 'N')
+     ->where('DATE(start_time) >=', $startDate)  // Compare only the date part
+     ->where('DATE(start_time) <=', $endDate);
+
+ if (!empty($emp_id)) {
+     $builder->where('emp_id', $emp_id);
+ }
+
+    // Execute the query and get the results
+    $query = $builder->get();
+    $res = $query->getResult();
+
+    return $res; // Use getResult() to get the results as an array of objects
+}
+
+public function getMonthlyAttendanceDatai($table, $startDate, $endDate, $id)
+{
+    return $this->db->table($table)
+        ->where('is_deleted', 'N')
+        ->where('emp_id', $id)
+
+        ->where('start_time >=', $startDate)
+        ->where('start_time <=', $endDate)
+        ->get()
+        ->getResult(); // Use getResult() to get the results as an array of objects
+}
+
 
 }

@@ -29,10 +29,10 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                     <div class="bd-example">
                     <ul class="nav nav-pills" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Bill List</button>
+                                <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Order Booking List</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Add Bill</button>
+                                <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Order Booking</button>
                             </li>
                         </ul>
 
@@ -79,7 +79,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                     </a>
                                                                                     
                                                                                     <!-- Invoice with Tooltip -->
-                                                                                    <a href="invoice/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill">
+                                                                                    <a href="bill/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill">
                                                                                         <i class='far fa-money-bill-alt me-2'></i>
                                                                                     </a>
 
@@ -398,7 +398,7 @@ $(document).ready(function(){
                 if (form.style.display === 'none') {
                     form.style.display = 'block';
                     list.style.display = 'none';
-                    title.textContent = 'Add Bill';
+                    title.textContent = 'Order Booking';
                     toggleButton.textContent = 'View Invoice List';
                     document.getElementById('submit-button').textContent = 'Submit';
                     form.reset();

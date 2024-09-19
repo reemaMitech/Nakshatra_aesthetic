@@ -62,8 +62,8 @@ $routes->get('manageStocks', 'Home::manageStocks');
 $routes->get('balanceStock', 'Home::balanceStock');
 
 
-$routes->post('add_bill', 'Home::add_invoice');
-$routes->get('add_bill', 'Home::add_invoice');
+$routes->post('order_booking', 'Home::add_invoice');
+$routes->get('order_booking', 'Home::add_invoice');
 
 $routes->get('Packaging_Material', 'Home::Packaging_Material');
 $routes->post('add_packaging_material', 'Home::add_packaging_material');
@@ -75,7 +75,7 @@ $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
 $routes->post('set_invoice', 'Home::set_invoice');
 $routes->get('edit_invoice/(:any)', 'Home::add_invoice/$1');
-$routes->get('invoice/(:any)', 'Home::invoice/$1');
+$routes->get('bill/(:any)', 'Home::invoice/$1');
 $routes->get('bill_label/(:any)', 'Home::bill_label/$1');
 
 $routes->get('add_row_Materials', 'Home::add_row_Materials');
@@ -118,5 +118,19 @@ $routes->post('set_invoice_data', 'Home::set_invoice_data');
 
 $routes->post('get_vendor_By_Id', 'Home::get_vendor_By_Id');
 $routes->get('get_vendor_By_Id', 'Home::get_vendor_By_Id');
+
+
+$routes->post('attendance', 'Home::generateMonthlyAttendanceReport');
+$routes->get('attendance', 'Home::generateMonthlyAttendanceReport');
+
+$routes->post('getallmonthdata', 'Home::getallmonthdata');
+$routes->get('getallmonthdata', 'Home::getallmonthdata');
+
+
+$routes->post('showattendance/(:any)', 'Home::showattendancei/$i');
+$routes->get('showattendance/(:any)', 'Home::showattendancei/$i');
+
+$routes->get('showattendancei/(:num)', 'Home::showattendancei/$1');
+$routes->post('showattendancei/(:num)', 'Home::showattendancei/$1');
 
 

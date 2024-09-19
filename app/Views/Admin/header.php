@@ -158,6 +158,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                             <span class="item-name">Dashboard</span>
                         </a>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menu" role="button"
                             aria-expanded="false" aria-controls="horizontal-menu">
@@ -352,9 +353,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                             </li>
                             <?php endif; ?>
 
-                            <?php if (in_array('add_bill', $menu_names)) : ?>
+                            <?php if (in_array('order_booking', $menu_names)) : ?>
                             <li class="nav-item">
-                                <a class="nav-link " href="<?=base_url(); ?>add_bill">
+                                <a class="nav-link " href="<?=base_url(); ?>order_booking">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
                                             viewBox="0 0 24 24" fill="currentColor">
@@ -364,7 +365,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                         </svg>
                                     </i>
                                     <i class="sidenav-mini-icon"> H </i>
-                                    <span class="item-name">Add Bill</span>
+                                    <span class="item-name">Order Booking</span>
                                 </a>
                             </li>
                             <?php endif; ?>
@@ -665,6 +666,23 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                 </a>
                             </li>
                             <?php endif; ?>
+
+                            <?php if (in_array('attendance', $menu_names)) : ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<?= base_url(); ?>attendance">
+                                        <i class="icon">
+                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                                viewBox="0 0 24 24" fill="currentColor">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        <i class="sidenav-mini-icon"> P </i>
+                                        <span class="item-name">Attendance</span>
+                                    </a>
+                                </li>
+                                <?php endif; ?>
 
                         </ul>
                     </li>

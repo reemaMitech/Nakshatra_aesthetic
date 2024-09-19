@@ -41,6 +41,8 @@ if (strpos($current_url, 'edit_employee') !== false) {
                                                         <th> Name</th>
                                                         <th>Mobile Number</th>
                                                         <th>Department</th>
+                                                        <th>Role</th>
+
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -55,6 +57,8 @@ if (strpos($current_url, 'edit_employee') !== false) {
                                                                 <td><?php echo $employee->first_name." ".$employee->middle_name." ".$employee->last_name; ?></td>
                                                                 <td><?php echo $employee->mobile; ?></td>
                                                                 <td><?php echo $employee->department; ?></td>
+                                                                <td><?php echo $employee->role; ?></td>
+
                                                                 <td>
                                                                     <a href="<?= base_url(); ?>edit_employee/<?= $employee->id; ?>"><i class="far fa-edit me-2"></i></a>
                                                                     <a href="<?= base_url(); ?>delete/<?= base64_encode($employee->id); ?>/tbl_register" onclick="return confirm('Are You Sure You Want To Delete This Record?')"><i class="far fa-trash-alt me-2"></i></a>
@@ -175,21 +179,43 @@ if (strpos($current_url, 'edit_employee') !== false) {
                                                 </div>
                                             </div>
 
+                                            <div class="col-md-6">
+                                                <label for="salaryfor8hour" class="form-label">Salary(For 8 Hours)</label>
+                                                <input type="text" class="form-control" id="salaryfor8hour" name="salaryfor8hour" value="<?php if(!empty($single_data)){ echo $single_data->salaryfor8hour; }?>" required>
+                                               
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Apply OT :</label>
+                                                <div class="d-flex">
+                                                    <div class="form-check me-3">
+                                                        <input class="form-check-input" type="radio" id="Yes" name="applyot" value="Yes" required <?php if(!empty($single_data) && $single_data->applyot == 'Yes'){ echo "checked"; }?>>
+                                                        <label class="form-check-label" for="Yes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" id="No" name="applyot" value="No" <?php if(!empty($single_data) && $single_data->applyot == 'No'){ echo "checked"; }?>>
+                                                        <label class="form-check-label" for="No">No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <!-- <div class="row"> -->
                                             <!-- Radio Buttons for User Role -->
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <label class="form-label">Add this user as:</label>
                                                 <div class="d-flex">
                                                     <div class="form-check me-3">
-                                                        <input class="form-check-input" type="radio" id="admin" name="user_role" value="Admin" required>
+                                                        <input class="form-check-input" type="radio" id="admin" name="user_role" value="Admin" required <?php if(!empty($single_data) && $single_data->role == 'Admin'){ echo "checked"; }?>>
                                                         <label class="form-check-label" for="admin">Admin</label>
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" id="employee" name="user_role" value="Employee">
+                                                        <input class="form-check-input" type="radio" id="employee" name="user_role" value="Employee" <?php if(!empty($single_data) && $single_data->role == 'Employee'){ echo "checked"; }?>>
                                                         <label class="form-check-label" for="employee">Employee</label>
                                                     </div>
                                                 </div>
                                             </div>
+
+
+
                                             <!-- </div> -->
 
                                             <!-- Checkbox List for Menu Names -->
