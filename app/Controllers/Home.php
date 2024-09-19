@@ -181,7 +181,7 @@ public function login()
                     return redirect()->to(base_url('admindashboard'));
             }   
             elseif ($user->role === 'Employee') {  // Add Employee role redirection
-                return redirect()->to(base_url('employeedashboard'));  // Change to Employee dashboard URL
+                return redirect()->to(base_url('admindashboard'));  // Change to Employee dashboard URL
             }
           
             else {
@@ -231,7 +231,7 @@ public function logout()
     //    return view('Admin/add_employee',$data);
     // }
     public function add_employee()
-{
+
     $session = \Config\Services::session();
     if (!$session->has('id')) {
         return redirect()->to('/');
@@ -246,6 +246,7 @@ public function logout()
     // Fetch employee data
     $wherecond = array('role' => 'Admin', 'active' => 'Y', 'is_deleted' => 'N');
     $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+
     
     // Find the highest username and increment it
     $lastUsername = '';
@@ -515,8 +516,14 @@ public function create_user()
         'email' => $this->request->getPost('email'),
         'designation' => $this->request->getPost('designation'),
         'department' => $this->request->getPost('department'),
+
+        'role' => $this->request->getPost('user_role'),
+        'salaryfor8hour' => $this->request->getPost('salaryfor8hour'),
+        'applyot' => $this->request->getPost('applyot'),
+
         'role' => 'Admin',
         'user_role' => $this->request->getPost('user_role'),
+
         'menu_names' => $menuNames, 
     ];
     if ($id) {
@@ -857,7 +864,7 @@ public function set_invoice()
             ->update();
     }
 
-    return redirect()->to('add_bill');
+    return redirect()->to('order_booking');
 }
 
 
@@ -2125,6 +2132,172 @@ public function set_invoice_data()
             return json_encode([]);
         }
     }
+
+
+    public function generateMonthlyAttendanceReport()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    // Load your model
+    $adminModel = new AdminModel();
+
+    // Get the first and last day of the current month
+    $firstDayOfMonth = date('Y-m-01');
+    $lastDayOfMonth = date('Y-m-t');
+
+    // Fetch all employees
+    $wherecond = array('is_deleted' => 'N', 'role' => 'Employee');
+    $allEmployees = $adminModel->getalldata('tbl_register', $wherecond);
+
+    // Fetch employees with attendance for the current month
+    $attendanceEmployees = $adminModel->getMonthlyAttendanceData('tbl_employeetiming', $firstDayOfMonth, $lastDayOfMonth);
+
+    // Convert the attendance list to a structured array
+    $attendanceData = [];
+    foreach ($attendanceEmployees as $record) {
+        $date = date('Y-m-d', strtotime($record->start_time));
+        if (!isset($attendanceData[$date])) {
+            $attendanceData[$date] = [];
+        }
+        $attendanceData[$date][] = $record->emp_id;
+    }
+
+    // Prepare the report data
+    $report = [
+        'allEmployees' => $allEmployees,
+        'attendanceData' => $attendanceData,
+        'firstDayOfMonth' => $firstDayOfMonth,
+        'lastDayOfMonth' => $lastDayOfMonth
+    ];
+
+    // Pass the report data to the view (assuming you have a view file for the report)
+    return view('Admin/monthly_attendance_report', ['report' => $report]);
+
+}
+
+public function getallmonthdata()
+{
+    // Fetch selected month and year from POST data
+    $selectedMonth = $_POST['month'] ?? date('n'); // Default to current month if not set
+    $selectedYear = $_POST['year'] ?? date('Y'); // Default to current year if not set
+
+    // Load your model
+    $adminModel = new AdminModel();
+
+    // Get the first and last day of the selected month and year
+    $firstDayOfMonth = date('Y-m-01', strtotime("$selectedYear-$selectedMonth-01"));
+    $lastDayOfMonth = date('Y-m-t', strtotime("$selectedYear-$selectedMonth-01"));
+
+    // Fetch all employees
+    $wherecond = array('is_deleted' => 'N', 'role' => 'Employee');
+    $allEmployees = $adminModel->getalldata('tbl_register', $wherecond);
+
+    // Fetch employees with attendance for the selected month and year
+    $attendanceEmployees = $adminModel->getMonthlyAttendanceData('tbl_employeetiming', $firstDayOfMonth, $lastDayOfMonth);
+
+    $wherecond = ['is_deleted' => 'N'];
+    $holidaysData = $adminModel->getalldata('tbl_holidays', $wherecond);
+
+    // Prepare holidays array
+    $holidays = [];
+    foreach ($holidaysData as $holiday) {
+        $holidays[] = date('Y-m-d', strtotime($holiday->holiday_date));
+    }
+
+    // Convert the attendance list to a structured array
+    $attendanceData = [];
+    foreach ($attendanceEmployees as $record) {
+        $date = date('Y-m-d', strtotime($record->start_time));
+        if (!isset($attendanceData[$date])) {
+            $attendanceData[$date] = [];
+        }
+        $attendanceData[$date][] = $record->emp_id;
+    }
+
+    // Prepare the report data
+    $report = [
+        'allEmployees' => $allEmployees,
+        'attendanceData' => $attendanceData,
+        'holidays' => $holidays,
+        'firstDayOfMonth' => $firstDayOfMonth,
+        'lastDayOfMonth' => $lastDayOfMonth
+    ];
+
+    // Pass the selected month, year, and report data to the view
+    return view('Admin/monthly_attendance_report', [
+        'selectedMonth' => $selectedMonth,
+        'selectedYear' => $selectedYear,
+        'report' => $report
+    ]);
+}
+
+
+public function showattendancei()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $adminModel = new AdminModel();
+    
+   
+        $uri = service('uri');
+        $id = $uri->getSegment(2); // Employee ID from URL segment
+
+        if (isset($id)) {
+            // Fetch selected month and year from POST data or default to current
+            $selectedMonth = $this->request->getPost('month') ?? date('n');
+            $selectedYear = $this->request->getPost('year') ?? date('Y');
+    
+            // Get the first and last day of the selected month and year
+            $firstDayOfMonth = date('Y-m-01', strtotime("$selectedYear-$selectedMonth-01"));
+            $lastDayOfMonth = date('Y-m-t', strtotime("$selectedYear-$selectedMonth-01"));
+    
+            // Fetch all employees
+            $wherecond = ['is_deleted' => 'N', 'role' => 'Employee'];
+            $allEmployees = $adminModel->getalldata('tbl_register', $wherecond);
+
+            $wherecond = ['is_deleted' => 'N', 'id' => $id];
+            $empdata = $adminModel->get_single_data('tbl_register', $wherecond);
+    
+            // Fetch employees with attendance for the selected month and year
+            $attendanceEmployees = $adminModel->getMonthlyAttendanceDatai('tbl_employeetiming', $firstDayOfMonth, $lastDayOfMonth, $id);
+    
+            // Convert the attendance list to a structured array
+            $attendanceData = [];
+            foreach ($attendanceEmployees as $record) {
+                $date = date('Y-m-d', strtotime($record->start_time));
+                if (!isset($attendanceData[$date])) {
+                    $attendanceData[$date] = [];
+                }
+                $attendanceData[$date][] = [
+                    'start_time' => $record->start_time,
+                    'end_time' => $record->end_time,
+                    'created_on' => $record->created_on
+                ];
+            }
+    
+            // Prepare the report data
+            $report = [
+                'allEmployees' => $allEmployees,
+                'attendace_data' => $attendanceData,
+                'firstDayOfMonth' => $firstDayOfMonth,
+                'lastDayOfMonth' => $lastDayOfMonth,
+                'emp_id' => $id
+            ];
+    
+            // Pass the selected month, year, and report data to the view
+            return view('Admin/showattendance', [
+                'selectedMonth' => $selectedMonth,
+                'selectedYear' => $selectedYear,
+                'report' => $report,
+                'empdata' => $empdata
+            ]);
+        }
+   
+}
 
 
     
