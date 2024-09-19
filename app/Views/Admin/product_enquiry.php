@@ -258,7 +258,7 @@
 
                         <div class="mb-3">
                             <label for="follow_up_date" class="form-label">Follow-Up Date</label>
-                            <input type="date" class="form-control" id="follow_up_date" name="follow_up_date" required>
+                            <input type="date" class="form-control" id="follow_up_date" name="follow_up_date" min="<?= date('Y-m-d');?> required>
                         </div>
 
                         <!-- Replace textarea with select dropdown -->
