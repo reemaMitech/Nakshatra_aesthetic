@@ -115,15 +115,6 @@ class Home extends BaseController
     session()->setFlashdata('success', 'Product updated successfully.');
 }
 
-   if ($id) {
-    $db->table('tbl_product')->where('id', $id)->update($data);
-    session()->setFlashdata('success', 'Employee updated successfully.');
-} else {
-    $db->table('tbl_product')->insert($data);
-    session()->setFlashdata('success', 'Employee created successfully.');
-}
-//    $db->table('tbl_product')->insert($data);
-
    return redirect()->to('add_product');
   }
   public function take_order()
@@ -211,30 +202,99 @@ public function logout()
     $session->destroy();
     return redirect()->to('/');
     }
-    public function add_employee()
-    {
-        $session = \Config\Services::session();
-        if (!$session->has('id')) {
-            return redirect()->to('/');
-        }
-        $model = new AdminModel();
-        $wherecond = array('is_active' => 'Y');
-        $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
-         //  print_r($data['menu']);die;
-        $wherecond = array('role' => 'Admin','active' => 'Y','is_deleted'=>'N');
-        $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+    // public function add_employee()
+    // {
+    //     $session = \Config\Services::session();
+    //     if (!$session->has('id')) {
+    //         return redirect()->to('/');
+    //     }
+    //     $model = new AdminModel();
+    //     $wherecond = array('is_active' => 'Y');
+    //     $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+    //      //  print_r($data['menu']);die;
+    //     $wherecond = array('role' => 'Admin','active' => 'Y','is_deleted'=>'N');
+    //     $data['employees'] = $model->getalldata('tbl_register', $wherecond);
     
-        $uri = service('uri');
-        $localbrand_id = $uri->getSegment(2); 
-        if(!empty($localbrand_id)){
-            $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
-            $data['single_data'] = $model->get_single_data('tbl_register', $wherecond1);
-            // print_r($data['single_data']);die;
+    //     $uri = service('uri');
+    //     $localbrand_id = $uri->getSegment(2); 
+    //     if(!empty($localbrand_id)){
+    //         $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+    //         $data['single_data'] = $model->get_single_data('tbl_register', $wherecond1);
+    //         // print_r($data['single_data']);die;
+    //     }
+    //  echo '<pre>';  print_r($data['employees']);die;
+    //    return view('Admin/add_employee',$data);
+    // }
+    public function add_employee()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+
+    $model = new AdminModel();
+    
+    // Fetch the menu data
+    $wherecond = array('is_active' => 'Y');
+    $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+
+    // Fetch employee data
+    $wherecond = array('role' => 'Admin', 'active' => 'Y', 'is_deleted' => 'N');
+    $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+    
+    // Find the highest username and increment it
+    $lastUsername = '';
+    foreach ($data['employees'] as $employee) {
+        if ($employee->username > $lastUsername) {
+            $lastUsername = $employee->username;
         }
-       
-       return view('Admin/add_employee',$data);
     }
     
+    if (!empty($lastUsername)) {
+        // Extract numeric part and increment it
+        $numericPart = (int) substr($lastUsername, 2);
+        $nextNumericPart = $numericPart + 1;
+        $nextUsername = 'AB' . str_pad($nextNumericPart, 3, '0', STR_PAD_LEFT);
+    } else {
+        // If no username found, start with AB001
+        $nextUsername = 'AB001';
+    }
+
+    // If a specific employee is being edited, retrieve their data
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2);
+    if (!empty($localbrand_id)) {
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $singleData = $model->get_single_data('tbl_register', $wherecond1);
+
+        // Merge nextUsername if it's empty
+        if (empty($singleData->username)) {
+            $singleData->username = $nextUsername;
+        }
+
+        // Pass the single data to the view
+        $data['single_data'] = $singleData;
+
+    } else {
+        // If no employee is being edited, use the nextUsername
+        $data['single_data'] = (object) [
+            'username' => $nextUsername,
+            'id'=>'',
+            'password'=>'',
+            'first_name' => '',
+            'middle_name' => '',
+            'last_name' => '',
+            'mobile' => '',
+            'email' => '',
+            'designation' => '',
+            'department' => '',
+        ];
+    }
+
+    // Pass the data to the view
+    return view('Admin/add_employee', $data);
+}
+
 public function create_access_level()
 {
     $session = \Config\Services::session();
@@ -454,8 +514,8 @@ public function create_user()
         'email' => $this->request->getPost('email'),
         'designation' => $this->request->getPost('designation'),
         'department' => $this->request->getPost('department'),
-        'role' => $this->request->getPost('user_role'),
-        // 'role' =>'Admin',
+        'role' => 'Admin',
+        'user_role' => $this->request->getPost('user_role'),
         'menu_names' => $menuNames, 
     ];
     if ($id) {
@@ -523,21 +583,47 @@ public function Add_stock()
     return view('Admin/Add_stock', $data);
 }
 
-public function add_stocksin()
-{
-    // print_r($_POST);die;
-    $db = \Config\Database::connect();
-    $data = [
-        'product_name' => $this->request->getPost('product_name'),
-        'quantity' => $this->request->getPost('quantity'),
-        'branch_name' => $this->request->getPost('branch_name'),
-        'size' => $this->request->getPost('size'),
-        'unit' => $this->request->getPost('unit'),
-        'use_by_date' => $this->request->getPost('use_by_date'),
-        'Expiry_date' => $this->request->getPost('Expiry_date'),
+// public function add_stocksin()
+// {
+//     print_r($_POST);die;
+//     $db = \Config\Database::connect();
+//     $data = [
+//         'product_name' => $this->request->getPost('product_name'),
+//         'quantity' => $this->request->getPost('quantity'),
+//         'branch_name' => $this->request->getPost('branch_name'),
+//         'size' => $this->request->getPost('size'),
+//         'unit' => $this->request->getPost('unit'),
+//         'use_by_date' => $this->request->getPost('use_by_date'),
+//         'Expiry_date' => $this->request->getPost('Expiry_date'),
 
        
+//     ];
+//     $db->table('tbl_stock')->insert($data);
+//     return redirect()->to('Add_stock');
+// }
+public function add_stocksin()
+{
+    // Get the form inputs
+    $product_name = $this->request->getPost('product_name');
+    $quantity = $this->request->getPost('quantity');
+    $branch_name = $this->request->getPost('branch_name');
+    $size = $this->request->getPost('size');
+    $unit = $this->request->getPost('unit');
+    $use_by_date = $this->request->getPost('use_by_date');
+    $expiry_date = $this->request->getPost('Expiry_date');
+    $current_date = date('dmy');
+    $batch_name = $current_date . '-' . strtoupper(substr($product_name, 0, 3));
+    $data = [
+        'product_name' => $product_name,
+        'quantity' => $quantity,
+        'branch_name' => $branch_name,
+        'size' => $size,
+        'unit' => $unit,
+        'use_by_date' => $use_by_date,
+        'Expiry_date' => $expiry_date,
+        'batch_name' => $batch_name, 
     ];
+    $db = \Config\Database::connect();
     $db->table('tbl_stock')->insert($data);
     return redirect()->to('Add_stock');
 }
@@ -1247,7 +1333,11 @@ public function leave_application(){
 
 
 public function petty_cash(){
+    $session = \CodeIgniter\Config\Services::session();
 
+    if (!$session->has('id')) {
+        return redirect()->to('/login'); // Redirect to login if not logged in
+    }
     $db = \Config\Database::connect();
 
     $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
