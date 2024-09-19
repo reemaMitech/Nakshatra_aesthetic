@@ -117,15 +117,6 @@ public function add_order()
     session()->setFlashdata('success', 'Product updated successfully.');
 }
 
-   if ($id) {
-    $db->table('tbl_product')->where('id', $id)->update($data);
-    session()->setFlashdata('success', 'Employee updated successfully.');
-} else {
-    $db->table('tbl_product')->insert($data);
-    session()->setFlashdata('success', 'Employee created successfully.');
-}
-//    $db->table('tbl_product')->insert($data);
-
    return redirect()->to('add_product');
   }
   public function take_order()
@@ -212,35 +203,103 @@ public function logout()
     $session = session();
     $session->destroy();
     return redirect()->to('/');
+
 }
     
-public function add_employee()
-    {
-        $session = \Config\Services::session();
-        if (!$session->has('id')) {
-            return redirect()->to('/');
-        }
-        $model = new AdminModel();
-        $wherecond = array('is_active' => 'Y');
-        $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
-         //  print_r($data['menu']);die;
-        $wherecond = array('role' => 'Admin','active' => 'Y','is_deleted'=>'N');
-        $data['employees'] = $model->getalldata('tbl_register', $wherecond);
-        $wherecond = array('is_deleted' => 'N');
-        $data['branch_data'] = $model->getalldata('tbl_branch', $wherecond);
-        // echo'<pre>';print_r($data['branch_data']);die;
+
+    // public function add_employee()
+    // {
+    //     $session = \Config\Services::session();
+    //     if (!$session->has('id')) {
+    //         return redirect()->to('/');
+    //     }
+    //     $model = new AdminModel();
+    //     $wherecond = array('is_active' => 'Y');
+    //     $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+    //      //  print_r($data['menu']);die;
+    //     $wherecond = array('role' => 'Admin','active' => 'Y','is_deleted'=>'N');
+    //     $data['employees'] = $model->getalldata('tbl_register', $wherecond);
     
-        $uri = service('uri');
-        $localbrand_id = $uri->getSegment(2); 
-        if(!empty($localbrand_id)){
-            $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
-            $data['single_data'] = $model->get_single_data('tbl_register', $wherecond1);
-            // print_r($data['single_data']);die;
+    //     $uri = service('uri');
+    //     $localbrand_id = $uri->getSegment(2); 
+    //     if(!empty($localbrand_id)){
+    //         $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+    //         $data['single_data'] = $model->get_single_data('tbl_register', $wherecond1);
+    //         // print_r($data['single_data']);die;
+    //     }
+    //  echo '<pre>';  print_r($data['employees']);die;
+    //    return view('Admin/add_employee',$data);
+    // }
+    public function add_employee()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+
+    $model = new AdminModel();
+
+    // Fetch the menu data
+    $wherecond = array('is_active' => 'Y');
+    $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
+
+    // Fetch employee data
+    $wherecond = array('role' => 'Admin', 'active' => 'Y', 'is_deleted' => 'N');
+    $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+    
+    // Find the highest username and increment it
+    $lastUsername = '';
+    foreach ($data['employees'] as $employee) {
+        if ($employee->username > $lastUsername) {
+            $lastUsername = $employee->username;
         }
-       
-       return view('Admin/add_employee',$data);
     }
     
+    if (!empty($lastUsername)) {
+        // Extract numeric part and increment it
+        $numericPart = (int) substr($lastUsername, 2);
+        $nextNumericPart = $numericPart + 1;
+        $nextUsername = 'AB' . str_pad($nextNumericPart, 3, '0', STR_PAD_LEFT);
+    } else {
+        // If no username found, start with AB001
+        $nextUsername = 'AB001';
+    }
+
+    // If a specific employee is being edited, retrieve their data
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2);
+    if (!empty($localbrand_id)) {
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $singleData = $model->get_single_data('tbl_register', $wherecond1);
+
+        // Merge nextUsername if it's empty
+        if (empty($singleData->username)) {
+            $singleData->username = $nextUsername;
+        }
+
+        // Pass the single data to the view
+        $data['single_data'] = $singleData;
+
+    } else {
+        // If no employee is being edited, use the nextUsername
+        $data['single_data'] = (object) [
+            'username' => $nextUsername,
+            'id'=>'',
+            'password'=>'',
+            'first_name' => '',
+            'middle_name' => '',
+            'last_name' => '',
+            'mobile' => '',
+            'email' => '',
+            'designation' => '',
+            'department' => '',
+        ];
+    }
+
+    // Pass the data to the view
+    return view('Admin/add_employee', $data);
+}
+
 public function create_access_level()
 {
     $session = \Config\Services::session();
@@ -456,8 +515,8 @@ public function create_user()
         'email' => $this->request->getPost('email'),
         'designation' => $this->request->getPost('designation'),
         'department' => $this->request->getPost('department'),
-        'role' => $this->request->getPost('user_role'),
-        // 'role' =>'Admin',
+        'role' => 'Admin',
+        'user_role' => $this->request->getPost('user_role'),
         'menu_names' => $menuNames, 
     ];
     if ($id) {
@@ -495,6 +554,8 @@ public function Add_stock()
     $wherecond = array('active' => 'Y');
     $data['stck'] = $model->getalldata('tbl_stock', $wherecond);
     // Create an associative array of product IDs and names for easy lookup
+
+    // print_r( $data['stck']);die;
     $productNames = array();
     foreach ($data['product'] as $product) {
         $productNames[$product->id] = $product->product_name;
@@ -519,28 +580,56 @@ public function Add_stock()
             }
         }
     }
-
+//   echo '<pre>'  ; print_r( $data);die;
     return view('Admin/Add_stock', $data);
 }
 
-public function add_stocksin()
-{
-    // print_r($_POST);die;
-    $db = \Config\Database::connect();
-    $data = [
-        'product_name' => $this->request->getPost('product_name'),
-        'quantity' => $this->request->getPost('quantity'),
-        'branch_name' => $this->request->getPost('branch_name'),
-        'size' => $this->request->getPost('size'),
-        'unit' => $this->request->getPost('unit'),
-        'use_by_date' => $this->request->getPost('use_by_date'),
-        'Expiry_date' => $this->request->getPost('Expiry_date'),
+// public function add_stocksin()
+// {
+//     print_r($_POST);die;
+//     $db = \Config\Database::connect();
+//     $data = [
+//         'product_name' => $this->request->getPost('product_name'),
+//         'quantity' => $this->request->getPost('quantity'),
+//         'branch_name' => $this->request->getPost('branch_name'),
+//         'size' => $this->request->getPost('size'),
+//         'unit' => $this->request->getPost('unit'),
+//         'use_by_date' => $this->request->getPost('use_by_date'),
+//         'Expiry_date' => $this->request->getPost('Expiry_date'),
 
        
+//     ];
+//     $db->table('tbl_stock')->insert($data);
+//     return redirect()->to('Add_stock');
+// }
+public function add_stocksin()
+{
+    // Get the form inputs
+    $product_name = $this->request->getPost('product_name');
+    $quantity = $this->request->getPost('quantity');
+    $branch_name = $this->request->getPost('branch_name');
+    $size = $this->request->getPost('size');
+    $unit = $this->request->getPost('unit');
+    $use_by_date = $this->request->getPost('use_by_date');
+    $expiry_date = $this->request->getPost('Expiry_date');
+    $current_date = date('dmy');
+    $batch_name = $current_date . '-' . strtoupper(substr($product_name, 0, 3));
+    $data = [
+        'product_name' => $product_name,
+        'quantity' => $quantity,
+        'branch_name' => $branch_name,
+        'size' => $size,
+        'unit' => $unit,
+        'use_by_date' => $use_by_date,
+        'Expiry_date' => $expiry_date,
+        'batch_name' => $batch_name, 
     ];
+    $db = \Config\Database::connect();
     $db->table('tbl_stock')->insert($data);
     return redirect()->to('Add_stock');
 }
+
+
 public function add_branch()
 {
     $session = \Config\Services::session();
@@ -719,98 +808,57 @@ public function set_invoice()
         'final_total' => $this->request->getVar('final_total'),
         'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
         'courier_charges' => $this->request->getVar('courier_charges'),
-        
     ];
-    $db = \Config\Database::connect();
 
-    if ($this->request->getVar('id') == "") {
+    $invoiceId = $this->request->getVar('id');
+
+    if (empty($invoiceId)) {
+        // Insert invoice data
         $add_data = $db->table('tbl_invoice');
         $add_data->insert($data);
 
-        $last_id =  $db->insertID();
-
-        $iteam = $this->request->getVar('iteam');
-
-        $quantity = $this->request->getVar('quantity');
-        $price = $this->request->getVar('price');
-
-        $gst_amount = $this->request->getVar('gst_amount');
-    
-        $total_amount = $this->request->getVar('total_amount');
-
-        for($k=0;$k<count($iteam);$k++){
-            $product_data = array(
-                'invoice_id' 	=> $last_id,
-                'product_id' 		=> $iteam[$k],
-                'quantity' 		=> $quantity[$k],
-                'gst_amount' 		=> $gst_amount[$k],
-
-                'price' 		=> $price[$k],
-                'total_amount'  => $total_amount[$k],
-                
-            ); 
-            // echo "<pre>";print_r($product_data);exit();
-            $add_data = $db->table('tbl_iteam');
-            $add_data->insert($product_data);
-    
-        }
+        $invoiceId = $db->insertID();
         session()->setFlashdata('success', 'Invoice added successfully.');
     } else {
+        // Update invoice data
+        $update_data = $db->table('tbl_invoice')->where('id', $invoiceId);
+        $update_data->update($data);
 
+        // Delete existing items for this invoice
+        $db->table('tbl_iteam')->where('invoice_id', $invoiceId)->delete();
 
-        $data1 = [
-            'branch_id' => $this->request->getVar('branch_id'),
-            'invoice_date' => $this->request->getVar('invoice_date'),
-            'customer_name' => $this->request->getVar('customer_name'),
-            'contact_no' => $this->request->getVar('contact_no'),
-            'delivery_address' => $this->request->getVar('delivery_address'),
-            'totalamounttotal' => $this->request->getVar('totalamounttotal'),
-            'total_tax_amt' => $this->request->getVar('total_tax_amt'),
-            'discount' => $this->request->getVar('discount'),
-            'final_total' => $this->request->getVar('final_total'),
-            'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
-            'courier_charges' => $this->request->getVar('courier_charges'),
-
-            
-        ];
-
-        $update_data = $db->table('tbl_invoice')->where('id', $this->request->getVar('id'));
-        $update_data->update($data1);
-
-        $last_id =  $this->request->getVar('id');
-
-        $delete = $db->table('tbl_iteam')->where('invoice_id', $this->request->getVar('id'))->delete();
-
-        $iteam = $this->request->getVar('iteam');
-
-
-        $quantity = $this->request->getVar('quantity');
-        $price = $this->request->getVar('price');
-        $gst_amount = $this->request->getVar('gst_amount');
-
-    
-        $total_amount = $this->request->getVar('total_amount');
-
-        for($k=0;$k<count($iteam);$k++){
-            $product_data = array(
-                'invoice_id' 	=> $last_id,
-                'product_id' 		=> $iteam[$k],
-                'quantity' 		=> $quantity[$k],
-                'gst_amount' 		=> $gst_amount[$k],
-                'price' 		=> $price[$k],
-                'total_amount'  => $total_amount[$k],
-            ); 
-            $add_data = $db->table('tbl_iteam');
-            $add_data->insert($product_data);
-    
-        }
         session()->setFlashdata('success', 'Invoice updated successfully.');
-            
     }
 
-    return redirect()->to('add_invoice');
-}
+    // Retrieve items and update stock
+    $items = $this->request->getVar('iteam');
+    $quantity = $this->request->getVar('quantity');
+    $price = $this->request->getVar('price');
+    $gst_amount = $this->request->getVar('gst_amount');
+    $total_amount = $this->request->getVar('total_amount');
 
+    for ($k = 0; $k < count($items); $k++) {
+        $product_data = array(
+            'invoice_id'  => $invoiceId,
+            'product_id'  => $items[$k],
+            'quantity'    => $quantity[$k],
+            'gst_amount'  => $gst_amount[$k],
+            'price'       => $price[$k],
+            'total_amount' => $total_amount[$k],
+        ); 
+        $add_data = $db->table('tbl_iteam');
+        $add_data->insert($product_data);
+
+        // Update stock
+        $db->table('tbl_stock')
+            ->where('product_name', $items[$k]) // Adjust if necessary
+            ->where('branch_name', $this->request->getVar('branch_id')) // Adjust if necessary
+            ->set('quantity', 'quantity - ' . $quantity[$k], false)
+            ->update();
+    }
+
+    return redirect()->to('add_bill');
+}
 
 
 public function transfer_branch_quantity()
@@ -1316,13 +1364,15 @@ public function leave_application()
 }
 
 
-public function petty_cash()
-{
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
 
+
+public function petty_cash(){
+    $session = \CodeIgniter\Config\Services::session();
+
+
+    if (!$session->has('id')) {
+        return redirect()->to('/login'); // Redirect to login if not logged in
+    }
     $db = \Config\Database::connect();
 
     $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
@@ -1507,25 +1557,182 @@ public function getProductDetails()
     }
 }
 
+public function bank_transaction()
+{
+    $db = \Config\Database::connect();
+    $builderDeposits = $db->table('tbl_bank_deposits')
+        ->select('transaction_date, description, deposit_amount, cheque_number, cheque_date')
+        ->orderBy('transaction_date', 'desc');
 
-public function getBalanceSheetData()
-    {
-        $db = \Config\Database::connect();
-        $builderCash = $db->table('tbl_pattyCash')->select('date, cash_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
-        $builderExpenses = $db->table('tbl_pattyExpenses')->select('date, expense_by as `by`, reason as `for`, amount')->orderBy('date', 'desc');
+    $builderWithdrawals = $db->table('tbl_bank_withdrawals')
+        ->select('transaction_date, description, withdrawal_amount')
+        ->orderBy('transaction_date', 'desc');
+
+    $depositData = $builderDeposits->get()->getResultArray();
+    $withdrawalData = $builderWithdrawals->get()->getResultArray();
 
 
-        $cashData = $builderCash->get()->getResultArray();
-        $expenseData = $builderExpenses->get()->getResultArray();
-        // print_r($expenseData);die;        // Combine the data
-        $data = [
-            'cashData' => $cashData,
-            'expenseData' => $expenseData,
-        ];
-
-        return view('balance_sheet', $data);
+    $balance = 0;
+    foreach ($depositData as $deposit) {
+        $balance += $deposit['deposit_amount'];
     }
 
+    foreach ($withdrawalData as $withdrawal) {
+        $balance -= $withdrawal['withdrawal_amount'];
+    }
+
+
+    $data = [
+        'depositData' => $depositData,
+        'withdrawalData' => $withdrawalData,
+        'balance' => $balance,
+    ];
+
+    return view('Admin/bank_transaction', $data);
+}
+
+
+
+
+public function add_deposit()
+{
+    $db = \Config\Database::connect();
+
+    // Get form data
+    $transactionDate = $this->request->getPost('transaction_date');
+    $description = $this->request->getPost('description');
+    $cheque = $this->request->getPost('cheque');
+    $chequeNumber = $this->request->getPost('cheque_number');
+    $chequeDate = $this->request->getPost('cheque_date');
+    $depositAmount = $this->request->getPost('deposit_amount');
+
+    $data = [
+        'transaction_date' => $transactionDate,
+        'description' => $description,
+        'cheque' => $cheque,
+        'cheque_number' => $chequeNumber,
+        'cheque_date' => $chequeDate,
+        'deposit_amount' => $depositAmount
+    ];
+   // echo '<pre>'; print_r($_POST);die;
+ 
+    $result = $db->table('tbl_bank_deposits')->insert($data);
+
+
+    if ($result) {
+        return redirect()->to('bank_transaction')->with('message', 'Deposit added successfully!');
+       
+    } else {
+        return redirect()->back()->with('error', 'Failed to add deposit');
+    }
+}
+
+public function add_withdrawal()
+{
+    $db = \Config\Database::connect();
+
+    $transactionDate = $this->request->getPost('transaction_date');
+    $description = $this->request->getPost('description');
+    $withdrawalAmount = $this->request->getPost('withdrawal_amount');
+
+    $data = [
+        'transaction_date' => $transactionDate,
+        'description' => $description,
+        'withdrawal_amount' => $withdrawalAmount
+    ];
+   // echo '<pre>'; print_r($_POST);die;
+ 
+    $result = $db->table('tbl_bank_withdrawals')->insert($data);
+
+  
+    if ($result) {
+        return redirect()->to('bank_transaction')->with('message', 'Withdrawal added successfully!');
+     
+    } else {
+        return redirect()->back()->with('error', 'Failed to add withdrawal');
+    }
+}
+
+    
+    
+    public function sales_reports() 
+    { 
+         $db = \Config\Database::connect();
+        $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
+    
+        $model = new AdminModel();
+        $wherecond = ['is_deleted' => 'N','payment_status' => 'Received'];
+        $orders = $model->getalldata('tbl_invoice', $wherecond);
+    
+        if (!$orders) {
+            $data['orders'] = [];
+            return view('Admin/sales_reports', $data);
+        }
+    
+        $branches = $model->getalldata('tbl_branch', ['is_deleted' => 'N']);
+        $branch_name = [];
+        foreach ($branches as $branch) {
+            if (isset($branch->id) && isset($branch->branch_name)) {
+                $branch_name[$branch->id] = $branch->branch_name;
+            }
+        }
+    
+        $invoice_ids = array_column($orders, 'id');
+        $invoice_ids = array_map('intval', $invoice_ids); // Ensure invoice IDs are integers
+    
+        $builder = $db->table('tbl_iteam');
+        $builder->whereIn('invoice_id', $invoice_ids);
+        $items = $builder->get()->getResult();
+    
+        if (!$items) {
+            $data['orders'] = $orders;
+            return view('Admin/sales_reports', $data);
+        }
+    
+        $product_ids = array_column($items, 'product_id');
+        $product_ids = array_map('intval', $product_ids); // Ensure product IDs are integers
+    
+        $builder = $db->table('tbl_product');
+        $builder->whereIn('id', $product_ids);
+        $products = $builder->get()->getResult();
+    
+        $product_name_map = [];
+        foreach ($products as $product) {
+            if (isset($product->id) && isset($product->product_name)) {
+                $product_name_map[$product->id] = $product->product_name;
+            }
+        }
+        foreach ($items as &$item) {
+            if (isset($product_name_map[$item->product_id])) {
+                $item->product_name = $product_name_map[$item->product_id];
+            } else {
+                $item->product_name = 'Unknown'; // Default if no match found
+            }
+        }
+        foreach ($orders as &$order) {
+            $order->items = array_filter($items, function($item) use ($order) {
+                return $item->invoice_id === $order->id; // Ensure proper comparison
+            });
+        }
+    
+        foreach ($orders as &$order) {
+            if (!empty($order->branch_id) && isset($branch_name[$order->branch_id])) {
+                $order->branch_name = $branch_name[$order->branch_id];
+            } else {
+                $order->branch_name = 'Unknown'; // Default if no match found
+            }
+        }
+        $data['orders'] = $orders;
+        return view('Admin/sales_reports', $data);
+    }
+    
+    
+    
+    
+    
 
 public function updatestatus() 
 {
@@ -1553,6 +1760,377 @@ public function updatestatus()
         'status' => 'success',
         'message' => 'Payment status updated successfully.',
     ]);
-}
 
 }
+
+public function edit_row_Materials()
+{
+    $used_materials = $this->request->getVar('used_materials');
+    $materialunits = $this->request->getVar('materialunits');
+    $materialid = $this->request->getVar('materialid');
+    $remaining_units = $materialunits - $used_materials;
+    $data = [
+        'unit' => $remaining_units
+    ];
+    $db = \Config\Database::connect();
+    $update_data = $db->table('tbl_row_materials')->where('id', $materialid);
+    if ($update_data->update($data)) {
+        return redirect()->back()->with('success', 'Material updated successfully');
+    } else {
+        return redirect()->back()->with('error', 'Failed to update material');
+    }
+}
+
+
+
+public function add_daily_expense()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $model = new AdminModel();
+
+
+    
+    // echo'<pre>';print_r($data);die;
+
+    $id = request()->getUri()->getSegment(2); // Adjust the segment number based on your route
+    $data['single_data'] = [];
+
+
+    if (!empty($id)) {
+        // Fetching single data using the ID
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
+        $data['single_data'] = $model->getsingleuser('tbl_daily_expenses', $wherecond1);
+
+
+        $wherecond1 = array('is_deleted' => 'N', 'invoice_id' => $id);
+
+        $data['iteam'] = $model->getalldata('tbl_daily_expenses_iteam', $wherecond1);
+
+            // echo'<pre>';print_r($data['iteam']);die;
+
+    }
+
+    $wherecond = array('is_deleted' => 'N');
+    $data['tax_data'] = $model->getalldata('tbl_tax', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N');
+    $data['vendor_data'] = $model->getalldata('tbl_vendor', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N');
+    $data['branch_data'] = $model->getalldata('tbl_branch', $wherecond);
+
+
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'));
+    $data['getData'] = $model->getalldata('tbl_daily_expenses', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'));
+    $data['all_daily_expenses_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Paid');
+    $data['paid_bill_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Due');
+    $data['due_bill_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
+
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Overdue');
+    $data['overdue_bill_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
+
+
+
+    $data['$totalAmountWithtax'] = $model->get_total_amount_with_gst(session()->get('user_id'));
+
+    $data['$totalAmountWithtaxpaid'] =$model->get_total_paidamount_with_gst(session()->get('user_id'));
+
+    $data['$totalAmountWithtaxdue'] =$model->get_total_dueamount_with_gst(session()->get('user_id'));
+
+    $data['$totalAmountWithtaxoverdue'] =$model->get_total_overdueamount_with_gst(session()->get('user_id'));
+    $getData = $data['getData'];
+
+    foreach ($getData as $key => $invoice) {
+        // Fetch vendor details
+        $vendorData = $model->getvendorById($invoice->vendor_id);
+    
+        // Ensure $invoice is either an array or object and handle accordingly
+        if (is_array($invoice)) {
+            // Treat it as an array
+            $getData[$key]['vendorname'] = isset($vendorData['vendor_name']) ? $vendorData['vendor_name'] : '';
+        } elseif (is_object($invoice)) {
+            // Treat it as an object
+            $getData[$key]->vendorname = isset($vendorData->vendor_name) ? $vendorData->vendor_name : '';
+        }
+    }
+    
+    
+
+    
+    
+    $wherecond = array('is_deleted' => 'N');
+    $data['getDatas'] = $model->getalldata('tbl_daily_expenses', $wherecond);
+
+
+
+    $getDatas = $data['getDatas'];
+
+    if (!empty($getDatas)) {
+        foreach ($getDatas as $key => $invoice) {
+            // Check if $invoice is an object
+            if (is_object($invoice)) {
+                // Fetch vendor and branch data
+                $vendorData = $model->getvendorById($invoice->vendor_id);
+                $branchData = $model->getUserModelById($invoice->branch_id);
+    
+                
+                $invoice->vendorname = isset($vendorData['vendor_name']) ? $vendorData['vendor_name'] : ''; // Use array key for accessing vendor_name
+                $invoice->branchname = isset($branchData['branch_name']) ? $branchData['branch_name'] : ''; // Use array key for accessing branch_name
+    
+   
+    
+                // Update back to the array
+                $getDatas[$key] = $invoice;
+            }
+        }
+    
+    
+    
+    
+        // Assign the updated array back to $data['getDatas']
+        $data['getDatas'] = $getDatas;
+    }
+    
+
+    
+    
+
+    // echo "<pre>";print_r($data['getDatas']);exit();
+
+   return view('Admin/add_daily_expense',$data);
+}
+
+public function set_invoice_data()
+	{
+        $session = \Config\Services::session();
+   
+
+		$billPhoto = $this->request->getFile('bill_photo');
+
+		// Check if a file was uploaded
+		if ($billPhoto->isValid() && !$billPhoto->hasMoved()) {
+			// Generate a unique name for the file
+			$newName = $billPhoto->getRandomName();
+		
+			// Move the file to the desired directory
+			$billPhoto->move(ROOTPATH . 'assets/images/bill_photo', $newName);
+		
+			// Get the file path
+			$billPhotoPath = 'assets/images/bill_photo/' . $newName;
+		} else {
+			// Handle the case when no file was uploaded
+			$billPhotoPath = $this->request->getVar('hidden_bill_photo'); // or any default value you want to use
+		}
+		$data = [
+					'vendor_id' => $this->request->getVar('vendor_id'),
+					'address' => $this->request->getVar('address'),
+					
+					'bill_date' => $this->request->getVar('bill_date'),
+					'bill_due_date' => $this->request->getVar('bill_due_date'),
+
+					'bill_no' => $this->request->getVar('bill_no'),
+					'account_number' => $this->request->getVar('account_number'),
+					'gst_no' => $this->request->getVar('gst_no'),
+					'bill' => $this->request->getVar('bill'),
+					'totalQuantity' => $this->request->getVar('totalQuantity'),
+					'total_price' => $this->request->getVar('total_price'),
+					'totalamount' => $this->request->getVar('totalamount'),
+					'total_discount' => $this->request->getVar('total_discount'),
+					'totalamounttotal' => $this->request->getVar('totalamounttotal'),
+					'totalamount_in_words' => $this->request->getVar('totalamount_in_words'),
+
+					'name_of_person' => $this->request->getVar('name_of_person'),
+					'total_tax' => $this->request->getVar('total_tax'),
+					'total_cgst' => $this->request->getVar('total_cgst'),
+					'total_sgst' => $this->request->getVar('total_sgst'),
+					'total_tax_value' => $this->request->getVar('tax2'),
+
+					'total_cgst_value' => $this->request->getVar('cgst2'),
+					'total_sgst_value' => $this->request->getVar('sgst2'),
+		
+					'totalAmountWithtax' => $this->request->getVar('totalAmountWithtax'),
+
+					'bank_name' => $this->request->getVar('bank_name'),
+					'tax_id' => $this->request->getVar('tax_id'),
+					'bank_holder_name' => $this->request->getVar('bank_holder_name'),
+					'ifsc_code' => $this->request->getVar('ifsc_code'),
+					'branch_name' => $this->request->getVar('branch_name'),
+					'upi_id' => $this->request->getVar('upi_id'),
+					'mobile_no' => $this->request->getVar('mobile_no'),
+					'branch_id' => $this->request->getVar('branch_id'),
+					'created_by' => $this->request->getVar('created_by'),
+					'user_idd' => $session->has('id'),
+
+					
+					 'bill_photo' => $billPhotoPath, // Insert the file path
+					 'bill_status' => $this->request->getVar('billstatus')
+	];
+	// echo "<pre>";
+	// print_r($data);
+	 $this->request->getVar('id'); 
+
+
+	 $db = \Config\Database::Connect();
+	 $id = $this->request->getVar('id');
+
+	 if(empty($id)){
+
+
+		$add_data = $db->table('tbl_daily_expenses');
+		$add_data->insert($data);
+
+		// echo "<pre>";print_r($data);
+
+
+		$last_id =  $db->insertID();
+
+	  $iteam = $this->request->getVar('iteam');
+	  $quantity = $this->request->getVar('quantity');
+	  $price = $this->request->getVar('price');
+	  $amount_p = $this->request->getVar('amount_p');
+	  $tax = $this->request->getVar('tax');
+	  $cgst = $this->request->getVar('cgst');
+	  $sgst = $this->request->getVar('sgst');
+	  $total_tax = $this->request->getVar('total_tax');
+	  $total_cgst = $this->request->getVar('total_cgst');
+	  $total_sgst = $this->request->getVar('total_sgst');
+	  $tax_value = $this->request->getVar('tax_value');
+	  $cgst_value = $this->request->getVar('cgst_value');
+	  $sgst_value = $this->request->getVar('sgst_value');
+	  $discount = $this->request->getVar('discount');
+	  $total_amount = $this->request->getVar('total_amount');
+
+
+	//   echo "<pre>";print_r($amount_p); print_r($total_amount);exit();
+  
+
+        for($k=0;$k<count($iteam);$k++){
+            $product_data = array(
+                'invoice_id' 	=> $last_id,
+                'iteam' 		=> $iteam[$k],
+                'quantity' 		=> $quantity[$k],
+                'price' 		=> $price[$k],
+                'amount' 	    => $amount_p[$k],
+                'discount' 		=> $discount[$k],
+				'tax' 			=> $tax[$k],
+				'cgst' 			=> $cgst[$k],
+				'sgst' 			=> $sgst[$k],
+				'total_tax' 	=> $total_tax[$k],
+				'total_cgst' 	=> $total_cgst[$k],
+				'total_sgst' 	=> $total_sgst[$k],
+				'tax_value' 	=> $tax_value[$k],
+				'cgst_value' 	=> $cgst_value[$k],
+				'sgst_value' 	=> $sgst_value[$k],
+                'total_amount'  => $total_amount[$k],
+				'created_on' => date('Y:m:d H:i:s'),
+                
+            ); 
+			// echo "<pre>";print_r($product_data);exit();
+			$add_data = $db->table('tbl_daily_expenses_iteam');
+			$add_data->insert($product_data);
+	
+		}
+	
+		session()->setFlashdata('success', 'Data added successfully.');
+	}else{
+		$update_data = $db->table('tbl_daily_expenses')->where('id',$this->request->getVar('id'));
+		$update_data->update($data);
+
+		// echo $this->request->getVar('id');
+		// exit();
+
+		$delete = $db->table('tbl_daily_expenses_iteam')->where('invoice_id', $this->request->getVar('id'))->delete();
+
+
+		$last_id = $this->request->getVar('id');
+
+		$iteam = $this->request->getVar('iteam');
+		$quantity = $this->request->getVar('quantity');
+		$price = $this->request->getVar('price');
+		$amount_p = $this->request->getVar('amount_p');
+		$tax = $this->request->getVar('tax');
+		$cgst = $this->request->getVar('cgst');
+		$sgst = $this->request->getVar('sgst');
+		$total_tax = $this->request->getVar('total_tax');
+		$total_cgst = $this->request->getVar('total_cgst');
+		$total_sgst = $this->request->getVar('total_sgst');
+		$tax_value = $this->request->getVar('tax_value');
+		$cgst_value = $this->request->getVar('cgst_value');
+		$sgst_value = $this->request->getVar('sgst_value');
+		$discount = $this->request->getVar('discount');
+		$total_amount = $this->request->getVar('total_amount');
+  
+  
+	  //   echo "<pre>";print_r($amount_p); print_r($total_amount);exit();
+	
+  
+		  for($k=0;$k<count($iteam);$k++){
+			  $product_data = array(
+				  'invoice_id' 	=> $last_id,
+				  'iteam' 		=> $iteam[$k],
+				  'quantity' 		=> $quantity[$k],
+				  'price' 		=> $price[$k],
+				  'amount' 	    => $amount_p[$k],
+				  'discount' 		=> $discount[$k],
+				  'tax' 			=> $tax[$k],
+				  'cgst' 			=> $cgst[$k],
+				  'sgst' 			=> $sgst[$k],
+				  'total_tax' 	=> $total_tax[$k],
+				  'total_cgst' 	=> $total_cgst[$k],
+				  'total_sgst' 	=> $total_sgst[$k],
+				  'tax_value' 	=> $tax_value[$k],
+				  'cgst_value' 	=> $cgst_value[$k],
+				  'sgst_value' 	=> $sgst_value[$k],
+				  'total_amount'  => $total_amount[$k],
+				  'created_on' => date('Y:m:d H:i:s'),
+				  
+			  ); 
+			  $add_data1 = $db->table('tbl_daily_expenses_iteam');
+			  $add_data1->insert($product_data);
+	  
+		  }
+	  
+
+		session()->setFlashdata('success', 'Data updated successfully.');
+	}
+
+	
+		return redirect()->to('add_daily_expense'); 
+
+	}
+
+    public function get_vendor_By_Id()
+    {
+
+        $model = new AdminModel();
+
+        $vendor_id = $this->request->getPost('vendor_id');
+
+        // echo $vendor_id; exit();
+
+        if ($vendor_id) {
+            $vendor_data = $model->get_vendor_By_Id($vendor_id);
+            // echo "<pre>";print_r($vendor_data);exit();
+            return json_encode($vendor_data);
+        } else {
+            return json_encode([]);
+        }
+    }
+
+
+    
+
+
+
+}
+
+

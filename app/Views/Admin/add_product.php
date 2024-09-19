@@ -44,8 +44,7 @@
                                             <label for="productName" class="form-label">Product Name</label>
 
 
-                                            <input type="text" class="form-control" id="productName"  value="<?php if(!empty($single_data)){ echo $single_data->product_name; }?>" name="product_name"
-                                                required>
+                                           
 
                                             <input type="text" class="form-control" id="productName"
                                                 value="<?php if(!empty($single_data)){ echo $single_data->product_name; }?>"
@@ -75,21 +74,8 @@
                                                 <option value="ml" <?php if (!empty($single_data) && ($single_data->unit_type == 'ml')){ echo "selected";  } ?>>Milliliters (ml)</option>
                                                 <option value="ltr" <?php if (!empty($single_data) && ($single_data->unit_type == 'ltr')){ echo "selected";  } ?>>Liters (ltr)</option>
 
-                                            <select class="form-select" id="unitType" name="unit_type" required>
-                                                <option selected disabled value="">Choose...</option>
-                                                <option value="gm"
-                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'gm') echo 'selected'; ?>>
-                                                    Grams (gm)</option>
-                                                <option value="kg"
-                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'kg') echo 'selected'; ?>>
-                                                    Kilograms (kg)</option>
-                                                <option value="ml"
-                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'ml') echo 'selected'; ?>>
-                                                    Milliliters (ml)</option>
-                                                <option value="ltr"
-                                                    <?php if (!empty($single_data) && $single_data->unit_type == 'ltr') echo 'selected'; ?>>
-                                                    Liters (ltr)</option>
-
+                                          
+                                               
                                                 <!-- Add more unit types as needed -->
                                             </select>
                                             <div class="invalid-feedback">
@@ -110,21 +96,7 @@
                                                 <option value="Jar" <?php if (!empty($single_data) && ($single_data->container_type == 'Jar')) { echo "selected"; } ?>>Jar</option>
 
 
-                                                <option value="Bottle"
-                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Bottle') echo 'selected'; ?>>
-                                                    Bottle</option>
-                                                <option value="Can"
-                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Can') echo 'selected'; ?>>
-                                                    Can</option>
-                                                <option value="Box"
-                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Box') echo 'selected'; ?>>
-                                                    Box</option>
-                                                <option value="Pouch"
-                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Pouch') echo 'selected'; ?>>
-                                                    Pouch</option>
-                                                <option value="Jar"
-                                                    <?php if (!empty($single_data) && $single_data->container_type == 'Jar') echo 'selected'; ?>>
-                                                    Jar</option>
+                                            
 
                                                 <!-- Add more container types as needed -->
                                             </select>
@@ -178,9 +150,7 @@
                                         <div class="col-md-4">
                                             <label for="tax_ammount" class="form-label">Tax Ammount</label>
 
-                                            <input type="text" class="form-control" id="tax_ammount" name="tax_ammount" value="<?php if(!empty($single_data)){ echo $single_data->tax_ammount; }?>"
-                                                required>
-
+                                         
                                             <input type="text" class="form-control"
                                                 value="<?php if(!empty($single_data)){ echo $single_data->tax_ammount; }?>"
                                                 id="tax_ammount" name="tax_ammount" required>

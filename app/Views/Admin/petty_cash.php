@@ -1,12 +1,8 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
 <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
-<!-- jQuery (required for DataTables) -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
 
 <div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
@@ -158,20 +154,23 @@
                             </div>
 
                             <!-- Balance Sheet Section -->
+                            <!-- Balance Sheet Section -->
                             <div class="tab-pane fade" id="balanceSheet" role="tabpanel"
                                 aria-labelledby="balanceSheet-tab">
+
+                         
                                 <h4 class="mt-3">Balance Sheet</h4>
                                 <table id="balanceSheetTable" class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Date</th>
                                             <th>Bill Number</th>
-                                            <th>Biller / Oblick Shop</th>
+                                            <th>Biller / Shop Name</th>
                                             <th>By</th>
                                             <th>For</th>
-                                            <th>Debit Amount</th>
-                                            <th>Credit Amount</th>
-                                            <th>Balance Amount</th>
+                                            <th class="text-right">Debit Amount</th>
+                                            <th class="text-right">Credit Amount</th>
+                                            <th class="text-right">Balance Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -182,33 +181,39 @@
 
                                             if (!empty($cashData) || !empty($expenseData)) {
                                                 $entries = array_merge(
-                                                    array_map(function($item) {
+                                                    array_map(function($item) use (&$totalCash) {
+                                                        $amount = (float)($item['amount'] ?? 0);
+                                                        $totalCash += $amount;
                                                         return [
                                                             'date' => $item['date'],
                                                             'bill_number' => '',
                                                             'biller' => '',
                                                             'by' => $item['by'],
                                                             'for' => $item['for'],
-                                                            'amount' => (float)$item['amount'],
+                                                            'amount' => $amount,
                                                             'type' => 'cash'
                                                         ];
                                                     }, $cashData),
-                                                    array_map(function($item) {
+                                                    array_map(function($item) use (&$totalExpenses) {
+                                                        $amount = -(float)($item['amount'] ?? 0);
+                                                        $totalExpenses += $amount;
                                                         return [
                                                             'date' => $item['date'],
-                                                            'bill_number' => isset($item['bill_number']) ? $item['bill_number'] : '',
-                                                            'biller' => isset($item['biller_or_shop']) ? $item['biller_or_shop'] : '',
-                                                            'by' => $item['by'],
-                                                            'for' => $item['for'],
-                                                            'amount' => -(float)$item['amount'],
+                                                            'bill_number' => $item['bill_number'] ?? '',
+                                                            'biller' => $item['biller_or_shop'] ?? '',
+                                                            'by' => $item['expense_by'] ?? '',
+                                                            'for' => $item['for'] ?? '',
+                                                            'amount' => $amount,
                                                             'type' => 'expense'
                                                         ];
                                                     }, $expenseData)
                                                 );
 
-                                                usort($entries, function($a, $b) {
-                                                    return strtotime($a['date']) - strtotime($b['date']);
-                                                });
+
+                                                    usort($entries, function($a, $b) {
+                                                        return strtotime($a['date']) - strtotime($b['date']);
+                                                    });
+
 
                                                 foreach ($entries as $entry) {
                                                     $debitAmount = $entry['amount'] < 0 ? abs($entry['amount']) : 0;
@@ -221,17 +226,29 @@
                                             <td><?= $entry['biller']; ?></td>
                                             <td><?= $entry['by']; ?></td>
                                             <td><?= $entry['for']; ?></td>
-                                            <td><?= $debitAmount > 0 ? number_format($debitAmount, 2) : '-'; ?></td>
-                                            <td><?= $creditAmount > 0 ? number_format($creditAmount, 2) : '-'; ?></td>
-                                            <td><?= number_format($netBalance, 2); ?></td>
+                                            <td class="text-right">
+                                                <?= $debitAmount > 0 ? number_format($debitAmount, 2) : '-'; ?></td>
+                                            <td class="text-right">
+                                                <?= $creditAmount > 0 ? number_format($creditAmount, 2) : '-'; ?></td>
+                                            <td class="text-right"><?= number_format($netBalance, 2); ?></td>
                                         </tr>
                                         <?php
                                                 }
                                             }
                                         ?>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5">Total</th>
+                                            <th class="text-right" style="text-align: end;"><?= number_format(abs($totalExpenses), 2); ?></th>
+                                            <th class="text-right" style="text-align: end;"><?= number_format($totalCash, 2); ?></th>
+                                            <th class="text-right" style="text-align: end;"><?= number_format($netBalance, 2); ?></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -240,7 +257,7 @@
     </div>
 </div>
 
-<!-- Success/Error message hide script -->
+
 <script>
 $(document).ready(function() {
     setTimeout(function() {
@@ -254,5 +271,3 @@ $(document).ready(function() {
     });
 });
 </script>
-
-<?php include __DIR__.'/../Admin/footer.php'; ?>
