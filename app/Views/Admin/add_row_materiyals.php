@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
-                        <h4 class="card-title">Add Row Materials</h4>
+                        <h4 class="card-title">Add Raw Materials</h4>
                     </div>
                 </div>
                 <div class="card-body">
@@ -15,12 +15,12 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
                                     data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home"
-                                    aria-selected="true">Add Row Materials</button>
+                                    aria-selected="true">Add Raw Materials</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
                                     data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile"
-                                    aria-selected="false">Manage Row Materials</button>
+                                    aria-selected="false">Manage Raw Materials</button>
                             </li>
 
                         </ul>
@@ -29,7 +29,7 @@
                             <div class="tab-pane fade show active" id="pills-home1" role="tabpanel"
                                 aria-labelledby="pills-home-tab1">
                                 <div class="card-header">
-                                    <h4 class="card-title">Add Row Materials</h4>
+                                    <h4 class="card-title">Add Raw Materials</h4>
                                 </div>
                                 <div class="card-body">
                                     <form class="row g-3 needs-validation"
@@ -94,7 +94,7 @@
                                 aria-labelledby="pills-profile-tab1">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">Row Materials Stock</h4>
+                                        <h4 class="card-title">Raw Materials Stock</h4>
                                     </div>
                                     <div class="card-body">
                                         <table class="table table-striped">
@@ -122,7 +122,7 @@
                                                 <?php endforeach; ?>
                                                 <?php else: ?>
                                                 <tr>
-                                                    <td colspan="6">No row materials found.</td>
+                                                    <td colspan="6">No Raw materials found.</td>
                                                 </tr>
                                                 <?php endif; ?>
                                             </tbody>
