@@ -9,7 +9,8 @@ class Home extends BaseController
     {
         return view('login');
     }
-    public function admindashboard()
+    
+public function admindashboard()
     {
         $session = \Config\Services::session();
         if (!$session->has('id')) {
@@ -17,7 +18,8 @@ class Home extends BaseController
         }
         return view('Admin/dashboard');
     }
-    public function add_order()
+
+public function add_order()
     {
         $session = \Config\Services::session();
         if (!$session->has('id')) {
@@ -201,7 +203,10 @@ public function logout()
     $session = session();
     $session->destroy();
     return redirect()->to('/');
-    }
+
+}
+    
+
     // public function add_employee()
     // {
     //     $session = \Config\Services::session();
@@ -233,7 +238,7 @@ public function logout()
     }
 
     $model = new AdminModel();
-    
+
     // Fetch the menu data
     $wherecond = array('is_active' => 'Y');
     $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
@@ -481,10 +486,6 @@ public function get_follow_up_data()
         'data' => $followUpData
     ]);
 }
-
-
-
-
 
 public function access_level()
 {
@@ -825,6 +826,7 @@ public function set_invoice()
 
         // Delete existing items for this invoice
         $db->table('tbl_iteam')->where('invoice_id', $invoiceId)->delete();
+
         session()->setFlashdata('success', 'Invoice updated successfully.');
     }
 
@@ -861,6 +863,10 @@ public function set_invoice()
 
 public function transfer_branch_quantity()
 {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     // print_r($_POST);die;
     $model = new AdminModel();
 
@@ -937,6 +943,10 @@ public function delete_compan()
 public function invoice()
 {
     $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $session = \Config\Services::session();
 
     $model = new AdminModel();
 
@@ -954,7 +964,10 @@ public function invoice()
 }
 
 public function bill_label()
-{
+{  $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     $session = \Config\Services::session();
 
     $model = new AdminModel();
@@ -997,7 +1010,8 @@ public function save_row_Materials()
     $db->table('tbl_row_materials')->insert($data);
     return redirect()->to('add_row_Materials');
 }   
-    public function add_courierService()
+
+public function add_courierService()
 {
     $session = \Config\Services::session();
     if (!$session->has('id')) {
@@ -1099,6 +1113,10 @@ public function add_vendor()
 
 public function set_vendor_data()
 {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     // print_r($_POST);die;
     $data = [
                 'vendor_name' => $this->request->getVar('name'),
@@ -1139,19 +1157,14 @@ public function set_vendor_data()
 }else{
     $update_data = $db->table('tbl_vendor')->where('id',$this->request->getVar('id'));
     $update_data->update($data);
-
-
-
     session()->setFlashdata('success', 'Data updated successfully.');
 }
-
-
     return redirect()->to('add_vendor'); 
-
 }
 
 
-public function dispatch() {
+public function dispatch() 
+{
     $session = \Config\Services::session();
     if (!$session->has('id')) {
         return redirect()->to('/');
@@ -1189,6 +1202,10 @@ public function dispatch() {
 
 public function challan()
 {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     $session = \Config\Services::session();
 
     $model = new AdminModel();
@@ -1236,7 +1253,8 @@ public function getCustomerData()
     }
 }
 
-public function getCourierMobile() {
+public function getCourierMobile()
+ {
     $providerName = $this->request->getGet('provider_name');
     
     $db = \Config\Database::connect();
@@ -1250,8 +1268,13 @@ public function getCourierMobile() {
         return $this->response->setJSON(['mobile_number' => '']);
     }
 } 
+
 public function dispatch_details()
 {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     // Get the database connection
     $db = \Config\Database::connect();
     $builder = $db->table('tbl_dispatch'); // Ensure this is your table name
@@ -1313,15 +1336,25 @@ return redirect()->to('dispatch');
 }
 
 public function salary_slip(){
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     return view('Admin/salary_slip');
 } 
 
-public function punch_in_out(){
+public function punch_in_out()
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     return view('Admin/punch_in_out');
 } 
 
 
-public function leave_application(){
+public function leave_application()
+{
     $session = \CodeIgniter\Config\Services::session();
 
     if (!$session->has('id')) {
@@ -1332,8 +1365,10 @@ public function leave_application(){
 
 
 
+
 public function petty_cash(){
     $session = \CodeIgniter\Config\Services::session();
+
 
     if (!$session->has('id')) {
         return redirect()->to('/login'); // Redirect to login if not logged in
@@ -1380,6 +1415,10 @@ public function Packaging_Material()
 }
 public function add_packaging_material()
 {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     // print_r($_POST);die;
     $id = $this->request->getPost('id');
     $db = \Config\Database::connect();
@@ -1402,6 +1441,10 @@ public function add_packaging_material()
 
 public function addCash()
 {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     
     $db = \Config\Database::connect();
     $builder = $db->table('tbl_pattyCash'); 
@@ -1439,6 +1482,10 @@ public function addCash()
 
 public function addExpense()
 {
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     $db = \Config\Database::connect();
     $builder = $db->table('tbl_pattyExpenses'); 
 
@@ -1478,20 +1525,22 @@ public function addExpense()
 }
 
 
-public function getProductDetails() {
+public function getProductDetails() 
+{
+    $session = \Config\Services::session();
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
     $model = new AdminModel();
 
     $productId = $this->request->getPost('product_id');
     
     if ($productId) {
 
-
         $wherecond1 = array('is_deleted' => 'N', 'id' => $productId);
 
         $productData = $model->get_single_data('tbl_product', $wherecond1);
 
-
-        
         if (!empty($productData)) {
             // Return product details as a JSON response
             echo json_encode([
@@ -1521,6 +1570,7 @@ public function bank_transaction()
 
     $depositData = $builderDeposits->get()->getResultArray();
     $withdrawalData = $builderWithdrawals->get()->getResultArray();
+
 
     $balance = 0;
     foreach ($depositData as $deposit) {
@@ -1567,6 +1617,7 @@ public function add_deposit()
    // echo '<pre>'; print_r($_POST);die;
  
     $result = $db->table('tbl_bank_deposits')->insert($data);
+
 
     if ($result) {
         return redirect()->to('bank_transaction')->with('message', 'Deposit added successfully!');
@@ -1683,7 +1734,8 @@ public function add_withdrawal()
     
     
 
-public function updatestatus() {
+public function updatestatus() 
+{
     $id = $this->request->getPost('id');
     $payment_status = $this->request->getPost('payment_status');
 
@@ -1728,6 +1780,7 @@ public function edit_row_Materials()
         return redirect()->back()->with('error', 'Failed to update material');
     }
 }
+
 
 
 public function add_daily_expense()
@@ -2079,4 +2132,5 @@ public function set_invoice_data()
 
 
 }
+
 

@@ -16,7 +16,8 @@
           </div>
       </footer>
       <!-- Footer Section End -->    </main>
-    
+
+
     <!-- Wrapper End-->
     <!-- offcanvas start -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" data-bs-scroll="true" data-bs-backdrop="true" aria-labelledby="offcanvasExampleLabel">
@@ -211,6 +212,8 @@
     <script src="<?php echo base_url();?>public/assets/js/plugins/form-wizard.js"></script>
     
     <!-- AOS Animation Plugin-->
+     <!-- AOS Animation Plugin-->
+    <script src="<?php echo base_url(); ?>public/assets/vendor/aos/dist/aos.js"></script>
     
     <!-- App Script -->
     <script src="<?php echo base_url();?>public/assets/js/hope-ui.js" defer></script>
