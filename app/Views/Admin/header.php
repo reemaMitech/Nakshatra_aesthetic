@@ -335,8 +335,6 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                 </ul>
                             </li>
 
-                            <?php endif; ?>
-
                             <?php if (in_array('add_daily_expense', $menu_names)) : ?>
                                 <li class="nav-item">
                                     <a class="nav-link " href="<?=base_url(); ?>add_daily_expense">
