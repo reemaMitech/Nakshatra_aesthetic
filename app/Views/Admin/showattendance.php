@@ -22,9 +22,9 @@ if (strpos($current_url, 'edit_employee') !== false) {
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Monthly Employee Attendance List</button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            <!-- <li class="nav-item" role="presentation">
                                 <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Add Employee</button>
-                            </li>
+                            </li> -->
                         </ul>
 
                         <div class="tab-content row" id="pills-tabContent">

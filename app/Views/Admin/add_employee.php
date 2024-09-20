@@ -39,7 +39,6 @@ if (strpos($current_url, 'edit_employee') !== false) {
                                 id="pills-home1" role="tabpanel" aria-labelledby="pills-home-tab1">
                                 <!-- Employee List -->
                                 <!-- <div id="employee-list" > -->
-                                <h5>Employee List</h5>
                                 <div class="table-responsive">
                                     <table id="datatable" class="table table-striped" data-toggle="data-table">
                                         <thead>
@@ -220,7 +219,7 @@ if (strpos($current_url, 'edit_employee') !== false) {
 
                                             <div class="col-md-6">
                                                 <label for="salaryfor8hour" class="form-label">Salary(For 8 Hours)</label>
-                                                <input type="text" class="form-control" id="salaryfor8hour" name="salaryfor8hour" value="<?php if(!empty($single_data)){ echo $single_data->salaryfor8hour; }?>" required>
+                                                <input type="text" class="form-control" id="salaryfor8hour" name="salaryfor8hour" value="<?php if(!empty($single_data)){ echo $single_data->salaryfor8hour; }?>" >
                                                
                                             </div>
                                             <div class="col-md-6">
@@ -258,23 +257,7 @@ if (strpos($current_url, 'edit_employee') !== false) {
                                             <!-- </div> -->
 
                                     <!-- <div class="row"> -->
-                                    <!-- Radio Buttons for User Role -->
-                                    <div class="col-md-12">
-                                        <label class="form-label">Add this user as:</label>
-                                        <div class="d-flex">
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" id="admin" name="user_role"
-                                                    value="Admin" required>
-                                                <label class="form-check-label" for="admin">Admin</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="employee"
-                                                    name="user_role" value="Employee">
-                                                <label class="form-check-label" for="employee">Employee</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- </div> -->
+
 
 
                                     <!-- Checkbox List for Menu Names -->
