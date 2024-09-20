@@ -260,15 +260,15 @@ public function logout()
             $lastUsername = $employee->username;
         }
     }
-    
+   
     if (!empty($lastUsername)) {
         // Extract numeric part and increment it
         $numericPart = (int) substr($lastUsername, 2);
         $nextNumericPart = $numericPart + 1;
-        $nextUsername = 'AB' . str_pad($nextNumericPart, 3, '0', STR_PAD_LEFT);
+        $nextUsername = 'NA' . str_pad($nextNumericPart, 3, '0', STR_PAD_LEFT);
     } else {
         // If no username found, start with AB001
-        $nextUsername = 'AB001';
+        $nextUsername = 'NA001';
     }
 
     // If a specific employee is being edited, retrieve their data
