@@ -37,6 +37,7 @@
                                         method="post" novalidate>
                                         <input type="hidden" name="id" class="form-control" id="id"
                                   value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>">
+                                  
                                         <div class="col-md-3">
                                         <input type="hidden" class="form-control" id="id"  value="<?php if(!empty($single_data)){ echo $single_data->id; }?>" name="id"
                                                 required>
@@ -56,7 +57,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <label for="unit" class="form-label">Size(weight)</label>
-                                            <input type="text" class="form-control" id="unit" name="unit"
+                                            <input type="number" class="form-control" id="unit" name="unit"
                                                 value="<?php if(!empty($single_data)){ echo $single_data->unit; }?>"
                                                 required>
                                             <div class="invalid-feedback">
@@ -94,6 +95,7 @@
                                                 <option value="Box" <?php if (!empty($single_data) && ($single_data->container_type == 'Box')) { echo "selected"; } ?>>Box</option>
                                                 <option value="Pouch" <?php if (!empty($single_data) && ($single_data->container_type == 'Pouch')) { echo "selected"; } ?>>Pouch</option>
                                                 <option value="Jar" <?php if (!empty($single_data) && ($single_data->container_type == 'Jar')) { echo "selected"; } ?>>Jar</option>
+                                                <option value="Jar" <?php if (!empty($single_data) && ($single_data->container_type == 'Tube')) { echo "selected"; } ?>>Tube</option>
 
 
                                             
@@ -122,7 +124,7 @@
 
                                         <div class="col-md-4">
                                             <label for="mrpWithTax" class="form-label">MRP</label>
-                                            <input type="text" class="form-control" id="mrpWithTax"
+                                            <input type="number" class="form-control" id="mrpWithTax"
                                                 value="<?php if(!empty($single_data)){ echo $single_data->mrp; }?>"
                                                 name="mrp" required>
                                             <div class="invalid-feedback">
@@ -151,7 +153,7 @@
                                             <label for="tax_ammount" class="form-label">Tax Ammount</label>
 
                                          
-                                            <input type="text" class="form-control"
+                                            <input type="number" class="form-control"
                                                 value="<?php if(!empty($single_data)){ echo $single_data->tax_ammount; }?>"
                                                 id="tax_ammount" name="tax_ammount" required>
 

@@ -76,13 +76,13 @@
                                 <?php foreach ($orders as $order): ?>
                                     <?php foreach ($order->items as $item): ?>
                                         <tr>
-                                            <td><?= $order->invoiceNo; ?></td>
-                                            <td><?= $order->invoice_date; ?></td>
-                                            <td><?= $order->customer_name; ?></td>
-                                            <td><?= $order->contact_no; ?></td>
-                                            <td><?= $order->branch_name; ?></td>
-                                            <td><?= $item->product_name; ?></td>
-                                            <td><?= $order->final_total; ?></td>
+                                            <td><?= htmlspecialchars($order->invoiceNo); ?></td>
+                                            <td><?= htmlspecialchars($order->invoice_date); ?></td>
+                                            <td><?= htmlspecialchars($order->customer_name); ?></td>
+                                            <td><?= htmlspecialchars($order->contact_no); ?></td>
+                                            <td><?= htmlspecialchars($order->branch_name); ?></td>
+                                            <td><?= htmlspecialchars($item->product_name); ?></td>
+                                            <td><?= htmlspecialchars($order->final_total); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endforeach; ?>
@@ -172,18 +172,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update total amount display
         totalAmountCell.innerText = totalAmount.toFixed(2);
-
-        // If "All Branches" is selected, show all records
-        if (!branch) {
-            row.style.display = '';
-        }
     }
 
     function exportTableData() {
-        const wb = XLSX.utils.table_to_book(document.getElementById('salesTable'), {sheet:"Sheet1"});
-        const wbout = XLSX.write(wb, {bookType:'xlsx', type: 'array'});
+        const table = document.getElementById('salesTable');
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.table_to_sheet(table, {raw: true});
 
-        // Create a Blob and a link to download the file
+        // Get the range of the table
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        
+        // Iterate over all rows and columns to set the cell types to text if needed
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+            for (let C = range.s.c; C <= range.e.c; ++C) {
+                const cellAddress = XLSX.utils.encode_cell({r: R, c: C});
+                const cell = ws[cellAddress];
+                if (cell) {
+                    if (C === 0) { // Invoice No column
+                        cell.t = 's'; // Set cell type to string/text
+                    } else if (cell.t === undefined) {
+                        cell.t = 's'; // Set cell type to string if not defined
+                    }
+                }
+            }
+        }
+
+        // Add the worksheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
+
+        // Generate and download the Excel file
+        const wbout = XLSX.write(wb, {bookType:'xlsx', type: 'array'});
         const blob = new Blob([wbout], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
         const link = document.createElement('a');
         link.href = window.URL.createObjectURL(blob);
