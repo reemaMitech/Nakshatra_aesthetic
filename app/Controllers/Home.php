@@ -1436,7 +1436,7 @@ public function petty_cash(){
         'cashData' => $cashData,
         'expenseData' => $expenseData,
     ];
-
+// print_r($data);die;
     return view('Admin/petty_cash', $data);
 }
 

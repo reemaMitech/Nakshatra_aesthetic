@@ -1,8 +1,4 @@
 <?php include __DIR__.'/../Admin/header.php'; ?>
-<!-- DataTables CSS -->
-
-
-
 
 <div class="container-fluid content-inner mt-n5 py-0">
     <div class="row">
@@ -257,6 +253,7 @@
     </div>
 </div>
 
+<?php include __DIR__.'/../Admin/footer.php'; ?>
 
 <script>
 $(document).ready(function() {
