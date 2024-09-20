@@ -67,7 +67,7 @@
 </head>
 
 <body class="  ">
-    <?php //echo "<pre>";print_r($_SESSION);die;?>
+    <?php //echo "<pre>";print_r($_SESSION);exit();?>
     <?php
 $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_names']) : [];
 
@@ -383,6 +383,23 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                         </i>
                                         <i class="sidenav-mini-icon"> H </i>
                                         <span class="item-name">Add Daily Expense</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php if (in_array('add_purchase_bill', $menu_names)) : ?>
+                                <li class="nav-item">
+                                    <a class="nav-link " href="<?=base_url(); ?>add_purchase_bill">
+                                        <i class="icon">
+                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                                viewBox="0 0 24 24" fill="currentColor">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        <i class="sidenav-mini-icon"> H </i>
+                                        <span class="item-name">Add purchase Bill</span>
                                     </a>
                                 </li>
                             <?php endif; ?>

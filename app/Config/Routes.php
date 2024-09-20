@@ -133,4 +133,12 @@ $routes->get('showattendance/(:any)', 'Home::showattendancei/$i');
 $routes->get('showattendancei/(:num)', 'Home::showattendancei/$1');
 $routes->post('showattendancei/(:num)', 'Home::showattendancei/$1');
 
+$routes->post('add_purchase_bill', 'Home::add_purchase_bill');
+$routes->get('add_purchase_bill', 'Home::add_purchase_bill');
+$routes->post('edit_purchase_bill/(:any)', 'Home::add_purchase_bill/$1');
+$routes->get('edit_purchase_bill/(:any)', 'Home::add_purchase_bill/$1');
+
+$routes->post('set_purchase_bill_data', 'Home::set_purchase_bill_data');
+
+
 

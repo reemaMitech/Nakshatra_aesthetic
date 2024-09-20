@@ -344,4 +344,109 @@ public function getMonthlyAttendanceDatai($table, $startDate, $endDate, $id)
 }
 
 
+public function get_total_amount_with_gstp($id)
+{
+
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_purchase_bill')
+                    ->selectSum('totalAmountWithtax')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+    }else{
+
+        $result = $this->db->table('tbl_purchase_bill')
+        ->selectSum('totalAmountWithtax')
+       ->where('is_deleted', 'N')
+        ->Where('user_idd', $id)
+
+        ->get()
+        ->getRow();
+
+    }
+
+    return $result->totalAmountWithtax;
+}
+
+public function get_total_paidamount_with_gstp($id)
+{
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_purchase_bill')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Paid')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+
+                }else{
+
+                    $result = $this->db->table('tbl_purchase_bill')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Paid')
+                   ->where('is_deleted', 'N')
+                    ->Where('user_idd', $id)
+
+                    ->get()
+                    ->getRow();
+            
+                }
+
+    return $result->totalAmountWithtax;
+}
+
+public function get_total_dueamount_with_gstp($id)
+{
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_purchase_bill')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Due')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+                }else{
+
+                    $result = $this->db->table('tbl_purchase_bill')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Due')
+                   ->where('is_deleted', 'N')
+                    ->Where('user_idd', $id)
+
+                    ->get()
+                    ->getRow();
+            
+                }
+
+    return $result->totalAmountWithtax;
+}
+
+public function get_total_overdueamount_with_gstp($id)
+{
+    $roll_type = session()->get('role');
+    if($roll_type == 'Admin'){
+    $result = $this->db->table('tbl_purchase_bill')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Overdue')
+                   ->where('is_deleted', 'N')
+                    ->get()
+                    ->getRow();
+                }else{
+
+                    $result = $this->db->table('tbl_purchase_bill')
+                    ->selectSum('totalAmountWithtax')
+                    ->where('bill_status', 'Overdue')
+                   ->where('is_deleted', 'N')
+                    ->Where('user_idd', $id)
+
+                    ->get()
+                    ->getRow();
+            
+                }
+
+    return $result->totalAmountWithtax;
+}
+
+
 }
