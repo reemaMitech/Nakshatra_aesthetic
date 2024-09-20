@@ -3,6 +3,9 @@
 namespace App\Controllers;
 use App\Models\AdminModel;
 
+helper('email_helper');
+require_once FCPATH . 'vendor/autoload.php';
+
 class Home extends BaseController
 {
     public function index(): string
@@ -58,10 +61,12 @@ public function add_order()
     $uri = service('uri');
     $localbrand_id = $uri->getSegment(2);  
 
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
 
     $model = new AdminModel();
 
@@ -308,10 +313,12 @@ public function logout()
 
 public function create_access_level()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     return view('Admin/access_level');
 }
 
@@ -553,10 +560,12 @@ public function delete_employee($id)
 
 public function Add_stock()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
 
     $model = new AdminModel();
 
@@ -667,10 +676,12 @@ public function add_branches()
     //  print_r($_POST);die;
   
 
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     // print_r($_POST);die;
     $id = $this->request->getPost('id');
     $db = \Config\Database::connect();
@@ -692,10 +703,12 @@ public function add_branches()
 
 public function add_invoice()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $model = new AdminModel();
 
 
@@ -908,10 +921,12 @@ public function set_invoice()
 
 public function transfer_branch_quantity()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     // print_r($_POST);die;
     $model = new AdminModel();
 
@@ -989,10 +1004,12 @@ public function delete_compan()
 
 public function invoice()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $session = \Config\Services::session();
 
     $model = new AdminModel();
@@ -1011,10 +1028,12 @@ public function invoice()
 }
 
 public function bill_label()
-{  $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+{ $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $session = \Config\Services::session();
 
     $model = new AdminModel();
@@ -1033,10 +1052,12 @@ public function bill_label()
  
 public function add_row_Materials()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $model = new AdminModel();
     $wherecond = array('active' => 'Y');
     $data['row_materials'] = $model->getalldata('tbl_row_materials', $wherecond);
@@ -1060,10 +1081,12 @@ public function save_row_Materials()
 
 public function add_courierService()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $model = new AdminModel();
 
     $uri = service('uri');
@@ -1090,10 +1113,12 @@ public function add_courierService()
 
 public function set_courierService()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
 
     // print_r($_POST);die;
     $db = \Config\Database::connect();
@@ -1130,10 +1155,12 @@ return redirect()->to('add_courierService');
 
 public function add_vendor()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $model = new AdminModel();
    
 
@@ -1160,10 +1187,12 @@ public function add_vendor()
 
 public function set_vendor_data()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     // print_r($_POST);die;
     $data = [
                 'vendor_name' => $this->request->getVar('name'),
@@ -1212,10 +1241,12 @@ public function set_vendor_data()
 
 public function dispatch() 
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $db = \Config\Database::connect();
     
     $courierBuilder = $db->table('tbl_courierservice');
@@ -1249,10 +1280,12 @@ public function dispatch()
 
 public function challan()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $session = \Config\Services::session();
 
     $model = new AdminModel();
@@ -1318,10 +1351,12 @@ public function getCourierMobile()
 
 public function dispatch_details()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     // Get the database connection
     $db = \Config\Database::connect();
     $builder = $db->table('tbl_dispatch'); // Ensure this is your table name
@@ -1383,19 +1418,23 @@ return redirect()->to('dispatch');
 }
 
 public function salary_slip(){
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     return view('Admin/salary_slip');
 } 
 
 public function punch_in_out()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     return view('Admin/punch_in_out');
 } 
 
@@ -1462,10 +1501,12 @@ public function Packaging_Material()
 }
 public function add_packaging_material()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     // print_r($_POST);die;
     $id = $this->request->getPost('id');
     $db = \Config\Database::connect();
@@ -1488,10 +1529,12 @@ public function add_packaging_material()
 
 public function addCash()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     
     $db = \Config\Database::connect();
     $builder = $db->table('tbl_pattyCash'); 
@@ -1529,10 +1572,12 @@ public function addCash()
 
 public function addExpense()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $db = \Config\Database::connect();
     $builder = $db->table('tbl_pattyExpenses'); 
 
@@ -1574,10 +1619,12 @@ public function addExpense()
 
 public function getProductDetails() 
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $model = new AdminModel();
 
     $productId = $this->request->getPost('product_id');
@@ -1833,10 +1880,12 @@ public function edit_row_Materials()
 
 public function add_daily_expense()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $model = new AdminModel();
 
 
@@ -1871,19 +1920,19 @@ public function add_daily_expense()
     $data['branch_data'] = $model->getalldata('tbl_branch', $wherecond);
 
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'));
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'));
     $data['getData'] = $model->getalldata('tbl_daily_expenses', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'));
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'));
     $data['all_daily_expenses_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Paid');
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'), 'bill_status' => 'Paid');
     $data['paid_bill_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Due');
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'), 'bill_status' => 'Due');
     $data['due_bill_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Overdue');
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'), 'bill_status' => 'Overdue');
     $data['overdue_bill_count'] = $model->getalldata('tbl_daily_expenses', $wherecond);
 
 
@@ -2016,7 +2065,7 @@ public function set_invoice_data()
 					'mobile_no' => $this->request->getVar('mobile_no'),
 					'branch_id' => $this->request->getVar('branch_id'),
 					'created_by' => $this->request->getVar('created_by'),
-					'user_idd' => $session->has('id'),
+					'user_idd' => $session->get('id'),
 
 					
 					 'bill_photo' => $billPhotoPath, // Insert the file path
@@ -2177,10 +2226,12 @@ public function set_invoice_data()
 
     public function generateMonthlyAttendanceReport()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     // Load your model
     $adminModel = new AdminModel();
 
@@ -2277,10 +2328,12 @@ public function getallmonthdata()
 
 public function showattendancei()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $adminModel = new AdminModel();
     
    
@@ -2345,10 +2398,12 @@ public function showattendancei()
 
 public function add_purchase_bill()
 {
-    $session = \Config\Services::session();
-    if (!$session->has('id')) {
-        return redirect()->to('/');
-    }
+   $session = \Config\Services::session();
+
+// Check if session 'id' exists, and if not, redirect
+if (!$session->has('id')) {
+    return redirect()->to('/');
+}
     $model = new AdminModel();
 
 
@@ -2383,19 +2438,19 @@ public function add_purchase_bill()
     $data['branch_data'] = $model->getalldata('tbl_branch', $wherecond);
 
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'));
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'));
     $data['getData'] = $model->getalldata('tbl_purchase_bill', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'));
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'));
     $data['all_daily_expenses_count'] = $model->getalldata('tbl_purchase_bill', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Paid');
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'), 'bill_status' => 'Paid');
     $data['paid_bill_count'] = $model->getalldata('tbl_purchase_bill', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Due');
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'), 'bill_status' => 'Due');
     $data['due_bill_count'] = $model->getalldata('tbl_purchase_bill', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->has('id'), 'bill_status' => 'Overdue');
+    $wherecond = array('is_deleted' => 'N', 'user_idd'=>$session->get('id'), 'bill_status' => 'Overdue');
     $data['overdue_bill_count'] = $model->getalldata('tbl_purchase_bill', $wherecond);
 
 
@@ -2473,7 +2528,10 @@ public function add_purchase_bill()
 
 public function set_purchase_bill_data()
 	{
+ 
+
         $session = \Config\Services::session();
+
    
 
 		$billPhoto = $this->request->getFile('bill_photo');
@@ -2530,7 +2588,7 @@ public function set_purchase_bill_data()
 					'mobile_no' => $this->request->getVar('mobile_no'),
 					'branch_id' => $this->request->getVar('branch_id'),
 					'created_by' => $this->request->getVar('created_by'),
-					'user_idd' => $session->has('id'),
+					'user_idd' => $session->get('id'),
 
 					
 					 'bill_photo' => $billPhotoPath, // Insert the file path
@@ -2670,6 +2728,177 @@ public function set_purchase_bill_data()
 
 	}
 
+
+    public function leave_form()
+{
+    $session = \Config\Services::session();
+
+    // Check if session 'id' exists, and if not, redirect
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    
+    // Fetch the session ID value properly
+    $Emp_id = $session->get('id'); // Retrieve the actual 'id' value
+    
+
+    $model = new AdminModel();
+
+    $wherecond = array('role' => 'Employee');
+    $data['Employee'] =  $model->getalldata('tbl_register', $wherecond);
+    $wherecond = array('applicant_employee_id'=>$Emp_id);
+    $data['application'] =  $model->getalldata('tbl_leave_requests', $wherecond);
+    // echo '<pre>' ; print_r($data['application']);die;
+    echo view('Admin/leave_form',$data);
+
+}
+
+
+public function leave_request()
+{
+
+    $session = \Config\Services::session();
+
+    // Check if session 'id' exists, and if not, redirect
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+    $Emp_id = $session->get('id'); // Retrieve the actual 'id' value
+    $from_date = $this->request->getPost('from_date');
+    $to_date = $this->request->getPost('to_date');
+    $rejoining_date = $this->request->getPost('rejoining_date');
+    $reason = $this->request->getPost('reason');
+    $employee_name = $this->request->getPost('hand_emp_id');
+    $project_manager =('1'); 
+    $hr_director =('1'); 
+
+    // print_r($Emp_id);
+    // print_r($employee_name);exit();
+    $data = [
+        'from_date' => $from_date,
+        'to_date' => $to_date,
+        'applicant_employee_id' => $Emp_id, 
+        'rejoining_date' => $rejoining_date,
+        'reason' => $reason,
+        'hand_emp_id' => $employee_name,
+        'project_manager' => $project_manager,
+        'hr_director' => $hr_director
+    ];
+    $db = db_connect(); 
+    $builder = $db->table('tbl_leave_requests'); 
+    $builder->insert($data);
+    $session = \CodeIgniter\Config\Services::session();
+    // $session->setFlashdata('success', 'Leave application successfully submitted.'); 
+
+   
+    $model = new AdminModel();
+
+
+    $sender_name = '';
+    $handovername =  '';
+    $sender_email = '';
+
+    $wherecond1 = array('is_deleted' => 'N', 'id' => $Emp_id);
+    $send_data = $model->get_single_data('tbl_register', $wherecond1);
+
+    // echo "<pre>";print_r($send_data);exit();
+
+
+    if(!empty($send_data)){
+        $sender_name = $send_data->first_name." ".$send_data->middle_name." ".$send_data->middle_name;
+        $sender_email = $send_data->email;
+    }
+    $handovername = "";
+    if($Emp_id != $employee_name ){
+    $wherecond1 = array('is_deleted' => 'N', 'id' => $employee_name);
+    $handovername_data = $model->get_single_data('tbl_register', $wherecond1);
+
+    if(!empty($handovername_data)){
+        $handovername = $handovername_data->first_name." ".$handovername_data->middle_name." ".$handovername_data->middle_name;
+    }
+}
+
+    $wherecond = array('is_deleted' => 'N', 'role' => 'Admin');
+    $admin_data = $model->getalldata('tbl_register', $wherecond);
+    // echo'<pre>';print_r($admin_data);
+
+    leaveemail($from_date, $to_date , $rejoining_date , $reason, $sender_name, $handovername, $admin_data, $sender_email);
+    $session->setFlashdata('success', 'Leave application successfully submitted.');       
+
+    return redirect()->to('leave_form');
+}
+
+
+public function leave_app()
+{
+
+    $session = \Config\Services::session();
+
+    // Check if session 'id' exists, and if not, redirect
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+   
+
+    $model = new AdminModel();
+    $today = date('Y-m-d');
+
+
+    $select = 'tbl_leave_requests.*, applicant.first_name as applicant_name, handler.first_name as handler_name';
+    $joinCond1 = 'tbl_leave_requests.applicant_employee_id = applicant.id';
+    $joinCond2 = 'tbl_leave_requests.hand_emp_id = handler.id';
+
+    $wherecond = [
+        'tbl_leave_requests.from_date >=' => $today, 'tbl_leave_requests.Status' => 'P'
+    ];
+
+    $data['leave_requests'] = $model->jointwotablesforleave($select, 'tbl_leave_requests', 
+                                                    ['tbl_register as applicant', 'tbl_register as handler'], 
+                                                    [$joinCond1, $joinCond2], $wherecond, 'DESC');
+
+    $select = 'tbl_leave_requests.*, applicant.first_name as applicant_name, handler.first_name as handler_name';
+    $joinCond1 = 'tbl_leave_requests.applicant_employee_id = applicant.id';
+    $joinCond2 = 'tbl_leave_requests.hand_emp_id = handler.id';
+
+    $wherecond = [
+        'tbl_leave_requests.is_deleted' => 'N' // Additional condition
+    ];
+
+    $data['allLeaveRequests'] = $model->jointwotablesforleave($select, 'tbl_leave_requests', 
+                                                    ['tbl_register as applicant', 'tbl_register as handler'], 
+                                                    [$joinCond1, $joinCond2], $wherecond, 'DESC');
+
+  
+    echo view('Admin/leave_app', $data);
+
+}
+
+public function leave_result() {
+    $db = \Config\Database::connect();
+    $leave_id = $this->request->getPost('leave_id');
+    $action = $this->request->getPost('action');
+
+    if ($action === 'A') {
+        $data = ['Status' => 'A'];
+        $message = 'Leave request approved successfully.';
+        $message_type = 'success';
+    } elseif ($action === 'R') {
+        $data = ['Status' => 'R'];
+        $message = 'Leave request rejected successfully.';
+        $message_type = 'error';
+    } else {
+        $message = 'Invalid action.';
+        $message_type = 'warning';
+    }
+
+    $db->table('tbl_leave_requests')->where('id', $leave_id)->update($data);
+
+    // Set flash data
+    $session = \Config\Services::session();
+    $session->setFlashdata($message_type, $message);
+
+    return redirect()->to('leave_app');
+}
 
     
 
