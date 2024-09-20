@@ -9,7 +9,7 @@ class Home extends BaseController
     {
         return view('login');
     }
-    
+
 public function admindashboard()
     {
         $session = \Config\Services::session();
@@ -644,24 +644,50 @@ public function add_stocksin()
 
 public function add_branch()
 {
+    $session = \CodeIgniter\Config\Services::session();
+
+    $model = new AdminModel();
+    if (!$session->has('id')) {
+        return redirect()->to('/'); 
+    }
+    $wherecond = array('is_deleted' => 'N');
+    $data['branch'] = $model->getalldata('tbl_branch', $wherecond);
+    $uri = service('uri');
+    $localbrand_id = $uri->getSegment(2); 
+    if(!empty($localbrand_id)){
+        $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
+        $data['single_data'] = $model->get_single_data('tbl_branch', $wherecond1);
+        // print_r($data['single_data']);die;
+    }
+
+   return view('Admin/add_branch',$data);
+}
+public function add_branches()
+{
+    //  print_r($_POST);die;
+  
+
     $session = \Config\Services::session();
     if (!$session->has('id')) {
         return redirect()->to('/');
     }
-    $model = new AdminModel();
-  
-   return view('Admin/add_branch');
-}
-public function add_branches()
-{
     // print_r($_POST);die;
+    $id = $this->request->getPost('id');
     $db = \Config\Database::connect();
     $data = [
         'branch_name' => $this->request->getPost('branch_name'),
         'branch_location' => $this->request->getPost('branch_location'),
     ];
-    $db->table('tbl_branch')->insert($data);
+    if ($id) {
+        $db->table('tbl_branch')->where('id', $id)->update($data);
+        session()->setFlashdata('success', 'Employee updated successfully.');
+    } else {
+        $db->table('tbl_branch')->insert($data);
+        session()->setFlashdata('success', 'Employee created successfully.');
+    }
     return redirect()->to('add_branch');
+
+
 }
 
 public function add_invoice()
@@ -681,6 +707,10 @@ public function add_invoice()
 
     $wherecond = array('is_deleted' => 'N');
     $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
+
+    $data['country'] = $model->get_country_name();
+
+    $data['states'] = $model->get_states_name();
     // echo'<pre>';print_r($data);die;
 
     $id = request()->getUri()->getSegment(2); // Adjust the segment number based on your route
@@ -812,6 +842,9 @@ public function set_invoice()
         'invoice_date' => $this->request->getVar('invoice_date'),
         'customer_name' => $this->request->getVar('customer_name'),
         'contact_no' => $this->request->getVar('contact_no'),
+        'country' => $this->request->getVar('Country'),
+        'state' => $this->request->getVar('State'),
+        'city' => $this->request->getVar('City'),
         'delivery_address' => $this->request->getVar('delivery_address'),
         'invoiceNo' => $invoiceNo,
         'totalamounttotal' => $this->request->getVar('totalamounttotal'),
@@ -886,6 +919,7 @@ public function transfer_branch_quantity()
     $selectProduct = $this->request->getPost('select_product');  
     $transferQuantity = $this->request->getPost('transfer_quantity'); 
     $transferBranch = $this->request->getPost('Transfer_branch'); 
+    $product_batch = $this->request->getPost('product_batch'); 
 
 
     $transferQuantity = intval(preg_replace('/[^0-9]/', '', $transferQuantity)); 
@@ -924,6 +958,7 @@ public function transfer_branch_quantity()
             'quantity' => $transferQuantity,
             'size' => $sourceStock->size, 
             'unit' => $sourceStock->unit, 
+            'batch_name' => $product_batch, 
             'use_by_date' => $sourceStock->use_by_date,
             'Expiry_date' => $sourceStock->Expiry_date,
             'active' => 'Y',
@@ -1738,6 +1773,7 @@ public function add_withdrawal()
             }
         }
         $data['orders'] = $orders;
+    //    echo '<pre>'; print_r($data);die;
         return view('Admin/sales_reports', $data);
     }
     

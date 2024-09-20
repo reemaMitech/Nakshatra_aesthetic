@@ -65,8 +65,8 @@
 
                                     <!-- Size of Product Field -->
                                     <div class="col-md-3">
-                                        <label for="size" class="form-label">Size of Product</label>
-                                        <input type="text" class="form-control" id="size" name="size" required>
+                                        <label for="size" class="form-label">Weight  of Product</label>
+                                        <input type="number" class="form-control" id="size" name="size" required>
                                         <div class="invalid-feedback">
                                             Please provide a valid size.
                                         </div>
@@ -142,6 +142,7 @@
                                         <form class="row g-3 needs-validation"
                                             action="<?= base_url('transfer_branch_quantity'); ?>" method="post"
                                             novalidate>
+                                            <input type="hidden" id="productBatch" name="product_batch">
 
                                             <!-- Select Branch Field -->
                                             <div class="col-md-6">
@@ -286,8 +287,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const productSelect = document.getElementById('selectProduct');
     const branchQuantityInput = document.getElementById('branchQuantity');
     const transferQuantityInput = document.getElementById('transferQuantity');
+    const transferBranchSelect = document.getElementById('Transfer_branch');
+    const form = document.querySelector('form'); // Select the form element
 
     branchSelect.addEventListener('change', function() {
+        const selectedBranchId = this.value;
+
+        // Remove the selected branch from the "Transfer to Branch" dropdown
+        Array.from(transferBranchSelect.options).forEach(option => {
+            if (option.value === selectedBranchId) {
+                option.style.display = 'none';  // Hide the option
+            } else {
+                option.style.display = 'block'; // Show other options
+            }
+        });
+
+        // Proceed with the rest of your code for handling product selection
         const selectedBranch = this.options[this.selectedIndex];
         const products = selectedBranch.getAttribute('data-stock');
 
@@ -296,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
             productSelect.innerHTML = '<option selected disabled value="">Choose...</option>';
             stock.forEach(item => {
                 productSelect.innerHTML +=
-                `<option value="${item.product_id}">${item.product_name} - ${item.batch_name}</option>`;
+                    `<option value="${item.product_id}" data-batch="${item.batch_name}">${item.product_name} - ${item.batch_name}</option>`;
             });
             productSelect.disabled = false;
         } else {
@@ -314,25 +329,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (selectedProduct) {
             branchQuantityInput.value = selectedProduct.quantity;
+            // Add batch_name to a hidden input field to include it in the form data
+            document.getElementById('productBatch').value = this.options[this.selectedIndex].getAttribute('data-batch');
         } else {
             branchQuantityInput.value = '';
+            document.getElementById('productBatch').value = ''; // Clear batch_name if no product is selected
         }
     });
 
     transferQuantityInput.addEventListener('input', function() {
-        if (parseInt(this.value) > parseInt(branchQuantityInput.value)) {
+        const availableQuantity = parseInt(branchQuantityInput.value) || 0;
+        const transferQuantity = parseInt(this.value) || 0;
+
+        if (transferQuantity > availableQuantity) {
             this.setCustomValidity('Transfer quantity cannot be more than available stock.');
         } else {
             this.setCustomValidity('');
+        }
+
+        // Force validation message to be displayed immediately
+        this.reportValidity();
+    });
+
+    document.getElementById('useByDate').addEventListener('change', function() {
+        var useByDate = this.value;
+        document.getElementById('expiryDate').setAttribute('min', useByDate);
+    });
+
+    form.addEventListener('submit', function(event) {
+        // Ensure that the batch_name is included in the form data
+        const productBatchInput = document.getElementById('productBatch');
+        if (productBatchInput) {
+            productBatchInput.value = productSelect.options[productSelect.selectedIndex].getAttribute('data-batch');
         }
     });
 });
 
 
-document.getElementById('useByDate').addEventListener('change', function() {
-    var useByDate = this.value;
-    document.getElementById('expiryDate').setAttribute('min', useByDate);
-});
 </script>
 
 <?php include __DIR__.'/../Admin/footer.php'; ?>
