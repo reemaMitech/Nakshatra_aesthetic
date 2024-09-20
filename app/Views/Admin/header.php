@@ -174,8 +174,8 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                 <ul class="navbar-nav iq-main-menu" id="sidebar-menu">
                     <li class="nav-item static-item">
                         <a class="nav-link static-item disabled" href="#" tabindex="-1">
-                            <span class="default-icon">Home</span>
-                            <span class="mini-icon">-</span>
+                            <!-- <span class="default-icon">Home</span>
+                            <span class="mini-icon">-</span> -->
                         </a>
                     </li>
                     <li class="nav-item">
@@ -335,39 +335,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                 </ul>
                             </li>
 
-                            <?php if (in_array('add_daily_expense', $menu_names)) : ?>
-                                <li class="nav-item">
-                                    <a class="nav-link " href="<?=base_url(); ?>add_daily_expense">
-                                        <i class="icon">
-                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
-                                                viewBox="0 0 24 24" fill="currentColor">
-                                                <g>
-                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                                </g>
-                                            </svg>
-                                        </i>
-                                        <i class="sidenav-mini-icon"> H </i>
-                                        <span class="item-name">Add Daily Expense</span>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
+                            
 
-                            <?php if (in_array('add_purchase_bill', $menu_names)) : ?>
-                                <li class="nav-item">
-                                    <a class="nav-link " href="<?=base_url(); ?>add_purchase_bill">
-                                        <i class="icon">
-                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
-                                                viewBox="0 0 24 24" fill="currentColor">
-                                                <g>
-                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
-                                                </g>
-                                            </svg>
-                                        </i>
-                                        <i class="sidenav-mini-icon"> H </i>
-                                        <span class="item-name">Add purchase Bill</span>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
+                          
 
 
 
@@ -693,6 +663,38 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                     <span class="item-name">Bank Transaction</span>
                                 </a>
                             </li>
+                            <?php endif; ?>
+                            <?php if (in_array('add_daily_expense', $menu_names)) : ?>
+                                <li class="nav-item">
+                                    <a class="nav-link " href="<?=base_url(); ?>add_daily_expense">
+                                        <i class="icon">
+                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                                viewBox="0 0 24 24" fill="currentColor">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        <i class="sidenav-mini-icon"> H </i>
+                                        <span class="item-name">Add Daily Expense</span>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (in_array('add_purchase_bill', $menu_names)) : ?>
+                                <li class="nav-item">
+                                    <a class="nav-link " href="<?=base_url(); ?>add_purchase_bill">
+                                        <i class="icon">
+                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                                viewBox="0 0 24 24" fill="currentColor">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        <i class="sidenav-mini-icon"> H </i>
+                                        <span class="item-name">Add purchase Bill</span>
+                                    </a>
+                                </li>
                             <?php endif; ?>
 
 
