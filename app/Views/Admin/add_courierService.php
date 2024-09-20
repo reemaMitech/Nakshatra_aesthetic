@@ -46,7 +46,7 @@
                                     <!-- Mobile number Field -->
                                     <div class="col-md-6">
                                         <label for="mobileNumber" class="form-label">Mobile Number</label>
-                                        <input type="text" class="form-control" id="mobileNumber" name="mobile_number" maxlength="10" value="<?php if(!empty($single_data)){ echo $single_data->mobile_number; }?>" required >
+                                        <input type="tel" class="form-control" id="mobileNumber" name="mobile_number" minlength="10" maxlength="10"  pattern="\d{10}" value="<?php if(!empty($single_data)){ echo $single_data->mobile_number; }?>" required >
                                         <div class="invalid-feedback">
                                             Please provide a valid mobile number.
                                         </div>

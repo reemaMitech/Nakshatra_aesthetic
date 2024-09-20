@@ -9,7 +9,7 @@ class Home extends BaseController
     {
         return view('login');
     }
-    
+
 public function admindashboard()
     {
         $session = \Config\Services::session();
@@ -702,6 +702,10 @@ public function add_invoice()
 
     $wherecond = array('is_deleted' => 'N');
     $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
+
+    $data['country'] = $model->get_country_name();
+
+    $data['states'] = $model->get_states_name();
     // echo'<pre>';print_r($data);die;
 
     $id = request()->getUri()->getSegment(2); // Adjust the segment number based on your route
@@ -833,6 +837,9 @@ public function set_invoice()
         'invoice_date' => $this->request->getVar('invoice_date'),
         'customer_name' => $this->request->getVar('customer_name'),
         'contact_no' => $this->request->getVar('contact_no'),
+        'country' => $this->request->getVar('Country'),
+        'state' => $this->request->getVar('State'),
+        'city' => $this->request->getVar('City'),
         'delivery_address' => $this->request->getVar('delivery_address'),
         'invoiceNo' => $invoiceNo,
         'totalamounttotal' => $this->request->getVar('totalamounttotal'),

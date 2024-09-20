@@ -56,11 +56,8 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                 <th>Bill Date</th>
                                                                 <th>Customer Name</th>
                                                                 <th>Discount</th>
-
                                                                 <th>Tax Amount</th>
-
                                                                 <th>Total Amount</th>
-                                  
                                                                 <th>Final Total</th>
                                                             </tr>
                                                         </thead>
@@ -176,7 +173,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
 
                                                 <div class="col-md-3">
                                                     <label for="contact_no" class="form-label"> Contact No.</label>
-                                                    <input type="text" class="form-control" id="contact_no" name="contact_no" value="<?php if(!empty($single_data)){ echo $single_data->contact_no; } ?>" required>
+                                                    <input type="tel" class="form-control" id="contact_no" name="contact_no" maxlength="10" minlength="10" pattern="\d{10}" value="<?php if(!empty($single_data)){ echo $single_data->contact_no; } ?>" required>
                                                 
                                                 </div>
 
