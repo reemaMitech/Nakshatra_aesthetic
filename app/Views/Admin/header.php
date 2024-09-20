@@ -34,41 +34,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link rel="stylesheet" href="<?php echo base_url(); ?>public/assets/css/sidebar.css" />
-    <style>
-    /* Ensure the table and buttons are displayed consistently */
-    /* .table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #212529;
-    border-collapse: collapse;
-}
 
-.table th, .table td {
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-}
-
-.table thead th {
-    font-weight: bold;
-}
-
-.follow-up-btn {
-    width: 100%;
-    padding: 5px 10px;
-    text-align: center;
-}
-
-.me-2 {
-    margin-right: 10px;
-}
-
-.table-responsive {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-} */
-    </style>
 
     <link rel="shortcut icon" href="<?=base_url(); ?>public/assets/images/favicon.ico" />
 
@@ -89,6 +55,8 @@
 
     <!-- Customizer Css -->
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/customizer.min.css" />
+    <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/style.css" />
+
 
     <!-- RTL Css -->
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/rtl.min.css" />
@@ -520,9 +488,27 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                     </li>
                                     <?php endif; ?>
 
-                                    <?php if (in_array('leave_application', $menu_names)) : ?>
+                                    <?php if (in_array('leave_list', $menu_names)) : ?>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="<?= base_url(); ?>leave_application">
+                                        <a class="nav-link" href="<?= base_url(); ?>leave_list">
+                                            <i class="icon">
+                                                <!-- Your SVG icon for Leave Application -->
+                                                <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                                    viewBox="0 0 24 24" fill="currentColor">
+                                                    <g>
+                                                        <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                                    </g>
+                                                </svg>
+                                            </i>
+                                            <i class="sidenav-mini-icon"> L </i>
+                                            <span class="item-name">Leave</span>
+                                        </a>
+                                    </li>
+                                    <?php endif; ?>
+
+                                    <?php if (in_array('leave_app', $menu_names)) : ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="<?= base_url(); ?>leave_app">
                                             <i class="icon">
                                                 <!-- Your SVG icon for Leave Application -->
                                                 <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"

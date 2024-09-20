@@ -448,5 +448,25 @@ public function get_total_overdueamount_with_gstp($id)
     return $result->totalAmountWithtax;
 }
 
+public function jointwotablesforleave($select, $table, $joins, $joinConds, $wherecond, $order)
+{
+    $builder = $this->db->table($table);
+    $builder->select($select);
+    
+    if (is_array($joins) && is_array($joinConds)) {
+        foreach ($joins as $index => $join) {
+            $builder->join($join, $joinConds[$index]);
+        }
+    } else {
+        $builder->join($joins, $joinConds);
+    }
+    
+    $builder->where($wherecond);
+    $builder->orderBy('tbl_leave_requests.id', $order);
+    
+    $query = $builder->get();
+    return $query->getResult();
+}
+
 
 }

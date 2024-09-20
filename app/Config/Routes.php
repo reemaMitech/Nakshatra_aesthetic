@@ -141,5 +141,22 @@ $routes->get('edit_purchase_bill/(:any)', 'Home::add_purchase_bill/$1');
 
 $routes->post('set_purchase_bill_data', 'Home::set_purchase_bill_data');
 
+$routes->get('leave_list', 'Home::leave_form');
+$routes->get('leave_form', 'Home::leave_form');
+
+$routes->post('leave-request', 'Home::leave_request');
+$routes->get('leave-request', 'Home::leave_request');
+
+$routes->get('leave_app', 'Home::leave_app');
+
+$routes->post('leave_result', 'Home::leave_result');
+
+
+
+
+
+
+
+
 
 
