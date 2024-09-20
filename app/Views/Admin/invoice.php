@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tax Invoice</title>
+    <title>Bill</title>
     <link rel="stylesheet" href="styles.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -324,15 +324,7 @@ $item_data = $adminModel->getalldata('tbl_iteam', $wherecond1);
 
                     <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->totalamounttotal; } ?></b></td>
                 </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  
-                    <td colspan=2 class="text-right"><strong>Courier Charges</strong></td>
-
-                    <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->courier_charges; } ?></b></td>
-                </tr>
+               
 
                 <tr>
                     <td></td>
@@ -353,6 +345,16 @@ $item_data = $adminModel->getalldata('tbl_iteam', $wherecond1);
                     <td colspan=2 class="text-right"><strong>Tax Amount Total</strong></td>
 
                     <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->total_tax_amt; } ?></b></td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  
+                    <td colspan=2 class="text-right"><strong>Courier Charges</strong></td>
+
+                    <td class="text-right"> ₹ <?php if(!empty($invoice_data)){ echo  $invoice_data->courier_charges; } ?></b></td>
                 </tr>
 
 

@@ -12,17 +12,30 @@ if (strpos($current_url, 'edit_invoice') !== false) {
         <div class="col-sm-12 col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
+
+
+
                     <h4 class="card-title mb-0" id="form-title">Order Booking</h4>
+
+
+                    <div>
+                     
+                    
+                    
+                    
+                    </div>
+
+
                 </div>
 
                 <div class="card-body">
                     <div class="bd-example">
                         <ul class="nav nav-pills" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Bill List</button>
+                                <button class="nav-link <?php echo !$showForm ? 'active' : ''; ?>" id="home-tab" data-bs-toggle="tab" data-bs-target="#pills-home1" type="button" role="tab" aria-controls="home" aria-selected="<?php echo !$showForm ? 'true' : 'false'; ?>">Order Booking List</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Add Bill</button>
+                                <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Order Booking</button>
                             </li>
                         </ul>
 
@@ -65,7 +78,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                     </a>
                                                                                     
                                                                                     <!-- Invoice with Tooltip -->
-                                                                                    <a href="invoice/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill">
+                                                                                    <a href="bill/<?=$data->id; ?>" target="_blank" data-toggle="tooltip" title="View Bill">
                                                                                         <i class='far fa-money-bill-alt me-2'></i>
                                                                                     </a>
 
@@ -332,6 +345,13 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                             <input type="text" name="totalamounttotal" id="totalamounttotal" class="form-control rallstyles" readonly   value="<?php if(!empty($single_data)){ echo $single_data->totalamounttotal;} ?>">
                                                                                         </td>   
                                                                                     </tr>
+
+                                                                                    <tr class="discount">
+                                                                                    <td><b> Discount : </b></td>
+                                                                                    <td class="pfortd">
+                                                                                        <input type="text" name="discount" id="discount" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->discount;} ?>">
+                                                                                    </td>
+                                                                                    </tr>
                                                                                     
                                                                                     <tr class="total_tax_amt">
                                                                                         <td><b>Total Tax Amount : </b></td>
@@ -346,12 +366,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                             <input type="text" name="courier_charges" id="courier_charges" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->courier_charges;} ?>">
                                                                                         </td>
                                                                                     </tr>
-                                                                                    <tr class="discount">
-                                                                                    <td><b> Discount : </b></td>
-                                                                                    <td class="pfortd">
-                                                                                        <input type="text" name="discount" id="discount" class="form-control rallstyle" value="<?php if(!empty($single_data)){ echo $single_data->discount;} ?>">
-                                                                                    </td>
-                                                                                    </tr>
+                                                                                 
                                                                                     <tr>
                                                                                         <td><b>Total : </b></td>
                                                                                         <td class="pfortd"> 
@@ -411,7 +426,7 @@ $(document).ready(function(){
                 if (form.style.display === 'none') {
                     form.style.display = 'block';
                     list.style.display = 'none';
-                    title.textContent = 'Add Invoice';
+                    title.textContent = 'Order Booking';
                     toggleButton.textContent = 'View Invoice List';
                     document.getElementById('submit-button').textContent = 'Submit';
                     form.reset();

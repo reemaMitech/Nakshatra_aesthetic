@@ -58,26 +58,31 @@ $routes->post('create_user', 'Home::create_user');
 // $routes->get('delete_employee/(:num)', 'Home::delete_employee/$1');
 $routes->get('Add_stock', 'Home::Add_stock');
 $routes->post('add_stocksin', 'Home::add_stocksin');
+$routes->get('manageStocks', 'Home::manageStocks');
+$routes->get('balanceStock', 'Home::balanceStock');
 
-$routes->post('add_invoice', 'Home::add_invoice');
-$routes->get('add_invoice', 'Home::add_invoice');
+
+$routes->post('order_booking', 'Home::add_invoice');
+$routes->get('order_booking', 'Home::add_invoice');
 
 $routes->get('Packaging_Material', 'Home::Packaging_Material');
 $routes->post('add_packaging_material', 'Home::add_packaging_material');
 $routes->get('edit_Packaging_Material/(:any)', 'Home::Packaging_Material/$1');
 
+$routes->get('sales_reports', 'Home::sales_reports');
 
 $routes->get('add_branch', 'Home::add_branch');
 $routes->post('add_branches', 'Home::add_branches');
 $routes->post('set_invoice', 'Home::set_invoice');
 $routes->get('edit_invoice/(:any)', 'Home::add_invoice/$1');
-$routes->get('invoice/(:any)', 'Home::invoice/$1');
+$routes->get('bill/(:any)', 'Home::invoice/$1');
 $routes->get('bill_label/(:any)', 'Home::bill_label/$1');
 
 $routes->get('add_row_Materials', 'Home::add_row_Materials');
 
 $routes->get('delete_compan/(:any)/(:any)', 'Home::delete_compan/$1/$2');
 $routes->post('save_row_Materials', 'Home::save_row_Materials');
+$routes->post('edit_row_Materials', 'Home::edit_row_Materials');
 
 $routes->get('delete/(:any)/(:any)', 'Home::delete/$1/$1');
 
@@ -96,5 +101,36 @@ $routes->get('petty_cash', 'Home::petty_cash');
 $routes->post('add_cash', 'Home::addCash');
 $routes->post('add_expense', 'Home::addExpense');
 
+$routes->get('bank_transaction', 'Home::bank_transaction');
+$routes->post('add_deposit', 'Home::add_deposit');
+$routes->post('add_withdrawal', 'Home::add_withdrawal');
+
 $routes->get('updatestatus', 'Home::updatestatus');
 $routes->post('updatestatus', 'Home::updatestatus');
+
+
+$routes->post('add_daily_expense', 'Home::add_daily_expense');
+$routes->get('add_daily_expense', 'Home::add_daily_expense');
+$routes->post('edit_daily_expenses/(:any)', 'Home::add_daily_expense/$1');
+$routes->get('edit_daily_expenses/(:any)', 'Home::add_daily_expense/$1');
+
+$routes->post('set_invoice_data', 'Home::set_invoice_data');
+
+$routes->post('get_vendor_By_Id', 'Home::get_vendor_By_Id');
+$routes->get('get_vendor_By_Id', 'Home::get_vendor_By_Id');
+
+
+$routes->post('attendance', 'Home::generateMonthlyAttendanceReport');
+$routes->get('attendance', 'Home::generateMonthlyAttendanceReport');
+
+$routes->post('getallmonthdata', 'Home::getallmonthdata');
+$routes->get('getallmonthdata', 'Home::getallmonthdata');
+
+
+$routes->post('showattendance/(:any)', 'Home::showattendancei/$i');
+$routes->get('showattendance/(:any)', 'Home::showattendancei/$i');
+
+$routes->get('showattendancei/(:num)', 'Home::showattendancei/$1');
+$routes->post('showattendancei/(:num)', 'Home::showattendancei/$1');
+
+

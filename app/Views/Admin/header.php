@@ -94,12 +94,7 @@
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/rtl.min.css" />
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/vendor/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="<?=base_url(); ?>public/assets/css/commanstylefile.css" />
-    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> -->
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 
 
@@ -111,7 +106,9 @@
     <?php //echo "<pre>";print_r($_SESSION);die;?>
     <?php
 $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_names']) : [];
-// print_r($menu_names);die;
+
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
+// print_r($role);die;
 ?>
     <!-- loader Start -->
     <div id="loading">
@@ -643,10 +640,84 @@ $menu_names = isset($_SESSION['menu_names']) ? explode(', ', $_SESSION['menu_nam
                                 </a>
                             </li>
                             <?php endif; ?>
-                          
+
+                            <?php if (in_array('bank_transaction', $menu_names)) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url(); ?>bank_transaction">
+                                    <i class="icon">
+                                        <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                            viewBox="0 0 24 24" fill="currentColor">
+                                            <!-- Example SVG icon for Bank Transaction -->
+                                            <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </i>
+                                    <i class="sidenav-mini-icon"> B </i>
+                                    <span class="item-name">Bank Transaction</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
+
+
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#Accountss" role="button"
+                            aria-expanded="false" aria-controls="Accountss">
+                            <i class="icon">
+                                <!-- SVG icon for Accounts -->
+                                <svg class="icon-20" xmlns="http://www.w3.org/2000/svg" width="20" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
+                            </i>
+                            <span class="item-name">Reports</span>
+                            <i class="right-icon">
+                                <svg class="icon-18" xmlns="http://www.w3.org/2000/svg" width="18" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </i>
+                        </a>
+                        <ul class="sub-nav collapse" id="Accountss" data-bs-parent="#sidebar-menu">
+                            <?php if (in_array('sales_reports', $menu_names)) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url(); ?>sales_reports">
+                                    <i class="icon">
+                                        <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                            viewBox="0 0 24 24" fill="currentColor">
+                                            <g>
+                                                <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                    <i class="sidenav-mini-icon"> P </i>
+                                    <span class="item-name">Sales Reports</span>
+                                </a>
+                            </li>
+                            <?php endif; ?>
 
+                            <?php if (in_array('attendance', $menu_names)) : ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<?= base_url(); ?>attendance">
+                                        <i class="icon">
+                                            <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10"
+                                                viewBox="0 0 24 24" fill="currentColor">
+                                                <g>
+                                                    <circle cx="12" cy="12" r="8" fill="currentColor"></circle>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        <i class="sidenav-mini-icon"> P </i>
+                                        <span class="item-name">Attendance</span>
+                                    </a>
+                                </li>
+                                <?php endif; ?>
+
+                        </ul>
+                    </li>
                 </ul>
                 <!-- Sidebar Menu End -->
             </div>
