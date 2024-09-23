@@ -13,14 +13,24 @@ class Home extends BaseController
         return view('login');
     }
 
-public function admindashboard()
+    public function admindashboard()
     {
         $session = \Config\Services::session();
         if (!$session->has('id')) {
             return redirect()->to('/');
         }
-        return view('Admin/dashboard');
+    
+        $model = new AdminModel();
+    
+        // Use the query builder to count records with payment_status 'Received'
+        $data['orderscount'] = $model->getCount('tbl_invoice', ['payment_status' => 'Received']);
+        $todayDate = date('Y-m-d');
+        $data['todaysdispatch'] = $model->getCount('tbl_dispatch', ['courier_date' => $todayDate]);
+        $data['todaysales'] = $model->getCount('tbl_invoice', ['payment_status' => 'Received' ,'invoice_date' => $todayDate]);
+
+        return view('Admin/dashboard', $data);
     }
+    
 
 public function add_order()
     {
@@ -693,46 +703,56 @@ if (!$session->has('id')) {
 
 public function add_invoice()
 {
-   $session = \Config\Services::session();
+    $session = \Config\Services::session();
 
-// Check if session 'id' exists, and if not, redirect
-if (!$session->has('id')) {
-    return redirect()->to('/');
-}
+    // Check if session 'id' exists, and if not, redirect
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+
     $model = new AdminModel();
 
-
-    $wherecond = array('is_deleted' => 'N');
+    // Fetching product data
+    $wherecond = ['is_deleted' => 'N'];
     $data['product_data'] = $model->getalldata('tbl_product', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N');
+    // Fetching branch data
     $data['branch_data'] = $model->getalldata('tbl_branch', $wherecond);
 
-    $wherecond = array('is_deleted' => 'N');
-    $data['invoice_data'] = $model->getalldata('tbl_invoice', $wherecond);
+    // Fetching invoice data with specific payment_status values
+    $db = \Config\Database::connect();
+    $data['invoice_data'] = $db->table('tbl_invoice')
+        ->where('is_deleted', 'N')
+        ->groupStart()
+            ->where('payment_status', 'Received')
+            ->orWhere('payment_status', 'Pending')
+            ->orWhere('payment_status IS NULL')  // Use IS NULL for null checks
+        ->groupEnd()
+        ->get()
+        ->getResult();
 
+    // Fetching country and state data
     $data['country'] = $model->get_country_name();
-
     $data['states'] = $model->get_states_name();
-    // echo'<pre>';print_r($data);die;
 
+    // Get ID from URI
     $id = request()->getUri()->getSegment(2); // Adjust the segment number based on your route
     $data['single_data'] = [];
 
     if (!empty($id)) {
-        // Fetching single data using the ID
-        $wherecond1 = array('is_deleted' => 'N', 'id' => $id);
+        // Fetching single invoice data using the ID
+        $wherecond1 = ['is_deleted' => 'N', 'id' => $id];
         $data['single_data'] = $model->getsingleuser('tbl_invoice', $wherecond1);
 
-
-        $wherecond1 = array('is_deleted' => 'N', 'invoice_id' => $id);
-
+        // Fetching items related to the invoice
+        $wherecond1 = ['is_deleted' => 'N', 'invoice_id' => $id];
         $data['iteam'] = $model->getalldata('tbl_iteam', $wherecond1);
     }
-    // echo "hiii";
-    // echo "<pre>";print_r($data['product_data']);exit();
-   return view('Admin/add_invoice',$data);
+
+    // Load the view with the data
+    return view('Admin/add_invoice', $data);
 }
+
 
 public function delete()
 {
@@ -1822,34 +1842,99 @@ public function add_withdrawal()
     
     
 
+// public function updatestatus() 
+// {
+//     $id = $this->request->getPost('id');
+//     $payment_status = $this->request->getPost('payment_status');
+
+//     // Initialize database
+//     $db = \Config\Database::connect();
+//     $table = 'tbl_invoice';  // your table name
+
+//     // Data to update
+//     $data = [
+//         'payment_status' => $payment_status,
+//     ];
+
+//     // Update the status
+//     $update_data = $db->table($table)->where('id', $id);
+//     $update_data->update($data);
+
+//     // Set flashdata for success, though not needed in AJAX
+//     session()->setFlashdata('success', 'Payment status updated successfully.');
+
+//     // Return JSON response for AJAX
+//     return $this->response->setJSON([
+//         'status' => 'success',
+//         'message' => 'Payment status updated successfully.',
+//     ]);
+
+// }
 public function updatestatus() 
 {
+    $model = new AdminModel();
     $id = $this->request->getPost('id');
     $payment_status = $this->request->getPost('payment_status');
-
-    // Initialize database
     $db = \Config\Database::connect();
-    $table = 'tbl_invoice';  // your table name
+    if ($payment_status == 'Cancelled') {
+        $wherecond = ['id' => $id];
+        $data['invoice'] = $model->getalldata('tbl_invoice', $wherecond);
+        if (!empty($data['invoice'])) {
+            $invoice = $data['invoice'][0];
+            $branch_id = $invoice->branch_id; 
+            $whereItemCond = ['invoice_id' => $invoice->id];
+            $items = $model->getalldata('tbl_iteam', $whereItemCond);
+            if (!empty($items)) {
+                foreach ($items as $item) {
+                    $product_id = $item->product_id;
+                    $quantity = $item->quantity;
+                    $whereStockCond = [
+                        'product_name' => $product_id, 
+                        'branch_name'  => $branch_id   
+                    ];
+                    $stock = $model->getalldata('tbl_stock', $whereStockCond);
 
-    // Data to update
-    $data = [
-        'payment_status' => $payment_status,
-    ];
+                    if (!empty($stock)) {
+                        $current_quantity = $stock[0]->quantity;
+                        $new_quantity = $current_quantity + $quantity;
+                        $db->table('tbl_stock')
+                            ->where($whereStockCond)
+                            ->update(['quantity' => $new_quantity]);
+                    }
+                }
+            }
+            $table = 'tbl_invoice';
+            $dataToUpdate = ['payment_status' => $payment_status];
+            $db->table($table)->where('id', $id)->update($dataToUpdate);
+            session()->setFlashdata('success', 'Stock and payment status updated successfully for cancelled payment.');
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Stock and payment status updated successfully for cancelled payment.',
+                'invoice_id' => $id
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Invoice not found.',
+            ]);
+        }
+    } else {
+        // If payment_status is not 'Cancelled', just update the payment status
+        $table = 'tbl_invoice';
+        $dataToUpdate = ['payment_status' => $payment_status];
+        $db->table($table)->where('id', $id)->update($dataToUpdate);
 
-    // Update the status
-    $update_data = $db->table($table)->where('id', $id);
-    $update_data->update($data);
+        session()->setFlashdata('success', 'Payment status updated successfully.');
 
-    // Set flashdata for success, though not needed in AJAX
-    session()->setFlashdata('success', 'Payment status updated successfully.');
-
-    // Return JSON response for AJAX
-    return $this->response->setJSON([
-        'status' => 'success',
-        'message' => 'Payment status updated successfully.',
-    ]);
-
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Payment status updated successfully.',
+            'invoice_id' => $id
+        ]);
+    }
 }
+
+
 
 public function edit_row_Materials()
 {

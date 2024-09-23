@@ -158,6 +158,7 @@
                                                         <th>Courier Name</th>
                                                         <th>Mobile Number</th>
                                                         <th>Courier Date</th>
+                                                        <th>Tracking ID</th>
                                                         <th>Bill Number</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -173,6 +174,7 @@
                                                                 <td><?php echo $dispatch->courier_provider; ?></td>
                                                                 <td><?php echo $dispatch->courier_mobile; ?></td>
                                                                 <td><?php echo $dispatch->courier_date; ?></td>
+                                                                <td><?php echo $dispatch->tracking_id; ?></td>
                                                                 <td><?php echo $dispatch->bill_number; ?></td>
                                                                 <!-- <td><?php echo $dispatch->courier_date; ?></td> -->
                                                                 <td>

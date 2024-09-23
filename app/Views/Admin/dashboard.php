@@ -6,20 +6,23 @@
             <div class="row row-cols-1">
                 <div class="overflow-hidden d-slider1 ">
                     <ul class="p-0 m-0 mb-2 swiper-wrapper list-inline">
-                    <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="700" onclick="openNewPage()">
-                        <div class="card-body">
-                            <div class="progress-widget">
-                                <div id="circle-progress-01"
-                                    class="text-center circle-progress-01 circle-progress circle-progress-primary"
-                                    data-min-value="0" data-max-value="100" data-value="90" data-type="percent">
-                                    <svg class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
-                                        <path fill="currentColor"
-                                            d="M5,17.59L15.59,7H9V5H19V15H17V8.41L6.41,19L5,17.59Z" />
-                                    </svg>
-                                </div>
-                                <div class="progress-detail">
-                                    <p class="mb-2">Total Sales</p>
-                                    <h4 class="counter">$560K</h4>
+                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="700">
+                            <div class="card-body">
+                                <div class="progress-widget">
+                                    <div id="circle-progress-01"
+                                        class="text-center circle-progress-01 circle-progress circle-progress-primary"
+                                        data-min-value="0" data-max-value="100" data-value="90" data-type="percent">
+                                        <svg class="card-slie-arrow icon-24" width="24" viewBox="0 0 24 24">
+                                            <path fill="currentColor"
+                                                d="M5,17.59L15.59,7H9V5H19V15H17V8.41L6.41,19L5,17.59Z" />
+                                        </svg>
+                                    </div>
+                                    <div class="progress-detail">
+                                        <p class="mb-2">Total Sales</p>
+                                        <h4 class="counter"><?= isset($orderscount) ? $orderscount : 0; ?></h4>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -37,8 +40,9 @@
                                         </svg>
                                     </div>
                                     <div class="progress-detail">
-                                        <p class="mb-2">Total Profit</p>
-                                        <h4 class="counter">$185K</h4>
+                                        <p class="mb-2">Todays Sales</p>
+                                        <h4 class="counter"><?= isset($todaysales) ? $todaysales : 0; ?></h4>
+
                                     </div>
                                 </div>
                             </div>
@@ -55,13 +59,14 @@
                                         </svg>
                                     </div>
                                     <div class="progress-detail">
-                                        <p class="mb-2">Total Cost</p>
-                                        <h4 class="counter">$375K</h4>
+                                        <p class="mb-2">Today’s Dispatch</p>
+                                        <h4 class="counter"><?= isset($todaysdispatch) ? $todaysdispatch : 0; ?></h4>
+
                                     </div>
                                 </div>
                             </div>
                         </li>
-                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1000">
+                        <!-- <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1000">
                             <div class="card-body">
                                 <div class="progress-widget">
                                     <div id="circle-progress-04"
@@ -132,14 +137,14 @@
                                     </div>
                                 </div>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>
                     <div class="swiper-button swiper-button-next"></div>
                     <div class="swiper-button swiper-button-prev"></div>
                 </div>
             </div>
         </div>
-      
+
     </div>
 </div>
 
