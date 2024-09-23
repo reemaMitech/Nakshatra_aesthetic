@@ -12,20 +12,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
         <div class="col-sm-12 col-lg-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-
-
-
                     <h4 class="card-title mb-0" id="form-title">Order Booking</h4>
-
-
-                    <div>
-                     
-                    
-                    
-                    
-                    </div>
-
-
                 </div>
 
                 <div class="card-body">
@@ -38,8 +25,6 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                 <button class="nav-link <?php echo $showForm ? 'active' : ''; ?>" id="profile-tab" data-bs-toggle="tab" data-bs-target="#pills-profile1" type="button" role="tab" aria-controls="profile" aria-selected="<?php echo $showForm ? 'true' : 'false'; ?>">Order Booking</button>
                             </li>
                         </ul>
-
-
 
                         <div class="tab-content" id="pills-tabContent">
                                 <div class="tab-pane fade show <?php echo !$showForm ? 'show active' : ''; ?>" id="pills-home1" role="tabpanel"
@@ -182,7 +167,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="country" class="form-label">Country:</label>
-                                                                <select class="form-select choosen" id="country_id" name="Country">
+                                                                <select class="form-select choosen" id="country" name="Country">
                                                                     <option value="">Please select country</option>
                                                                     <?php if(!empty($country)){foreach($country as $country_result){?>
                                                                     <option value="<?=$country_result->id?>"
@@ -194,17 +179,8 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                 </div>
                                                 <div class="col-md-4">
                                                     <label for="state" class="form-label">State:</label>
-                                                        <select class="form-select choosen" id="state_id" name="State">
+                                                        <select class="form-select choosen" id="state" name="State">
                                                             <option value="">Please select state</option>
-                                                        
-                                                            <?php 
-                                                                if(!empty($states)){
-                                                                foreach($states as $state_result){                ?>
-                                                            <option value="<?=$state_result->id?>"
-                                                                <?php if(!empty($single_data) && $single_data->state == $state_result->id){?>selected="selected"
-                                                                <?php }?>><?=$state_result->name?></option>
-                                                            <?php } } ?>
-                                                        
                                                         </select>
                                                 </div>
                                                 <div class="col-md-4">
@@ -232,7 +208,6 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                     <th>Quantity</th>
                                                                                     <th>Unit Price</th>
                                                                                     <th>Tax Amount</th>
-
                                                                                     <th>Amount</th>
                                                                                     <th>Actions</th>
                                                                                 </tr>
@@ -243,7 +218,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                             ?>    
                                                                             <tbody >
                                                                                 <tr class="add-row">
-                                                                                    <td>
+                                                                                    <td style="width:200px;">
                                                                                         <select class="form-control" name="iteam[]" id="iteam_0" required>
                                                                                             <option value="">Select Product</option>
                                                                                             <?php if (!empty($product_data)) { ?>
@@ -258,7 +233,7 @@ if (strpos($current_url, 'edit_invoice') !== false) {
                                                                                     </td>
 
                                                                                 
-                                                                                    <td>
+                                                                                    <td style="width:75px;">
                                                                                         <input type="text" name="quantity[]" class="dynamic-quantity form-control">
                                                                                     </td>
                                                                                     <td>
@@ -480,6 +455,17 @@ $(document).on("change", ".add-row input[type='text'], input[name='gst_amount[]'
 
     // Convert the final total to words (assuming numberToWords library is included)
     var totalAmountTotalWords = numberToWords.toWords(final_total);
+
+  
+    // Capitalize the first letter
+    if (totalAmountTotalWords) {
+        totalAmountTotalWords = totalAmountTotalWords.charAt(0).toUpperCase() + totalAmountTotalWords.slice(1);
+    }
+
+    // Debug to check the words in console
+    console.log('Amount in words (capitalized): ', totalAmountTotalWords);
+
+    // Update the input field value (replace 'totalamount_in_words' with the actual field name if different)
     $("input[name='totalamount_in_words']").val(totalAmountTotalWords);
 
     // Update preview fields (if any)
@@ -815,4 +801,31 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+
+$(document).ready(function() {
+    $('#country').on('change', function() {
+        var countryId = $(this).val();
+
+        // Clear the state dropdown
+        $('#state').html('<option value="">Select State</option>');
+
+        if (countryId) {
+            // AJAX request to get states based on selected country
+            $.ajax({
+                url: '<?= base_url('getStates') ?>',  // CodeIgniter 4 route
+                type: 'GET',
+                data: { country_id: countryId },
+                dataType: 'json',
+                success: function(states) {
+                    console.log(states);
+                    // Populate the state dropdown
+                    $.each(states, function(key, state) {
+                        $('#state').append('<option value="'+ state.id +'">'+ state.name +'</option>');
+                    });
+                }
+            });
+        }
+    });
+});
 </script>

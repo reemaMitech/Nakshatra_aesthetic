@@ -341,14 +341,15 @@ public function product_enquiry()
 
         $data['states'] = $model->get_states_name();
 
-        $data['citys'] = $model->get_citys_name();
+        // $data['citys'] = $model->get_citys_name();
 
         // $session_id = $result->get('id');
 
         // $id = $this->request->uri->getSegments(1);
 
         
-        // echo'<pre>';print_r($data['enquiry_data']);die;
+        // echo'<pre>';print_r($data['country']);die;
+        // echo'<pre>';print_r($data['states']);die;
 
         if(!empty($localbrand_id)){
 
@@ -382,6 +383,17 @@ public function get_city_name_location()
     $model = new AdminModel();
     $state_id = $this->request->getVar('state_id');
     $model->get_city_name_location($state_id);
+}
+
+public function getStates()
+{
+    $country_id = $this->request->getGet('country_id');
+    $model = new AdminModel();
+
+    if ($country_id) {
+        $states = $model->getStatesByCountry($country_id);
+        return $this->response->setJSON($states);
+    }
 }
 
 public function product_enquiry_details()
@@ -1162,7 +1174,10 @@ if (!$session->has('id')) {
     return redirect()->to('/');
 }
     $model = new AdminModel();
-   
+    $data['country'] = $model->get_country_name();
+
+    $data['states'] = $model->get_states_name();
+
 
     $uri = service('uri');
     $vendor_id = $uri->getSegment(2);   // Assuming the ID is the second segment

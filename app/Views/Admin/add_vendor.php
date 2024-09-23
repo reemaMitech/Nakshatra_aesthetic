@@ -68,7 +68,6 @@
                                                                 <td><?php echo $vendor->vendor_name; ?></td>
                                                                 <td><?php echo $vendor->vendor_mobile_no; ?></td>
                                                                 <td><?php echo $vendor->contact_person; ?></td>
-                                                                
                                                                 <td><?php echo $vendor->contperson_mobile_no; ?></td>
                                                                 <td><?php echo $vendor->country; ?></td>
                                                                 <td><?php echo $vendor->state; ?></td>
@@ -129,56 +128,82 @@
                             </div>  
 
                             <div class="tab-pane fade" id="pills-profile1" role="tabpanel" aria-labelledby="pills-profile-tab1">
-                            <h4 class="card-title">Vendor Details : </h4>
+                                <h4 class="card-title">Vendor Details : </h4>
                                     <form action="<?php echo base_url(); ?>set_vendor_data" id="form" method="post">
                                         <div class="row">
                                                             <input type="hidden" name="id" value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>" >
                                                             <div class="col-md-3">
-                                                                <div class="form-group">
+                                                                <!-- <div class="form-group"> -->
                                                                     <label>Vendor Name</label>
                                                                     <input type="text" class="form-control" id="name" name="name"  value="<?php if(!empty($single_data)){ echo $single_data->vendor_name;} ?>" placeholder="Enter name" required >
-                                                                </div>
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a valid Vendor name.
+                                                                    </div>
+                                                                <!-- </div> -->
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <div class="form-group">
+                                                                <!-- <div class="form-group"> -->
                                                                     <label>Vendor Mobile No.:</label>
-                                                                    <input type="text" class="form-control" id="phone_no" name="vendor_mobile_no"  value="<?php if(!empty($single_data)){ echo $single_data->vendor_mobile_no;} ?>" placeholder="Enter Vendor's Mobile Number "  >
-                                                                </div>
+                                                                    <input type="tel" class="form-control" id="vendor_mobile_no" name="vendor_mobile_no" maxlength="10" minlength="10" pattern="\d{10}" value="<?php if(!empty($single_data)){ echo $single_data->vendor_mobile_no;} ?>" placeholder="Enter Vendor's Mobile Number "  >
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a valid Vendor mobile number.
+                                                                    </div>
+                                                                <!-- </div> -->
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <div class="form-group">
+                                                                <!-- <div class="form-group"> -->
                                                                     <label>Contact Person Name</label>
                                                                     <input type="text" class="form-control" id="contact_person_name" name="contact_person_name"  value="<?php if(!empty($single_data)){ echo $single_data->contact_person;} ?>" placeholder="Enter Contact Person name"  >
-                                                                </div>
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a valid Name.
+                                                                    </div>
+                                                                <!-- </div> -->
                                                             </div>
                                                         
                                                             <div class="col-md-3">
-                                                                <div class="form-group">
+                                                                <!-- <div class="form-group"> -->
                                                                     <label>Mobile No.:</label>
-                                                                    <input type="text" class="form-control" id="phone_no2" name="cp_mobile_no"  value="<?php if(!empty($single_data)){ echo $single_data->contperson_mobile_no;} ?>" placeholder="Enter mobile number of Contact Person"  >
-                                                                </div>
+                                                                    <input type="tel" class="form-control" id="phone_no2" name="cp_mobile_no" maxlength="10" minlength="10" pattern="\d{10}"  value="<?php if(!empty($single_data)){ echo $single_data->contperson_mobile_no;} ?>" placeholder="Enter mobile number of Contact Person"  >
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a valid mobile number.
+                                                                    </div>
+                                                                <!-- </div> -->
                                                             </div>
 
-                                                
                                                             <div class="col-md-3">
-                                                                <div class="form-group">
+                                                                <!-- <div class="form-group"> -->
                                                                     <label>Email</label>
                                                                     <input type="text" class="form-control" id="email" name="email"  value="<?php if(!empty($single_data)){ echo $single_data->email;} ?>" placeholder="Enter email"  >
-                                                                </div>
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a valid email address.
+                                                                    </div>
+                                                                <!-- </div> -->
                                                             </div>
                                                     
                                                         
                                                             <div class="form-group col-md-3">
-                                                                <label for="inputcountry">Country:</label>
+                                                                <!-- <label for="inputcountry">Country:</label>
                                                                 <select  class="form-select"  id="inputCountry" name="country" >
                                                                     <option value="SelectCountry">Select Country</option>
                                                                     <option value="Bharat" <?php if (isset($single_data)) { echo ($single_data->country == 'Bharat') ? 'selected="selected"' : ''; } ?>>Bharat</option>
-                                                                </select>
+                                                                </select> -->
+
+                                                                 <div class="form-group">
+                                                                    <label for="country" class="form-label">Country:</label>
+                                                                        <select class="form-select choosen" id="country" name="country">
+                                                                            <option value="">Please select country</option>
+                                                                            <?php if(!empty($country)){foreach($country as $country_result){?>
+                                                                            <option value="<?=$country_result->id?>"
+                                                                                <?php if(!empty($single_data) && $single_data->country == $country_result->id){?>selected="selected"
+                                                                                <?php }?>><?=$country_result->name?></option>
+                                                                            <?php } } ?>
+                                                                        </select>
+                                                                </div>
                                                             </div>
 
                                                             <div class="form-group col-md-3">
                                                                 <label for="inputState">State:</label>
-                                                                <select  class="form-select"  id="inputState" name="state">
+                                                                <!-- <select  class="form-select"  id="inputState" name="state">
                                                                     <option value="SelectState"  >Select State</option>
                                                                     <option value="Andra Pradesh" <?php if (isset($single_data)) { echo ($single_data->state == 'Andra Pradesh') ? 'selected="selected"' : ''; } ?>>Andra Pradesh</option>
                                                                     <option value="Arunachal Pradesh" <?php if (isset($single_data)) { echo ($single_data->state == 'Arunachal Pradesh') ? 'selected="selected"' : ''; } ?>>Arunachal Pradesh</option>
@@ -219,20 +244,36 @@
                                                                     <option value="Delhi" <?php if (isset($single_data)) { echo ($single_data->state == 'Delhi') ? 'selected="selected"' : ''; } ?>>Delhi</option>
                                                                     <option value="Lakshadeep" <?php if (isset($single_data)) { echo ($single_data->state == 'Lakshadeep') ? 'selected="selected"' : ''; } ?>>Lakshadeep</option>
                                                                     <option value="Pondicherry" <?php if (isset($single_data)) { echo ($single_data->state == 'Pondicherry') ? 'selected="selected"' : ''; } ?>>Pondicherry</option>
+                                                                </select> -->
+
+                                                                <label for="state" class="form-label">State:</label>
+                                                                <select class="form-select choosen" id="state" name="state">
+                                                                    <option value="">Please select state</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="form-group col-md-3">
+                                                            <!-- <div class="form-group col-md-3">
                                                                 <label for="inputDistrict">District:</label>
                                                                 <select  class="form-select"  id="inputDistrict" name="district">
                                                                     <option value="">Select District</option>
                                                                 </select>
+                                                            </div> -->
+                                                            <div class=" form-group col-md-3">
+                                                                <label for="district" class="form-label">District</label>
+                                                                <input type="text" class="form-control" id="inputDistrict" name="district" value="<?php if(!empty($single_data)){ echo $single_data->district; }?>"required>
+                                                                <div class="invalid-feedback">
+                                                                    Please provide a valid district name.
+                                                                </div>
                                                             </div>
 
                                                             <div class="col-md-3">
-                                                            <div class="form-group">
+                                                            <!-- <div class="form-group"> -->
                                                                 <label>Address</label>
                                                                 <textarea name="address" class="form-control" id="" cols="30" rows="1" placeholder="Type here..." ><?php if(!empty($single_data)){ echo $single_data->address;} ?></textarea>
+                                                            
+                                                            <div class="invalid-feedback">
+                                                                Please provide a valid mobile number.
                                                             </div>
+                                                            <!-- </div> -->
                                                             </div>
 
                                      
@@ -240,7 +281,7 @@
                                                             <div class="col-md-3">
                                                                 <div class="form-group">
                                                                     <label>Vendor Type</label>
-                                                                    <select name="vendor_type" id="vendor_type"  class="form-select" >
+                                                                    <select name="vendor_type" id="vendor_type" name="vendor_type" class="form-select" >
                                                                         <option>Please Select Vendor Type</option>
                                                                     
                                                                             
@@ -332,12 +373,18 @@
                                                                     <div class="form-group">
                                                                         <label>GST No</label>
                                                                         <input type="text" class="form-control" id="gst_no" name="gst_no"  value="<?php if(!empty($single_data)){ echo $single_data->GST_no;} ?>" placeholder="Enter GST no" >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid GST number.
+                                                                        </div>
                                                                     </div>
                                                             </div>
                                                             <div class="col-md-3">
                                                                     <div class="form-group">
                                                                         <label>PAN No</label>
                                                                         <input type="text" class="form-control" id="pan_no" name="pan_no"  value="<?php if(!empty($single_data)){ echo $single_data->PAN_no;} ?>" placeholder="Enter PAN no" >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid PAN number.
+                                                                        </div>
                                                                     </div>
                                                             </div>
                                                             <h4 class="card-title">Billing Cycle :</h4>
@@ -439,6 +486,9 @@
                                                                     <div class="form-group">
                                                                         <label>Bank Name</label>
                                                                         <input type="text" class="form-control" id="bank_name" name="bank_name"  value="<?php if (isset($single_data)) {echo $single_data->bank_name; } ?>" placeholder="Enter bank name"  >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid Bank name.
+                                                                        </div>
                                                                     </div>
                                                             </div>
 
@@ -446,6 +496,9 @@
                                                                     <div class="form-group">
                                                                         <label>Branch Name</label>
                                                                         <input type="text" class="form-control" id="branch_name" name="branch_name"  value="<?php if (isset($single_data)) {echo $single_data->branch_name; } ?>" placeholder="Enter branch name"  >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid Branch name.
+                                                                        </div>
                                                                     </div>
                                                             </div>
 
@@ -453,6 +506,9 @@
                                                                     <div class="form-group">
                                                                         <label>Account Name</label>
                                                                         <input type="text" class="form-control" id="bank_holder_name" name="bank_holder_name"  value="<?php if (isset($single_data)) {echo $single_data->bank_holder_name; } ?>" placeholder="Enter bank holder name"  >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid Account Holder Name.
+                                                                        </div>
                                                                     </div>
                                                             </div>
 
@@ -460,6 +516,9 @@
                                                                     <div class="form-group">
                                                                         <label>Account Number</label>
                                                                         <input type="text" class="form-control" id="acc_no" name="acc_no"  value="<?php if (isset($single_data)) {echo $single_data->acc_no; } ?>" placeholder="Enter Account Number"  >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid Account number.
+                                                                        </div>
                                                                     </div>
                                                             </div>
 
@@ -467,6 +526,10 @@
                                                                     <div class="form-group">
                                                                         <label>IFSC Code</label>
                                                                         <input type="text" class="form-control" id="ifsc_code" name="ifsc_code"  value="<?php if (isset($single_data)) {echo $single_data->ifsc_code; } ?>" placeholder="Enter IFSC code"  >
+                                                                    
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid IFSC Code.
+                                                                        </div>
                                                                     </div>
                                                             </div>
 
@@ -474,14 +537,20 @@
                                                                     <div class="form-group">
                                                                         <label>UPI ID</label>
                                                                         <input type="text" class="form-control" id="upi_id" name="upi_id"  value="<?php if (isset($single_data)) {echo $single_data->upi_id; } ?>" placeholder="Enter UPI Code"  >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a valid UPI Id.
+                                                                        </div>
                                                                     </div>
                                                             </div>
 
                                                             <div class="col-md-4">
-                                                                    <div class="form-group">
+                                                                    <!-- <div class="form-group"> -->
                                                                         <label>Mobile Number( Link With Bank Account)</label>
-                                                                        <input type="text" class="form-control" id="mobile_no" name="bank_linked_mobile_no"  value="<?php if (isset($single_data)) {echo $single_data->mobile_no; } ?>" placeholder="Enter Bank Linked mobile number" >
-                                                                    </div>
+                                                                        <input type="text" class="form-control" id="bank_linked_mobile_no" name="bank_linked_mobile_no"  value="<?php if (isset($single_data)) {echo $single_data->mobile_no; } ?>" placeholder="Enter Bank Linked mobile number" >
+                                                                        <div class="invalid-feedback">
+                                                                            Please provide a linked mobile number.
+                                                                        </div>
+                                                                    <!-- </div> -->
                                                             </div>
                                                             <div class="text-end mt-4">
                                                                 <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
@@ -504,9 +573,9 @@
 
 
 
-<script src="<?=base_url(); ?>/assets/js/jquery-3.6.0.min.js"></script>
+<!-- <script src="<?=base_url(); ?>public/assets/js/jquery-3.6.0.min.js"></script> -->
 
-<script src="<?=base_url(); ?>/assets/js/jquery.validate.min.js"></script>
+<script src="<?=base_url(); ?>public/assets/js/plugins/jquery.validate.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -600,25 +669,28 @@ $(document).ready(function() {
                 required: true,
                 lettersOnly: true, // Use the custom method here
             },
+
             contact_person_name:{
+                required: true,
                 lettersOnly: true,
             },
-            phone_no : {
+            vendor_mobile_no : {
                 required: true,
                 phoneLength: true,
                 
             },
-            phone_no2 : {
-              
+            cp_mobile_no : {
+                required: true,
                 phoneLength: true,
-                
             },
-            mobile_no: {
+            bank_linked_mobile_no: {
+                required: true,
                 phoneLength: true,
                   
             },
 
             email: {
+                required: true,
                 email: true,
             },
          
@@ -636,6 +708,10 @@ $(document).ready(function() {
             district:{
                 required:true,
             },
+            vendor_type: {
+                required: true,
+            },
+
             gst_no: {
                 gstNumber:true,
             },
@@ -657,7 +733,11 @@ $(document).ready(function() {
             },
             branch_name: {
                 validBranchName: true
-            }
+            },
+            upi_id: {
+                required: true
+            },
+
         },
         messages: {
             name: {
@@ -665,19 +745,23 @@ $(document).ready(function() {
             lettersOnly: 'Please enter letters only.' // Custom error message
             },
             contact_person_name:{
+                required: 'Please enter contact person name.',
                 lettersOnly: 'Please enter letters only.'
             },
-            phone_no : {
-                required: 'Please enter your phone no.',
+            vendor_mobile_no : {
+                required: 'Please enter vendor phone no.',
                 phoneLength: 'Please enter your valid phone no.'
             },
-            phone_no2 : {
+            cp_mobile_no : {
+                required: 'Please enter mobile number.',
                 phoneLength: 'Please enter your valid phone no.'
             },
-            mobile_no: {
+            bank_linked_mobile_no: {
+                required: 'Please enter bank linked mobile number.',
                 phoneLength: 'Please enter your valid phone no.'
             },
             email: {
+                required: 'Please enter Email.',
                 email: 'Please enter a valid email address.'
             },
             address: {
@@ -687,10 +771,13 @@ $(document).ready(function() {
                 required: 'Please select a country.'
             },
             state:{
-                required: 'Please select state.',
+                required: 'Please select a state.',
             },
             district:{
-                required: 'Please select district.',
+                required: 'Please enter a district.',
+            },
+            vendor_type:{
+                required: 'Please select vendor type.',
             },
             gst_no: {
                 gstNumber: 'Please enter a valid GST number (e.g., 12ABCDE3456F)'
@@ -712,7 +799,11 @@ $(document).ready(function() {
             },
             branch_name: {
                 validBranchName: 'Please enter a valid branch name.'
-            }
+            },
+            upi_id: {
+                required: 'Please enter UPI ID.',
+            }, 
+            
         }
     });
 });
@@ -1040,6 +1131,32 @@ $(document).ready(function() {
 
     // Call the handler on page load
     handleRecurringSelect();
+});
+
+$(document).ready(function() {
+    $('#country').on('change', function() {
+        var countryId = $(this).val();
+
+        // Clear the state dropdown
+        $('#state').html('<option value="">Select State</option>');
+
+        if (countryId) {
+            // AJAX request to get states based on selected country
+            $.ajax({
+                url: '<?= base_url('getStates') ?>',  // CodeIgniter 4 route
+                type: 'GET',
+                data: { country_id: countryId },
+                dataType: 'json',
+                success: function(states) {
+                    console.log(states);
+                    // Populate the state dropdown
+                    $.each(states, function(key, state) {
+                        $('#state').append('<option value="'+ state.id +'">'+ state.name +'</option>');
+                    });
+                }
+            });
+        }
+    });
 });
 
 
