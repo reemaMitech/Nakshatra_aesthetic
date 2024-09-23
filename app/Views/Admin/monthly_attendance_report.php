@@ -94,6 +94,8 @@ if (strpos($current_url, 'edit_employee') !== false) {
                                                     </thead>
                                                     <tbody>
                                                         <?php 
+                                                        if (is_array($report['allEmployees']) && !empty($report['allEmployees'])): 
+
                                                         $i = 1;
                                                         foreach ($report['allEmployees'] as $employee): ?>
                                                             <?php
@@ -179,7 +181,8 @@ if (strpos($current_url, 'edit_employee') !== false) {
                                                                 endwhile;
                                                                 ?>
                                                             </tr>
-                                                        <?php endforeach; ?>
+                                                        <?php endforeach;endif; 
+ ?>
                                                     </tbody>
                                                 </table>
                                             </div>
