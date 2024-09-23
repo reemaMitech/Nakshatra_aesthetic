@@ -104,6 +104,15 @@ class AdminModel extends Model
         }
     }
 
+    public function getStatesByCountry($country_id)
+    {
+        // Specify the table for states
+        $this->table = 'states';  // Set the states table
+
+        // Fetch states based on the country_id
+        return $this->where('country_id', $country_id)->findAll();
+    }
+
 
     public function jointwotables($select, $table1, $table2,  $joinCond, $wherecond, $type)
 {

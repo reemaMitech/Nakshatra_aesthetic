@@ -33,6 +33,7 @@ $routes->post('get_city_name_location','Home::get_city_name_location');
 $routes->post('increment_follow_up_count', 'Home::increment_follow_up_count');
 $routes->post('add_follow_up', 'Home::add_follow_up');
 $routes->get('get_follow_up_data', 'Home::get_follow_up_data');
+$routes->get('getStates', 'Home::getStates');
 
 
 $routes->get('add_courierService', 'Home::add_courierService');
