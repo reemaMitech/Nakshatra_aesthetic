@@ -196,7 +196,7 @@ public function login()
                     return redirect()->to(base_url('admindashboard'));
             }   
             elseif ($user->role === 'Employee') {  // Add Employee role redirection
-                return redirect()->to(base_url('admindashboard'));  // Change to Employee dashboard URL
+                return redirect()->to(base_url('saveSignupTime'));  // Change to Employee dashboard URL
             }
           
             else {
@@ -222,29 +222,7 @@ public function logout()
 }
     
 
-    // public function add_employee()
-    // {
-    //     $session = \Config\Services::session();
-    //     if (!$session->has('id')) {
-    //         return redirect()->to('/');
-    //     }
-    //     $model = new AdminModel();
-    //     $wherecond = array('is_active' => 'Y');
-    //     $data['menu'] = $model->getalldata('tbl_menu', $wherecond);
-    //      //  print_r($data['menu']);die;
-    //     $wherecond = array('role' => 'Admin','active' => 'Y','is_deleted'=>'N');
-    //     $data['employees'] = $model->getalldata('tbl_register', $wherecond);
     
-    //     $uri = service('uri');
-    //     $localbrand_id = $uri->getSegment(2); 
-    //     if(!empty($localbrand_id)){
-    //         $wherecond1 = array('is_deleted' => 'N', 'id' => $localbrand_id);
-    //         $data['single_data'] = $model->get_single_data('tbl_register', $wherecond1);
-    //         // print_r($data['single_data']);die;
-    //     }
-    //  echo '<pre>';  print_r($data['employees']);die;
-    //    return view('Admin/add_employee',$data);
-    // }
     public function add_employee(){
 
     $session = \Config\Services::session();
@@ -351,14 +329,15 @@ public function product_enquiry()
 
         $data['states'] = $model->get_states_name();
 
-        $data['citys'] = $model->get_citys_name();
+        // $data['citys'] = $model->get_citys_name();
 
         // $session_id = $result->get('id');
 
         // $id = $this->request->uri->getSegments(1);
 
         
-        // echo'<pre>';print_r($data['enquiry_data']);die;
+        // echo'<pre>';print_r($data['country']);die;
+        // echo'<pre>';print_r($data['states']);die;
 
         if(!empty($localbrand_id)){
 
@@ -392,6 +371,17 @@ public function get_city_name_location()
     $model = new AdminModel();
     $state_id = $this->request->getVar('state_id');
     $model->get_city_name_location($state_id);
+}
+
+public function getStates()
+{
+    $country_id = $this->request->getGet('country_id');
+    $model = new AdminModel();
+
+    if ($country_id) {
+        $states = $model->getStatesByCountry($country_id);
+        return $this->response->setJSON($states);
+    }
 }
 
 public function product_enquiry_details()
@@ -1182,7 +1172,10 @@ if (!$session->has('id')) {
     return redirect()->to('/');
 }
     $model = new AdminModel();
-   
+    $data['country'] = $model->get_country_name();
+
+    $data['states'] = $model->get_states_name();
+
 
     $uri = service('uri');
     $vendor_id = $uri->getSegment(2);   // Assuming the ID is the second segment
@@ -2984,6 +2977,381 @@ public function leave_result() {
 
     return redirect()->to('leave_app');
 }
+
+
+public function saveSignupTime() {
+  
+    $session = \Config\Services::session();
+    date_default_timezone_set('Asia/Kolkata');
+
+    // Check if session 'id' exists, and if not, redirect
+    if (!$session->has('id')) {
+        return redirect()->to('/');
+    }
+
+        $model = new AdminModel();
+        $db = \Config\Database::connect();  // Connect to the database
+
+        // Access session data
+        $emp_id = $session->get('id');
+        $data['employeeTiming'] = $model->getEmployeeTiming($emp_id);
+
+        // Check if employeeTiming is empty
+        if (empty($data['employeeTiming'])) {
+            // Prepare data for insertion
+            $dataToInsert = [
+                'emp_id' => $emp_id,
+                'action' => 'punchIn',
+                'start_time' => date('Y-m-d H:i:s') // Set the current date and time in Asia/Kolkata timezone
+
+                // 'timestamp' => date('Y-m-d H:i:s') // Insert current date and time
+            ];
+
+            // Insert data into tbl_employeetiming table
+            $db->table('tbl_employeetiming')->insert($dataToInsert);
+        }
+
+     
+        return view('Admin/empdashboard', $data);
+ 
+
+}
+
+public function getPunchStatus()
+{
+
+    $session = \Config\Services::session();
+
+    // Check if session 'id' exists, and if not, redirect
+
+    $db = \Config\Database::connect();
+    
+    // Access session data
+  $emp_id = $session->get('id');
+
+
+    
+    // Get the current date
+    $currentDate = date('Y-m-d');
+    
+    // Check the punch status for today
+    $query = $db->table('tbl_employeetiming')
+                ->where('emp_id', $emp_id)
+                ->where('DATE(created_on)', $currentDate)
+                ->orderBy('created_on', 'DESC')
+                ->get();
+    
+    $employeeTiming = $query->getResultArray();
+
+    $allowPunchIn = true; // Default to allow punch in
+
+    // Check if there's already a completed punch for today
+    foreach ($employeeTiming as $timing) {
+        if (!empty($timing['start_time']) && !empty($timing['end_time'])) {
+            $allowPunchIn = false; // Disable punch in if a punch out is already completed
+            break;
+        }
+    }
+    
+    return $this->response->setJSON([
+        'allowPunchIn' => $allowPunchIn,
+        'timingData' => $employeeTiming
+    ]);
+}
+
+
+
+public function punchAction()
+{
+    $db = \Config\Database::connect();
+    $session = \Config\Services::session();
+
+    // Set the timezone to Asia/Kolkata
+    date_default_timezone_set('Asia/Kolkata');
+
+    $action = $this->request->getJSON()->action;
+
+    // Access session data
+    $emp_id = $session->get('id');
+
+    if ($action === 'punchIn') {
+        // Insert a new punchIn record with the correct timezone
+        $data = [
+            'emp_id' => $emp_id,
+            'action' => 'punchIn',
+            'start_time' => date('Y-m-d H:i:s') // Set the current date and time in Asia/Kolkata timezone
+        ];
+
+        $result = $db->table('tbl_employeetiming')->insert($data);
+
+        if ($result) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Punched in successfully']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Error in data insertion']);
+        }
+    } elseif ($action === 'punchOut') {
+        // Update the existing punchIn record with punchOut action
+        $data = [
+            'action' => 'punchOut',
+            'end_time' => date('Y-m-d H:i:s') // Set the current date and time in Asia/Kolkata timezone
+        ];
+
+        $result = $db->table('tbl_employeetiming')
+            ->where('emp_id', $emp_id)
+            ->where('action', 'punchIn')
+            ->where('DATE(created_on)', date('Y-m-d'))
+            ->where('end_time', null)
+            ->update($data);
+
+        if ($result) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Punched out successfully']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Error in updating data']);
+        }
+    } else {
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid action']);
+    }
+}
+
+
+public function get_attendance_data(){
+
+    $session = \Config\Services::session();
+        if (!$session->has('id')) {
+            return redirect()->to('/');
+        }
+        $model = new AdminModel();
+
+    
+    
+    
+        $select = 'tbl_employeetiming.*, tbl_register.*';
+        $joinCond = 'tbl_employeetiming.emp_id  = tbl_register.id ';
+        $wherecond = [
+            'tbl_employeetiming.is_deleted' => 'N',
+            'DATE(tbl_employeetiming.start_time)' => date('Y-m-d')
+        ];
+        $data['attendance_list'] = $model->jointwotables($select, 'tbl_employeetiming', 'tbl_register',  $joinCond,  $wherecond, 'DESC');
+    
+        // Absent List
+        
+       // Assuming you have the model loaded as $model
+
+            // Fetch all employees from tbl_register
+
+            // Fetch all employees from tbl_register where is_deleted = 'N' and role = 'Employee'
+            $wherecond = array('is_deleted' => 'N', 'role' => 'Employee');
+            $allEmployees = $model->getalldata('tbl_register', $wherecond);
+
+            // Check if $allEmployees is a valid array
+            if ($allEmployees === false) {
+                // Handle the error, e.g., log it or show an error message
+                echo "Error fetching all employees.";
+                return;
+            }
+
+            // Fetch employees with attendance for the current date from tbl_employeetiming
+            $wherecond = array('is_deleted' => 'N');
+            $attendanceEmployees = $model->db->table('tbl_employeetiming')
+                ->where($wherecond)
+                ->where('DATE(start_time)', date('Y-m-d'))
+                ->get()
+                ->getResult(); // Note: getResult() returns an array of objects
+
+            // Check if $attendanceEmployees is a valid array
+            if ($attendanceEmployees === false) {
+                // Handle the error, e.g., log it or show an error message
+                echo "Error fetching attendance employees.";
+                return;
+            }
+
+            // Convert the attendance list to an array of IDs
+            $attendanceEmpIds = array_map(function($item) {
+                return $item->id; // Accessing object property
+            }, $attendanceEmployees);
+
+            // Get absent employees by filtering out the ones in attendanceEmpIds
+            $absentEmployees = array_filter($allEmployees, function($employee) use ($attendanceEmpIds) {
+                return !in_array($employee->id, $attendanceEmpIds); // Accessing object property
+            });
+
+            // You can now use $absentEmployees to display in the absent list
+            $data['absent_list'] = $absentEmployees;
+
+            // echo "<pre>";print_r($data);exit();
+
+    return view('Admin/attendancelist', $data);
+}
+
+public function get_attendance_list()
+{
+    $adminModel = new AdminModel();
+
+    $searchDate = $this->request->getGet('searchDate');
+    if (!$searchDate) {
+        $searchDate = date('Y-m-d');
+    }
+
+    $select = 'tbl_employeetiming.*, tbl_register.*';
+    $joinCond = 'tbl_employeetiming.emp_id = tbl_register.id';
+    $wherecond = [
+        'tbl_employeetiming.is_deleted' => 'N',
+        'DATE(tbl_employeetiming.start_time)' => $searchDate
+    ];
+
+    $data['attendance_list'] = $adminModel->jointwotables($select, 'tbl_employeetiming', 'tbl_register', $joinCond, $wherecond, 'DESC');
+
+    // Load the table view with the filtered data
+    // echo'<pre>';print_r($data);die;
+    echo view('Admin/attendance_table', $data);
+}
+
+
+public function get_absent_list()
+{
+    $adminModel = new AdminModel();
+
+    $searchDate = $this->request->getGet('absentSearchDate');
+    if (!$searchDate) {
+        $searchDate = date('Y-m-d');
+    }
+
+    // Fetch all employees from tbl_register where is_deleted = 'N' and role = 'Employee'
+    $wherecond = array('is_deleted' => 'N', 'role' => 'Employee');
+    $allEmployees = $adminModel->getalldata('tbl_register', $wherecond);
+
+    // Check if $allEmployees is a valid array
+    if ($allEmployees === false) {
+        echo "Error fetching all employees.";
+        return;
+    }
+
+    // Fetch employees with attendance for the specified date from tbl_employeetiming
+    $wherecond = array('is_deleted' => 'N');
+    $attendanceEmployees = $adminModel->db->table('tbl_employeetiming')
+        ->where($wherecond)
+        ->where('DATE(start_time)', $searchDate)
+        ->get()
+        ->getResult(); // getResult() returns an array of objects
+
+    // Check if $attendanceEmployees is a valid array
+    if ($attendanceEmployees === false) {
+        echo "Error fetching attendance employees.";
+        return;
+    }
+
+    // Convert the attendance list to an array of IDs
+    $attendanceEmpIds = array_map(function($item) {
+        return $item->emp_id; // Accessing object property
+    }, $attendanceEmployees);
+
+    // Get absent employees by filtering out the ones in attendanceEmpIds
+    $absentEmployees = array_filter($allEmployees, function($employee) use ($attendanceEmpIds) {
+        return !in_array($employee->id, $attendanceEmpIds); // Accessing object property
+    });
+
+    // Use $absentEmployees to display in the absent list
+    $data['absent_list'] = $absentEmployees;
+
+    // Load the view with the absent list data
+    return view('Admin/absent_table', $data);
+}
+
+
+public function punch_in()
+{
+    $adminModel = new AdminModel();
+    $empId = $this->request->getPost('emp_id');
+    $startTime = $this->request->getPost('start_time'); // Get the start_time from the request
+
+    // Add logic to handle punch-in, such as recording the provided start time
+    $data = [
+        'emp_id' => $empId,
+        'start_time' => $startTime,
+        'action' => 'punchIn',
+    ];
+// echo "<prE>";print_r($data);exit();
+    
+    if ($adminModel->insertdata('tbl_employeetiming', $data)) {
+        return $this->response->setJSON(['success' => true]);
+    } else {
+        return $this->response->setJSON(['success' => false, 'message' => 'Error inserting punch in time.']);
+    }
+}
+
+public function punch_out() {
+    $empId = $this->request->getPost('emp_id');
+    $endTime = $this->request->getPost('end_time');
+
+    // Validate input
+    if (!$empId || !$endTime) {
+        return $this->response->setJSON(['success' => false, 'message' => 'Employee ID or End Time is missing.']);
+    }
+
+    // Prepare data for update
+    $data = [
+        'end_time' => $endTime, // This will include the date you want to update
+        'action' => 'punchout',
+    ];
+
+    // Connect to the database
+    $db = \Config\Database::connect();
+
+    // Update query with conditions
+    $updateQuery = $db->table('tbl_employeetiming')
+                      ->where('emp_id', $empId)
+                      ->where('action', 'punchIn')
+                      ->where('is_deleted', 'N')
+                      ->where('end_time', null)
+                      // Remove current date condition; use the end_time for filtering
+                      ->where('DATE(start_time)', date('Y-m-d', strtotime($endTime))); // Use the date part of endTime
+
+    // Execute the update
+    $update = $updateQuery->update($data);
+
+    // Check if the update was successful
+    if ($db->affectedRows() > 0) {
+        return $this->response->setJSON(['success' => true]);
+    } else {
+        return $this->response->setJSON(['success' => false, 'message' => 'Error updating punch out time or no record to update.']);
+    }
+}
+
+
+
+public function get_employee_list() {
+    // Get the 'date' parameter from the GET request
+    $emp_date = $this->request->getGet('date');
+
+    // Initialize the model correctly
+    $model = new AdminModel();
+    
+    // Define the condition to fetch employees
+    $wherecond = array('is_deleted' => 'N', 'role' => 'Employee');
+    
+    // Use the $model variable to access the method instead of $this->model
+    $data['employees'] = $model->getalldata('tbl_register', $wherecond);
+
+    // Fetch punch-in and punch-out data for each employee based on the selected date
+    foreach ($data['employees'] as $employee) {
+        $today = !empty($emp_date) ? $emp_date : date('Y-m-d');
+        
+        // Fetch punch-in and punch-out times using the selected or current date
+        $employee->punch_in = $model->get_punch_in_time($employee->id, $today);
+        $employee->punch_out = $model->get_punch_out_time($employee->id, $today);
+    }
+
+    // Return the view with the employee data
+    return view('Admin/emp_table', $data);
+}
+
+
+
+
+
+
+
+
 
     
 

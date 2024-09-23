@@ -22,9 +22,12 @@
                                         <h4 class="counter"><?= isset($orderscount) ? $orderscount : 0; ?></h4>
                                     </div>
 
+
                                 </div>
                             </div>
-                        </li>
+                        </div>
+                    </li>
+
                         <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="800">
                             <div class="card-body">
                                 <div class="progress-widget">
@@ -146,3 +149,15 @@
 </div>
 
 <?php include __DIR__.'/../Admin/footer.php'; ?>
+
+
+
+<script>
+function openNewPage() {
+    // Use PHP to inject the base URL into the JavaScript
+    var baseUrl = '<?php echo base_url(); ?>';
+    
+    // Redirect to a new page based on the base URL
+    window.location.href = baseUrl + '/attendance-list';
+}
+</script>
