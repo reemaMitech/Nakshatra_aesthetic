@@ -105,21 +105,6 @@
                                                         endforeach; 
                                                     } ?>
                                                 </tbody>
-                                                <tfoot>
-                                                <tr>
-                                                        <th>Sr. No.</th>
-                                                        <th> Name</th>
-                                                        <th>Mobile Number</th>
-                                                        <th>Contact Person Name</th>
-                                                        <th>Mobile Number</th>
-                                                        <th>Country</th>
-                                                        <th>State</th>
-                                                        <th>District</th>
-                                                        <th>Vendor Type</th>
-                                                        <th>Bank Name</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </tfoot>
                                             </table>  
                                         </div>
                                     </div>
@@ -131,7 +116,7 @@
                                 <h4 class="card-title">Vendor Details : </h4>
                                     <form action="<?php echo base_url(); ?>set_vendor_data" id="form" method="post">
                                         <div class="row">
-                                                            <input type="hidden" name="id" value="<?php if(!empty($single_data)){ echo $single_data->id;} ?>" >
+                                                            <input type="hidden" name="id" value="<?php if(!empty($single_data)){ echo $single_data[0]->id;} ?>" >
                                                             <div class="col-md-3">
                                                                 <!-- <div class="form-group"> -->
                                                                     <label>Vendor Name</label>
@@ -194,7 +179,7 @@
                                                                             <option value="">Please select country</option>
                                                                             <?php if(!empty($country)){foreach($country as $country_result){?>
                                                                             <option value="<?=$country_result->id?>"
-                                                                                <?php if(!empty($single_data) && $single_data->country == $country_result->id){?>selected="selected"
+                                                                                <?php if(!empty($single_data) && $single_data->country_name == $country_result->id){?>selected="selected"
                                                                                 <?php }?>><?=$country_result->name?></option>
                                                                             <?php } } ?>
                                                                         </select>

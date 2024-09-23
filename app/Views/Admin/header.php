@@ -68,6 +68,7 @@
 
 
 
+
 </head>
 
 <body class="  ">
@@ -330,17 +331,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
 
 
 
-                            <?php  if (in_array('add_courierService', $menu_names)) : ?>
-                            <li class="nav-item">
-                                <a class="nav-link " href="<?=base_url(); ?>add_courierService">
-                                <i class='fas fa-shipping-fast'></i>
-                                    <i class="sidenav-mini-icon"> D </i>
-                                    <span class="item-name">Add Courier Service</span>
-                                </a>
-                            </li>
-                            <?php  endif; ?>
+                          
 
-                            <?php if (in_array('add_order', $menu_names) || in_array('add_row_Materials', $menu_names)  || in_array('Packaging_Material', $menu_names) || in_array('add_branch', $menu_names) || in_array('Coupon_Code', $menu_names) || in_array('add_cash', $menu_names) || in_array('add_vendor', $menu_names) || in_array('punch_in_out', $menu_names) || in_array('leave_application', $menu_names) || in_array('salary_slip', $menu_names) ) {  ?> 
+                            <?php if (in_array('add_order', $menu_names) || in_array('add_row_Materials', $menu_names)  || in_array('Packaging_Material', $menu_names) || in_array('add_branch', $menu_names) || in_array('Coupon_Code', $menu_names) || in_array('add_cash', $menu_names) || in_array('add_vendor', $menu_names) || in_array('punch_in_out', $menu_names) || in_array('leave_application', $menu_names) || in_array('salary_slip', $menu_names) || in_array('add_courierService', $menu_names) ) {  ?> 
                             <li class="nav-item">
                                 <a class="nav-link" data-bs-toggle="collapse" href="#horizontal-menu" role="button"
                                     aria-expanded="false" aria-controls="horizontal-menu">
@@ -543,9 +536,19 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : '';
                                         </a>
                                     </li>
                                     <?php endif; ?>
+                                    <?php  if (in_array('add_courierService', $menu_names)) : ?>
+                            <li class="nav-item">
+                                <a class="nav-link " href="<?=base_url(); ?>add_courierService">
+                                <i class='fas fa-shipping-fast'></i>
+                                    <i class="sidenav-mini-icon"> D </i>
+                                    <span class="item-name">Add Courier Service</span>
+                                </a>
+                            </li>
+                            <?php  endif; ?>
                                 </ul>
                             </li>
                             <?php  }?>
+                         
                             
                             <?php if (in_array('add_employee', $menu_names) || in_array('create_access_level', $menu_names)) {  ?>
                             <li class="nav-item">
