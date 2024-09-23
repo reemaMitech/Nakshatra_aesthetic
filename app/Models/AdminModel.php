@@ -477,5 +477,64 @@ public function jointwotablesforleave($select, $table, $joins, $joinConds, $wher
     return $query->getResult();
 }
 
+public function getEmployeeTiming($emp_Id) {
+    // Get today's date
+    $todayDate = date('Y-m-d');
+
+    // Fetch data from empdata table for the specified employee and today's date
+    $todaysData = $this->db->table('tbl_employeetiming')
+                         ->where('emp_id', $emp_Id)
+                         ->where('created_on >=', $todayDate . ' 00:00:00')
+                         ->where('created_on <=', $todayDate . ' 23:59:59')
+                         ->get()
+                         ->getResultArray();
+    // print_r($todaysData);die;                     
+
+    return $todaysData;
+}
+
+
+
+public function get_punch_in_time($emp_id, $date) {
+    // Use the Query Builder to build your query
+    $builder = $this->db->table('tbl_employeetiming'); // Replace with your punch-in table name
+    $builder->select('start_time');
+    $builder->where('emp_id', $emp_id);
+    $builder->where('DATE(start_time)', $date); // Match today's date
+    
+    // Execute the query
+    $query = $builder->get();
+    
+    // Check if there are any results and return the punch-in time
+    if ($query->getNumRows() > 0) {
+        return $query->getRow()->start_time;
+    }
+
+    return null; // Return null if no punch-in time is found
+}
+
+public function get_punch_out_time($emp_id, $date) {
+    // Use the Query Builder to build your query
+    $builder = $this->db->table('tbl_employeetiming'); // Replace with your punch-in table name
+    $builder->select('end_time');
+    $builder->where('emp_id', $emp_id);
+    $builder->where('DATE(start_time)', $date); // Match today's date
+    
+    // Execute the query
+    $query = $builder->get();
+    
+    // Check if there are any results and return the punch-in time
+    if ($query->getNumRows() > 0) {
+        return $query->getRow()->end_time;
+    }
+
+    return null; // Return null if no punch-in time is found
+}
+
+
+
+
+
+
 
 }

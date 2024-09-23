@@ -152,7 +152,32 @@ $routes->get('leave_app', 'Home::leave_app');
 
 $routes->post('leave_result', 'Home::leave_result');
 
+$routes->get('saveSignupTime', 'Home::saveSignupTime');
 
+$routes->get('getPunchStatus', 'Home::getPunchStatus');
+
+$routes->post('punchAction', 'Home::punchAction');
+
+
+$routes->get('attendance_list', 'Home::get_attendance_data');
+
+$routes->post('get_attendance_list', 'Home::get_attendance_list');
+$routes->get('get_attendance_list', 'Home::get_attendance_list');
+
+$routes->post('get_absent_list', 'Home::get_absent_list');
+$routes->get('get_absent_list', 'Home::get_absent_list');
+
+$routes->post('punch_in', 'Home::punch_in');
+$routes->get('punch_in', 'Home::punch_in');
+
+$routes->post('punch_out', 'Home::punch_out');
+$routes->get('punch_out', 'Home::punch_out');
+
+$routes->post('get_employee_list', 'Home::get_employee_list');
+$routes->get('get_employee_list', 'Home::get_employee_list');
+
+$routes->post('fetch_employees', 'Home::fetch_employees');
+$routes->get('fetch_employees', 'Home::fetch_employees');
 
 
 
