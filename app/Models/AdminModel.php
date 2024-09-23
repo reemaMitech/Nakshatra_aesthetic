@@ -467,6 +467,10 @@ public function jointwotablesforleave($select, $table, $joins, $joinConds, $wher
     $query = $builder->get();
     return $query->getResult();
 }
+public function getCount($table, $conditions = [])
+{
+    return $this->db->table($table)->where($conditions)->countAllResults();
+}
 
 
 }

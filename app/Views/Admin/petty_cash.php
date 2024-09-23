@@ -156,6 +156,7 @@
 
                          
                                 <h4 class="mt-3">Balance Sheet</h4>
+                                <div class="table-responsive">
                                 <table id="balanceSheetTable" class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -242,7 +243,7 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-
+                                </div>
                             </div>
 
                         </div>

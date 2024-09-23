@@ -14,15 +14,15 @@
                 <div class="card-body">
                     <!-- Filter section -->
                     <div class="row mb-3">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label>From Date</label>
                             <input type="date" id="fromDate" class="form-control">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label>To Date</label>
                             <input type="date" id="toDate" class="form-control">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label>Branch</label>
                             <select id="branchFilter" class="form-control">
                                 <option value="">All Branches</option>
@@ -56,6 +56,10 @@
                                 ?>
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label>Contact No</label>
+                            <input type="text" id="contactFilter" class="form-control" placeholder="Enter Contact No">
+                        </div>
                     </div>
 
                     <!-- Table section -->
@@ -63,8 +67,8 @@
                         <table id="salesTable" class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Invoice No</th>
-                                    <th>Invoice Date</th>
+                                    <th>Billing No</th>
+                                    <th>Billing Date</th>
                                     <th>Customer Name</th>
                                     <th>Contact No</th>
                                     <th>Branch</th>
@@ -107,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const toDateInput = document.getElementById('toDate');
     const branchFilterInput = document.getElementById('branchFilter');
     const productFilterInput = document.getElementById('productFilter');
+    const contactFilterInput = document.getElementById('contactFilter');
     const salesTable = document.getElementById('salesTable');
     const exportBtn = document.getElementById('exportBtn');
     const rows = salesTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
@@ -117,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const toDate = toDateInput.value;
         const branch = branchFilterInput.value.toLowerCase();
         const productName = productFilterInput.value.toLowerCase();
+        const contactNo = contactFilterInput.value.toLowerCase();
         const today = new Date().toISOString().split('T')[0]; // Today's date
 
         // Validation for From Date greater than today's date
@@ -140,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const invoiceDate = row.cells[1].innerText; // Invoice Date
             const branchName = row.cells[4].innerText.toLowerCase(); // Branch Name
             const rowProductName = row.cells[5].innerText.toLowerCase(); // Product Name
+            const rowContactNo = row.cells[3].innerText.toLowerCase(); // Contact No
 
             let showRow = true;
 
@@ -158,6 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Filter by product name
             if (productName && productName !== rowProductName) {
+                showRow = false;
+            }
+
+            // Filter by contact number
+            if (contactNo && rowContactNo.indexOf(contactNo) === -1) {
                 showRow = false;
             }
 
@@ -209,14 +221,16 @@ document.addEventListener('DOMContentLoaded', function() {
         link.click();
     }
 
-    // Add event listeners to the filters
     fromDateInput.addEventListener('change', filterTable);
     toDateInput.addEventListener('change', filterTable);
     branchFilterInput.addEventListener('change', filterTable);
     productFilterInput.addEventListener('change', filterTable);
+    contactFilterInput.addEventListener('input', filterTable); // Added contact filter listener
 
-    // Export button event listener
     exportBtn.addEventListener('click', exportTableData);
+
+    // Calculate initial total on page load
+    filterTable();
 });
 </script>
 

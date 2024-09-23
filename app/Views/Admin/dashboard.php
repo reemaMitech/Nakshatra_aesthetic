@@ -19,8 +19,9 @@
                                     </div>
                                     <div class="progress-detail">
                                         <p class="mb-2">Total Sales</p>
-                                        <h4 class="counter">$560K</h4>
+                                        <h4 class="counter"><?= isset($orderscount) ? $orderscount : 0; ?></h4>
                                     </div>
+
                                 </div>
                             </div>
                         </li>
@@ -36,8 +37,9 @@
                                         </svg>
                                     </div>
                                     <div class="progress-detail">
-                                        <p class="mb-2">Total Profit</p>
-                                        <h4 class="counter">$185K</h4>
+                                        <p class="mb-2">Todays Sales</p>
+                                        <h4 class="counter"><?= isset($todaysales) ? $todaysales : 0; ?></h4>
+
                                     </div>
                                 </div>
                             </div>
@@ -54,13 +56,14 @@
                                         </svg>
                                     </div>
                                     <div class="progress-detail">
-                                        <p class="mb-2">Total Cost</p>
-                                        <h4 class="counter">$375K</h4>
+                                        <p class="mb-2">Today’s Dispatch</p>
+                                        <h4 class="counter"><?= isset($todaysdispatch) ? $todaysdispatch : 0; ?></h4>
+
                                     </div>
                                 </div>
                             </div>
                         </li>
-                        <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1000">
+                        <!-- <li class="swiper-slide card card-slide" data-aos="fade-up" data-aos-delay="1000">
                             <div class="card-body">
                                 <div class="progress-widget">
                                     <div id="circle-progress-04"
@@ -131,14 +134,14 @@
                                     </div>
                                 </div>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>
                     <div class="swiper-button swiper-button-next"></div>
                     <div class="swiper-button swiper-button-prev"></div>
                 </div>
             </div>
         </div>
-      
+
     </div>
 </div>
 
