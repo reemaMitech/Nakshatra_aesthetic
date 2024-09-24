@@ -127,6 +127,19 @@ class AdminModel extends Model
     return $result;
 }
 
+public function jointhreetables($select, $table1, $table2, $table3, $joinCond, $joinCond2, $wherecond, $type)
+{
+    $result = $this->db->table($table1)  // Use $table1 variable here
+        ->select($select)
+        ->join($table2, $joinCond, $type)
+        ->join($table3, $joinCond2, $type)
+        ->where($wherecond)
+        ->get()
+        ->getResult();
+    //    echo $this->db->getLastQuery();die;
+    return $result;
+}
+
 public function get_single_data($table, $wherecond)
 {
     $result = $this->db->table($table)->where($wherecond)->get()->getRow();

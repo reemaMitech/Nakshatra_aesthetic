@@ -1187,10 +1187,16 @@ if (!$session->has('id')) {
         // print_r($vendor_id);exit();
 
         $wherecond1 = array('is_deleted' => 'N', 'id' => $vendor_id);
+        $select = 'tbl_vendor.*, countries.name as country_name, states.name as state_name,';
+        $joinCond = 'tbl_vendor.country = countries.id';
+        $joinCond2 = 'tbl_vendor.state = states.id';
 
-        $data['single_data'] = $model->get_single_data('tbl_vendor', $wherecond1);
+        $wherecond = [
+             'tbl_vendor.is_deleted' => 'N',
+        ];
+
+        $data['single_data'] = $model->jointhreetables($select, 'tbl_vendor ', 'countries', 'states',  $joinCond, $joinCond2, $wherecond, 'DESC');
         // echo'<pre>';print_r($data['single_data']);die;
-
     }else{
         $wherecond = array('is_deleted' => 'N');
         $data['vendor_data'] = $model->getalldata('tbl_vendor', $wherecond);
