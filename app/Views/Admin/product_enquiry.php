@@ -73,7 +73,7 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label for="country" class="form-label">Country:</label>
-                                                        <select class="form-select choosen" id="country_id" name="Country">
+                                                        <select class="form-select choosen" id="country" name="Country">
                                                             <option value="">Please select country</option>
                                                             <?php if(!empty($country)){foreach($country as $country_result){?>
                                                             <option value="<?=$country_result->id?>"
@@ -85,17 +85,8 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="state" class="form-label">State:</label>
-                                                <select class="form-select choosen" id="state_id" name="State">
+                                                <select class="form-select choosen" id="state" name="State">
                                                     <option value="">Please select state</option>
-                                                   
-                                                    <?php 
-                                                        if(!empty($states)){
-                                                        foreach($states as $state_result){                ?>
-                                                    <option value="<?=$state_result->id?>"
-                                                        <?php if(!empty($single_data) && $single_data->state == $state_result->id){?>selected="selected"
-                                                        <?php }?>><?=$state_result->name?></option>
-                                                    <?php } } ?>
-                                                 
                                                 </select>
                                         </div>
                                         <!-- <div class="col-md-4">
@@ -124,13 +115,16 @@
                                                 <label for="productName" class="form-label">Product Name</label>
                                                 <select class="form-select" id="productName" name="product_name" required>
                                                     <option selected disabled value="">Choose...</option>
-                                                    <?php foreach ($product as $item): ?>
+                                                    <?php if(!empty($product)){
+                                                     foreach ($product as $item): ?>
                                                     <option value="<?= $item->id; ?>"
                                                      <?php if(!empty($single_data) && $single_data->prod_id == $item->id){?>selected="selected"
                                                     data-mrp="<?= $item->mrp_with_tax; ?>"  <?php }?>>
                                                         <?= $item->product_name; ?>
                                                     </option>
-                                                    <?php endforeach; ?>
+                                                    <?php endforeach;
+                                                    } ?>
+
                                                 </select>
                                                 <div class="invalid-feedback">
                                                     Please select a valid product name.
@@ -156,7 +150,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="form-label" for="pincode"> Pincode</label>
-                                                <input type="text" class="form-control" id="pincode" name="pincode"  minlength="6"  value="<?php if(!empty($single_data)){ echo $single_data->pincode; }?>" required>
+                                                <input type="text" class="form-control" id="pincode" name="pincode"  minlength="6" maxlength="6" pattern="^[1-9][0-9]{5}$" title="Pincode must be a 6-digit number starting with a non-zero digit"
+                                                 value="<?php if(!empty($single_data)){ echo $single_data->pincode; }?>" required>
                                                 <div class="invalid-feedback">
                                                     Please provide a valid pincode.
                                                 </div>
@@ -443,6 +438,32 @@ $(document).ready(function() {
                 alert('Error fetching follow-up data.');
             }
         });
+    });
+});
+
+$(document).ready(function() {
+    $('#country').on('change', function() {
+        var countryId = $(this).val();
+
+        // Clear the state dropdown
+        $('#state').html('<option value="">Select State</option>');
+
+        if (countryId) {
+            // AJAX request to get states based on selected country
+            $.ajax({
+                url: '<?= base_url('getStates') ?>',  // CodeIgniter 4 route
+                type: 'GET',
+                data: { country_id: countryId },
+                dataType: 'json',
+                success: function(states) {
+                    console.log(states);
+                    // Populate the state dropdown
+                    $.each(states, function(key, state) {
+                        $('#state').append('<option value="'+ state.id +'">'+ state.name +'</option>');
+                    });
+                }
+            });
+        }
     });
 });
 
